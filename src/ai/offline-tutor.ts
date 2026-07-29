@@ -331,6 +331,24 @@ const GENERIC_OPENERS: Record<LanguageCode, string[]> = {
     'Interessant. Kannst du das in einem ganzen Satz sagen?',
     'Sehr gut. Versuch es jetzt in der Vergangenheit.',
   ],
+  ja: [
+    'いいですね！それからどうなりましたか。',
+    'なるほど。どう思いましたか。',
+    '面白いですね。文で言ってみてください。',
+    'いいですね。今度は過去形で言ってみましょう。',
+  ],
+  ko: [
+    '좋아요! 그다음에는 어떻게 됐어요?',
+    '그렇군요. 기분이 어땠어요?',
+    '재미있네요. 완전한 문장으로 말해 볼까요?',
+    '잘했어요. 이번에는 과거형으로 해 보세요.',
+  ],
+  zh: [
+    '很好！后来怎么样了？',
+    '原来如此。你当时觉得怎么样？',
+    '有意思。可以用完整的句子说一遍吗？',
+    '很好。现在试试用过去的说法。',
+  ],
 };
 
 function buildGenericReply(context: TutorContext, message: string, turn: number): string {

@@ -155,6 +155,19 @@ describe('buildStudyPlan', () => {
     expect(plan.blocks[0]?.kind).toBe('review');
   });
 
+  it('no modo Essencial o dia tem no máximo dois blocos', () => {
+    const plan = buildStudyPlan({
+      ...baseInput,
+      dailyMinutes: 60,
+      reviewStates: dueStates(30),
+      learningMode: 'essential',
+    });
+
+    expect(plan.blocks.length).toBeLessThanOrEqual(2);
+    // O corte tira os blocos menos prioritários — nunca a dívida de revisão.
+    expect(plan.blocks[0]?.kind).toBe('review');
+  });
+
   it('não gera bloco de revisão quando não há dívida', () => {
     const plan = buildStudyPlan({ ...baseInput, dailyMinutes: 20, reviewStates: [] });
     expect(

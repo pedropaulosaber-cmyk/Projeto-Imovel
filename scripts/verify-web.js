@@ -215,6 +215,37 @@ async function main() {
       await assertAlive(`aba ${tab}`);
     }
 
+    /**
+     * Telas empilhadas, alcançadas a partir de uma aba.
+     *
+     * Cada uma abre de uma aba, precisa montar e precisa voltar sem derrubar a
+     * árvore. Voltar importa tanto quanto abrir: o `router.back()` desmonta a
+     * tela e é onde um efeito mal encerrado explode.
+     */
+    const visitFromTab = async (tab, label, screen) => {
+      await tap(tab);
+      await tap(label);
+      await assertAlive(screen);
+      await page.goBack();
+      await page.waitForTimeout(SETTLE_MS);
+      await assertAlive(`${screen} → voltar`);
+    };
+
+    await visitFromTab('Praticar', 'Expressões idiomáticas', 'expressões');
+    await visitFromTab('Perfil', 'Meu nível', 'nível do curso');
+    await visitFromTab('Perfil', 'Modo de aprendizado', 'modo de aprendizado');
+
+    // Apostilas vai um nível mais fundo: a lista abre o leitor, que é rota
+    // dinâmica (`workbook/[id]`) e carrega o documento do banco local.
+    await tap('Praticar');
+    await tap('Apostilas');
+    await assertAlive('apostilas');
+    await tap('Abrir');
+    await assertAlive('leitor de apostila');
+    await page.goBack();
+    await page.waitForTimeout(SETTLE_MS);
+    await assertAlive('leitor → voltar');
+
     if (failures.length > 0) {
       console.error('\n✗ Build web com falhas:\n');
       for (const failure of failures) console.error(`  · ${failure}`);

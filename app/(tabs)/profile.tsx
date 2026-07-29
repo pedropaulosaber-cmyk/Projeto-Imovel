@@ -30,6 +30,7 @@ import {
   useTheme,
 } from '@/design';
 import { ACHIEVEMENTS, levelProgress } from '@/domain/gamification';
+import { LEARNING_MODE_META } from '@/domain/learning-mode';
 import { type LanguageCode, SUPPORTED_LANGUAGES } from '@/domain/types';
 import { formatBytes, formatDuration } from '@/lib/date';
 import { selectAccuracy, selectTotalMinutes, useAppStore } from '@/state/app-store';
@@ -249,6 +250,27 @@ export default function Profile() {
 
         {/* ---------------- Configurações ---------------- */}
         <Section title="Estudo">
+          <ListRow
+            icon="school"
+            title="Meu nível"
+            subtitle={`${enrollment.currentLevel} · trocar não apaga seu progresso`}
+            onPress={() => router.push('/level')}
+          />
+          <Divider inset={44} />
+          <ListRow
+            icon={LEARNING_MODE_META[enrollment.learningMode].icon as never}
+            title="Modo de aprendizado"
+            subtitle={`${LEARNING_MODE_META[enrollment.learningMode].title} · ${LEARNING_MODE_META[enrollment.learningMode].tagline}`}
+            onPress={() => router.push('/learning-mode')}
+          />
+          <Divider inset={44} />
+          <ListRow
+            icon="library"
+            title="Apostilas"
+            subtitle="Uma por nível, para consultar offline"
+            onPress={() => router.push('/workbooks')}
+          />
+          <Divider inset={44} />
           <ListRow
             icon="download"
             title="Downloads e armazenamento"

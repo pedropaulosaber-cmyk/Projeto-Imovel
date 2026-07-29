@@ -26,6 +26,9 @@ const VOICE_LOCALE: Record<LanguageCode, string> = {
   fr: 'fr-FR',
   it: 'it-IT',
   de: 'de-DE',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  zh: 'zh-CN',
 };
 
 export type SpeakOptions = {

@@ -24,8 +24,23 @@ export type Timestamp = number;
 export type LocalDate = string;
 
 /** Códigos ISO 639-1 dos idiomas suportados. */
-export const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'it', 'de'] as const;
+export const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'it', 'de', 'ja', 'ko', 'zh'] as const;
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number];
+
+/**
+ * Idiomas cuja escrita não usa alfabeto latino.
+ *
+ * Para eles, todo termo carrega **romanização obrigatória** e a interface
+ * mostra os dois. O motivo é prático: um iniciante brasileiro não consegue ler
+ * kanji nem hanzi na primeira semana, e não tem teclado para digitá-los. A
+ * romanização é a ponte que torna esses idiomas estudáveis desde o dia 1 sem
+ * exigir IME nem tipografia especial.
+ */
+export const NON_LATIN_LANGUAGES: LanguageCode[] = ['ja', 'ko', 'zh'];
+
+export function usesNonLatinScript(language: LanguageCode): boolean {
+  return NON_LATIN_LANGUAGES.includes(language);
+}
 
 /** Idiomas em que a interface e as explicações podem ser apresentadas. */
 export type UILanguage = 'pt' | 'en' | 'es';
@@ -103,8 +118,24 @@ export type Enrollment = {
   startedAt: Timestamp;
   /** Idioma ativo na interface. Apenas uma matrícula fica ativa por vez. */
   isActive: boolean;
+  /** Ritmo e formato da trilha. Trocável a qualquer momento. */
+  learningMode: LearningMode;
   updatedAt: Timestamp;
 };
+
+/**
+ * Modos de aprendizado.
+ *
+ * - **`complete`** — a trilha inteira: 16 tipos de exercício, vidas, produção
+ *   escrita e falada. Para quem quer profundidade.
+ * - **`essential`** — o caminho curto. Só os quatro formatos mais diretos,
+ *   sessões de 3 a 5 exercícios, sem vidas e sem punição. Existe porque a
+ *   maior causa de abandono não é dificuldade do idioma: é a sessão parecer
+ *   longa demais num dia ruim. Quem usa o Essencial mantém a ofensiva; quem
+ *   abandona, não aprende nada.
+ */
+export const LEARNING_MODES = ['complete', 'essential'] as const;
+export type LearningMode = (typeof LEARNING_MODES)[number];
 
 /* ------------------------------------------------------------------ *
  * Estrutura de conteúdo
@@ -365,8 +396,15 @@ export type VocabularyItem = {
   translation: string;
   partOfSpeech: string | null;
   phonetic: string | null;
+  /**
+   * Transliteração para o alfabeto latino (romaji, pinyin, romanização
+   * revisada). Obrigatória nos idiomas de escrita não latina; nula nos demais.
+   */
+  romanization: string | null;
   exampleSentence: string | null;
   exampleTranslation: string | null;
+  /** Romanização da frase de exemplo, quando aplicável. */
+  exampleRomanization: string | null;
   /** Rank de frequência no idioma; menor = mais comum. */
   frequencyRank: number | null;
   cefr: CefrLevel | null;
@@ -697,4 +735,121 @@ export type SyncStatus = {
   syncing: boolean;
   online: boolean;
   lastError: string | null;
+};
+
+/* ------------------------------------------------------------------ *
+ * Apostilas
+ * ------------------------------------------------------------------ */
+
+/**
+ * Apostila de um nível.
+ *
+ * Uma por (idioma, nível CEFR), acompanhando exatamente a trilha daquele
+ * nível. É material de **consulta e revisão** — não substitui os exercícios,
+ * mas resolve algo que app nenhum resolve bem: rever a regra depois, sem
+ * precisar refazer a lição.
+ *
+ * Fica disponível offline e pode ser exportada como arquivo.
+ */
+export type Workbook = {
+  id: ID;
+  language: LanguageCode;
+  level: CefrLevel;
+  title: string;
+  subtitle: string;
+  /** Curso que a apostila acompanha. */
+  courseId: ID;
+  sections: WorkbookSection[];
+  /** Estimativa de páginas na exportação. */
+  estimatedPages: number;
+  contentVersion: number;
+};
+
+export type WorkbookSection = {
+  id: ID;
+  title: string;
+  /** Ordena a apostila na mesma sequência dos módulos da trilha. */
+  order: number;
+  kind: 'intro' | 'vocabulary' | 'grammar' | 'phrases' | 'idioms' | 'practice' | 'summary';
+  /** Blocos de conteúdo, renderizados na ordem. */
+  blocks: WorkbookBlock[];
+};
+
+/**
+ * Bloco de conteúdo da apostila.
+ *
+ * União discriminada em vez de HTML/markdown livre: o app renderiza cada tipo
+ * com o design system (tabelas legíveis no celular, áudio tocável nos exemplos)
+ * e a exportação para texto continua trivial.
+ */
+export type WorkbookBlock =
+  | { kind: 'heading'; text: string }
+  | { kind: 'paragraph'; text: string }
+  | { kind: 'callout'; tone: 'tip' | 'warning' | 'rule'; title: string; text: string }
+  | { kind: 'list'; items: string[] }
+  | {
+      kind: 'vocabTable';
+      rows: { term: string; romanization?: string; translation: string; note?: string }[];
+    }
+  | {
+      kind: 'examples';
+      items: { target: string; romanization?: string; native: string }[];
+    }
+  | { kind: 'conjugation'; verb: string; forms: { person: string; form: string }[] };
+
+/** Estado de download de uma apostila no dispositivo. */
+export type WorkbookDownload = {
+  id: ID;
+  workbookId: ID;
+  downloadedAt: Timestamp;
+  sizeBytes: number;
+};
+
+/* ------------------------------------------------------------------ *
+ * Expressões idiomáticas
+ * ------------------------------------------------------------------ */
+
+/**
+ * Expressão idiomática com explicação em português.
+ *
+ * É a lacuna que nenhum app do segmento cobre bem: o aprendiz chega ao B1
+ * entendendo todas as palavras de "it's raining cats and dogs" e mesmo assim
+ * não entende a frase. Tradução palavra a palavra atrapalha — por isso cada
+ * verbete separa **o que está escrito** do **o que significa**, e dá o
+ * equivalente brasileiro quando existe.
+ */
+export type Idiom = {
+  id: ID;
+  language: LanguageCode;
+  /** A expressão no idioma-alvo. */
+  expression: string;
+  romanization: string | null;
+  /** Tradução literal — deliberadamente estranha, para o contraste didático. */
+  literal: string;
+  /** O que a expressão realmente quer dizer, em português. */
+  meaning: string;
+  /** Expressão brasileira equivalente, quando existe. */
+  equivalent: string | null;
+  /** De onde vem — a origem é o que fixa a expressão na memória. */
+  origin: string | null;
+  example: string;
+  exampleTranslation: string;
+  register: 'formal' | 'neutral' | 'informal' | 'slang';
+  cefr: CefrLevel;
+  /** Frequência de uso real, 1 (rara) a 5 (todo dia). */
+  frequency: number;
+  tags: string[];
+};
+
+/** Progresso do usuário numa expressão. */
+export type IdiomProgress = {
+  id: ID;
+  userId: ID;
+  idiomId: ID;
+  /** Vezes que a expressão foi vista. */
+  seen: number;
+  /** Acertos em exercícios com ela. */
+  correct: number;
+  starred: boolean;
+  updatedAt: Timestamp;
 };

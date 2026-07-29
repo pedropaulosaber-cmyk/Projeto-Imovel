@@ -18,6 +18,7 @@
  *     inteiros, não parcialmente.
  */
 
+import { MAX_PLAN_BLOCKS } from './learning-mode';
 import { countDue, estimateReviewMinutes } from './srs';
 import type {
   CefrLevel,
@@ -25,6 +26,7 @@ import type {
   DailyStat,
   LanguageCode,
   LearningGoal,
+  LearningMode,
   LocalDate,
   OnboardingAnswers,
   PlanBlock,
@@ -241,6 +243,8 @@ export type PlanInput = {
   recentStats: DailyStat[];
   /** Título da próxima lição da trilha, se houver. */
   nextLesson: { id: string; title: string; estimatedMinutes: number; xpReward: number } | null;
+  /** Modo de aprendizado. Ausente equivale a `complete` (compatibilidade). */
+  learningMode?: LearningMode;
   now: Timestamp;
 };
 
@@ -263,6 +267,7 @@ export function buildStudyPlan(input: PlanInput): StudyPlan {
     reviewStates,
     recentStats,
     nextLesson,
+    learningMode = 'complete',
     now,
   } = input;
 
@@ -346,7 +351,12 @@ export function buildStudyPlan(input: PlanInput): StudyPlan {
     date,
     dailyGoalXp: goalXp,
     targetMinutes: dailyMinutes,
-    blocks: blocks.sort((a, b) => b.priority - a.priority),
+    // No Essencial o plano é truncado depois da ordenação por prioridade, não
+    // antes: o corte tira os blocos menos importantes, nunca a revisão vencida.
+    // Uma tela com dois cards é o ponto do modo — três já viram uma lista.
+    blocks: blocks
+      .sort((a, b) => b.priority - a.priority)
+      .slice(0, MAX_PLAN_BLOCKS[learningMode]),
     weeksToNextLevel: weeksToNextLevel(level, dailyMinutes, studyDays.length || 5),
   };
 }

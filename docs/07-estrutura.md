@@ -21,6 +21,11 @@ lumo/
 │   ├── practice/[mode].tsx             # Prática por habilidade
 │   ├── review.tsx                      # Sessão de repetição espaçada
 │   ├── vocabulary.tsx                  # Banco de palavras
+│   ├── idioms.tsx                      # Expressões idiomáticas
+│   ├── workbooks.tsx                   # Biblioteca de apostilas
+│   ├── workbook/[id].tsx               # Leitor de apostila
+│   ├── level.tsx                       # Trocar o nível do curso
+│   ├── learning-mode.tsx               # Completo × Essencial
 │   ├── downloads.tsx                   # Conteúdo offline
 │   └── paywall.tsx                     # Assinatura
 │
@@ -44,8 +49,9 @@ lumo/
 │   │   ├── srs.ts                      # Repetição espaçada
 │   │   ├── gamification.ts             # XP · níveis · ofensiva · ligas
 │   │   ├── plan.ts                     # Plano adaptativo
+│   │   ├── learning-mode.ts            # Regras do Completo × Essencial
 │   │   ├── grading.ts                  # Correção offline
-│   │   └── __tests__/                  # 4 suítes, 126 testes
+│   │   └── __tests__/                  # 5 suítes
 │   │
 │   ├── db/                             # PERSISTÊNCIA LOCAL
 │   │   ├── store.ts                    # Porta DocumentStore
@@ -56,6 +62,7 @@ lumo/
 │   │   │   └── web.ts                  # Web · testes · fallback
 │   │   ├── repositories/
 │   │   │   ├── content.ts              # Cursos, lições, exercícios (leitura)
+│   │   │   ├── library.ts              # Apostilas, downloads e expressões
 │   │   │   ├── learner.ts              # Perfil, progresso, SRS, stats
 │   │   │   └── sync.ts                 # Outbox
 │   │   └── __tests__/
@@ -72,8 +79,11 @@ lumo/
 │   │   └── knowledge.ts                # Erros de lusófonos · regras · cenários
 │   │
 │   ├── content/                        # CONTEÚDO
-│   │   ├── vocabulary.ts               # Léxico por frequência (5 idiomas)
+│   │   ├── vocabulary.ts               # Léxico por frequência (latinos)
+│   │   ├── vocabulary-asia.ts          # Léxico ja/ko/zh com romanização
 │   │   ├── phrases.ts                  # Frases curadas por tema
+│   │   ├── idioms.ts                   # Expressões idiomáticas (8 idiomas)
+│   │   ├── workbooks.ts                # Gerador das 48 apostilas
 │   │   ├── courses.ts                  # Gerador da trilha
 │   │   └── seed.ts                     # Semeadura idempotente
 │   │
@@ -106,7 +116,7 @@ lumo/
 ## Princípios de organização
 
 **1. Por camada, não por feature.** O núcleo (`domain/`) precisa ser
-importável sem arrastar UI ou banco junto — é o que permite 169 testes rodarem
+importável sem arrastar UI ou banco junto — é o que permite 181 testes rodarem
 em Node puro, sem emulador. Uma organização por feature acopla domínio e
 apresentação e mata essa propriedade.
 
@@ -122,5 +132,6 @@ sinal de que o desenho quebrou.
 árvore paralela — quem mexe no SRS vê o teste do SRS.
 
 **5. Conteúdo é dado, não código.** `content/` guarda listas; a estrutura
-pedagógica é uma só e vale para todos os idiomas. Adicionar japonês é adicionar
-duas listas.
+pedagógica é uma só e vale para todos os idiomas. Adicionar japonês foi
+adicionar duas listas — e as 48 apostilas saem das *mesmas* fontes que as
+lições, justamente para que nunca divirjam do que é ensinado.

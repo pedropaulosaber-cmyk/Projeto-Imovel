@@ -15,6 +15,8 @@ import type {
   DownloadRecord,
   Enrollment,
   Exercise,
+  Idiom,
+  IdiomProgress,
   Lesson,
   LessonProgress,
   Module,
@@ -26,6 +28,8 @@ import type {
   TutorMessage,
   UserProfile,
   VocabularyItem,
+  Workbook,
+  WorkbookDownload,
 } from '@/domain/types';
 import type { CollectionSpec } from './store';
 
@@ -45,6 +49,10 @@ export const COLLECTION = {
   achievementProgress: 'achievement_progress',
   tutorConversations: 'tutor_conversations',
   tutorMessages: 'tutor_messages',
+  workbooks: 'workbooks',
+  workbookDownloads: 'workbook_downloads',
+  idioms: 'idioms',
+  idiomProgress: 'idiom_progress',
   contentBundles: 'content_bundles',
   downloads: 'downloads',
   syncQueue: 'sync_queue',
@@ -285,6 +293,58 @@ export const tutorMessagesCollection = spec<TutorMessage>({
   }),
 });
 
+export const workbooksCollection = spec<Workbook>({
+  name: COLLECTION.workbooks,
+  idOf: (doc) => doc.id,
+  indexes: [
+    { name: 'language', type: 'text', indexed: true },
+    { name: 'level', type: 'text', indexed: true },
+    { name: 'courseId', type: 'text' },
+  ],
+  indexer: (doc) => ({ language: doc.language, level: doc.level, courseId: doc.courseId }),
+});
+
+export const workbookDownloadsCollection = spec<WorkbookDownload>({
+  name: COLLECTION.workbookDownloads,
+  idOf: (doc) => doc.id,
+  indexes: [{ name: 'workbookId', type: 'text', indexed: true }],
+  indexer: (doc) => ({ workbookId: doc.workbookId }),
+});
+
+export const idiomsCollection = spec<Idiom>({
+  name: COLLECTION.idioms,
+  idOf: (doc) => doc.id,
+  indexes: [
+    { name: 'language', type: 'text', indexed: true },
+    { name: 'cefr', type: 'text', indexed: true },
+    { name: 'register', type: 'text' },
+    // Ordenar por frequência é a consulta padrão da tela: expressão comum
+    // primeiro, curiosidade depois.
+    { name: 'frequency', type: 'integer', indexed: true },
+  ],
+  indexer: (doc) => ({
+    language: doc.language,
+    cefr: doc.cefr,
+    register: doc.register,
+    frequency: doc.frequency,
+  }),
+});
+
+export const idiomProgressCollection = spec<IdiomProgress>({
+  name: COLLECTION.idiomProgress,
+  idOf: (doc) => doc.id,
+  indexes: [
+    { name: 'userId', type: 'text', indexed: true },
+    { name: 'idiomId', type: 'text', indexed: true },
+    { name: 'starred', type: 'integer' },
+  ],
+  indexer: (doc) => ({
+    userId: doc.userId,
+    idiomId: doc.idiomId,
+    starred: doc.starred ? 1 : 0,
+  }),
+});
+
 export const contentBundlesCollection = spec<ContentBundle>({
   name: COLLECTION.contentBundles,
   idOf: (doc) => doc.id,
@@ -348,6 +408,10 @@ export const ALL_COLLECTIONS = [
   achievementProgressCollection,
   tutorConversationsCollection,
   tutorMessagesCollection,
+  workbooksCollection,
+  workbookDownloadsCollection,
+  idiomsCollection,
+  idiomProgressCollection,
   contentBundlesCollection,
   downloadsCollection,
   syncQueueCollection,

@@ -551,4 +551,283 @@ export const CURATED_PHRASES: Record<LanguageCode, Phrase[]> = {
       native: 'Eu gostaria de um café sem açúcar.',
     },
   ]),
+
+  ja: phrases('ja', [
+    {
+      topic: 'greetings',
+      target: 'おはようございます。お元気ですか。',
+      native: 'Bom dia. Como você está?',
+      reply: '元気です、ありがとう。',
+    },
+    {
+      topic: 'greetings',
+      target: '私はアナです。はじめまして。',
+      native: 'Eu sou a Ana. Prazer em conhecê-lo.',
+      reply: 'こちらこそ、はじめまして。',
+    },
+    {
+      topic: 'greetings',
+      target: 'どこから来ましたか。',
+      native: 'De onde você é?',
+      reply: 'ブラジルから来ました。',
+    },
+    {
+      topic: 'greetings',
+      target: 'すみません、もう一度お願いします。',
+      native: 'Desculpe, pode repetir?',
+      reply: 'はい、もちろん。',
+    },
+    { topic: 'greetings', target: 'また明日。', native: 'Até amanhã.', reply: 'また明日ね。' },
+    {
+      topic: 'greetings',
+      target: '日本語があまり話せません。',
+      native: 'Não falo japonês muito bem.',
+      reply: '大丈夫ですよ。',
+    },
+
+    {
+      topic: 'routine',
+      target: '毎日七時に起きます。',
+      native: 'Acordo às sete todos os dias.',
+    },
+    {
+      topic: 'routine',
+      target: '彼女は病院で働いています。',
+      native: 'Ela trabalha em um hospital.',
+    },
+    {
+      topic: 'routine',
+      target: '暇な時に何をしますか。',
+      native: 'O que você faz no tempo livre?',
+      reply: '本を読みます。',
+    },
+    {
+      topic: 'routine',
+      target: 'お茶よりコーヒーが好きです。',
+      native: 'Gosto mais de café do que de chá.',
+    },
+    {
+      topic: 'routine',
+      target: 'いつも八時に晩ご飯を食べます。',
+      native: 'Normalmente janto às oito.',
+    },
+    {
+      topic: 'routine',
+      target: '彼は週末に働きません。',
+      native: 'Ele não trabalha nos fins de semana.',
+    },
+
+    {
+      topic: 'out',
+      target: '二人です。',
+      native: 'Mesa para dois.',
+      reply: 'こちらへどうぞ。',
+    },
+    {
+      topic: 'out',
+      target: 'メニューをお願いします。',
+      native: 'O cardápio, por favor.',
+      reply: 'はい、どうぞ。',
+    },
+    {
+      topic: 'out',
+      target: 'これはいくらですか。',
+      native: 'Quanto custa isso?',
+      reply: '千円です。',
+    },
+    {
+      topic: 'out',
+      target: 'すみません、駅はどこですか。',
+      native: 'Com licença, onde fica a estação?',
+      reply: 'まっすぐ行って左です。',
+    },
+    {
+      topic: 'out',
+      target: 'お会計をお願いします。',
+      native: 'A conta, por favor.',
+      reply: 'かしこまりました。',
+    },
+    {
+      topic: 'out',
+      target: '砂糖なしのコーヒーをください。',
+      native: 'Um café sem açúcar, por favor.',
+    },
+  ]),
+
+  ko: phrases('ko', [
+    {
+      topic: 'greetings',
+      target: '안녕하세요. 잘 지내세요?',
+      native: 'Olá. Como você está?',
+      reply: '네, 잘 지내요. 감사합니다.',
+    },
+    {
+      topic: 'greetings',
+      target: '저는 아나예요. 만나서 반갑습니다.',
+      native: 'Eu sou a Ana. Prazer em conhecê-lo.',
+      reply: '저도 반갑습니다.',
+    },
+    {
+      topic: 'greetings',
+      target: '어디에서 왔어요?',
+      native: 'De onde você é?',
+      reply: '브라질에서 왔어요.',
+    },
+    {
+      topic: 'greetings',
+      target: '죄송해요, 다시 말해 주세요.',
+      native: 'Desculpe, pode repetir?',
+      reply: '네, 그럼요.',
+    },
+    {
+      topic: 'greetings',
+      target: '내일 봐요.',
+      native: 'Até amanhã.',
+      reply: '네, 내일 봐요.',
+    },
+    {
+      topic: 'greetings',
+      target: '한국어를 잘 못해요.',
+      native: 'Não falo coreano muito bem.',
+      reply: '잘하고 있어요.',
+    },
+
+    {
+      topic: 'routine',
+      target: '매일 일곱 시에 일어나요.',
+      native: 'Acordo às sete todos os dias.',
+    },
+    {
+      topic: 'routine',
+      target: '그녀는 병원에서 일해요.',
+      native: 'Ela trabalha em um hospital.',
+    },
+    {
+      topic: 'routine',
+      target: '시간 있을 때 뭐 해요?',
+      native: 'O que você faz no tempo livre?',
+      reply: '보통 책을 읽어요.',
+    },
+    {
+      topic: 'routine',
+      target: '차보다 커피를 더 좋아해요.',
+      native: 'Gosto mais de café do que de chá.',
+    },
+    {
+      topic: 'routine',
+      target: '보통 여덟 시에 저녁을 먹어요.',
+      native: 'Normalmente janto às oito.',
+    },
+    {
+      topic: 'routine',
+      target: '그는 주말에 일하지 않아요.',
+      native: 'Ele não trabalha nos fins de semana.',
+    },
+
+    {
+      topic: 'out',
+      target: '두 명이요.',
+      native: 'Mesa para dois.',
+      reply: '이쪽으로 오세요.',
+    },
+    {
+      topic: 'out',
+      target: '메뉴 주세요.',
+      native: 'O cardápio, por favor.',
+      reply: '여기 있습니다.',
+    },
+    {
+      topic: 'out',
+      target: '이거 얼마예요?',
+      native: 'Quanto custa isso?',
+      reply: '만 원이에요.',
+    },
+    {
+      topic: 'out',
+      target: '실례합니다, 역이 어디예요?',
+      native: 'Com licença, onde fica a estação?',
+      reply: '직진하고 왼쪽이에요.',
+    },
+    {
+      topic: 'out',
+      target: '계산서 주세요.',
+      native: 'A conta, por favor.',
+      reply: '네, 잠시만요.',
+    },
+    {
+      topic: 'out',
+      target: '설탕 없는 커피 주세요.',
+      native: 'Um café sem açúcar, por favor.',
+    },
+  ]),
+
+  zh: phrases('zh', [
+    {
+      topic: 'greetings',
+      target: '早上好，你好吗？',
+      native: 'Bom dia, como você está?',
+      reply: '我很好，谢谢。',
+    },
+    {
+      topic: 'greetings',
+      target: '我叫安娜，很高兴认识你。',
+      native: 'Meu nome é Ana, prazer em conhecê-lo.',
+      reply: '我也很高兴。',
+    },
+    {
+      topic: 'greetings',
+      target: '你从哪里来？',
+      native: 'De onde você é?',
+      reply: '我从巴西来。',
+    },
+    {
+      topic: 'greetings',
+      target: '对不起，请再说一遍。',
+      native: 'Desculpe, pode repetir?',
+      reply: '当然可以。',
+    },
+    { topic: 'greetings', target: '明天见。', native: 'Até amanhã.', reply: '明天见。' },
+    {
+      topic: 'greetings',
+      target: '我的中文不太好。',
+      native: 'Meu chinês não é muito bom.',
+      reply: '你说得很好。',
+    },
+
+    { topic: 'routine', target: '我每天七点起床。', native: 'Acordo às sete todos os dias.' },
+    { topic: 'routine', target: '她在医院工作。', native: 'Ela trabalha em um hospital.' },
+    {
+      topic: 'routine',
+      target: '你有空的时候做什么？',
+      native: 'O que você faz no tempo livre?',
+      reply: '我常常看书。',
+    },
+    {
+      topic: 'routine',
+      target: '我喜欢咖啡胜过茶。',
+      native: 'Gosto mais de café do que de chá.',
+    },
+    {
+      topic: 'routine',
+      target: '我们通常八点吃晚饭。',
+      native: 'Normalmente jantamos às oito.',
+    },
+    {
+      topic: 'routine',
+      target: '他周末不工作。',
+      native: 'Ele não trabalha nos fins de semana.',
+    },
+
+    { topic: 'out', target: '两个人。', native: 'Mesa para dois.', reply: '这边请。' },
+    { topic: 'out', target: '请给我菜单。', native: 'O cardápio, por favor.', reply: '给您。' },
+    { topic: 'out', target: '这个多少钱？', native: 'Quanto custa isso?', reply: '五十块。' },
+    {
+      topic: 'out',
+      target: '请问，车站在哪里？',
+      native: 'Com licença, onde fica a estação?',
+      reply: '一直走然后左转。',
+    },
+    { topic: 'out', target: '请结账。', native: 'A conta, por favor.', reply: '好的，稍等。' },
+    { topic: 'out', target: '我要一杯不加糖的咖啡。', native: 'Quero um café sem açúcar.' },
+  ]),
 };

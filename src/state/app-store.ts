@@ -23,9 +23,11 @@ import { syncRepository } from '@/db/repositories/sync';
 import { levelProgress } from '@/domain/gamification';
 import { buildStudyPlan, dailyGoalXp } from '@/domain/plan';
 import type {
+  CefrLevel,
   DailyStat,
   Enrollment,
   LanguageCode,
+  LearningMode,
   Lesson,
   LessonProgress,
   StreakState,
@@ -64,6 +66,8 @@ type AppState = {
   refresh: () => Promise<void>;
   completeOnboarding: (params: OnboardingResult) => Promise<void>;
   switchLanguage: (language: LanguageCode) => Promise<void>;
+  setLearningMode: (mode: LearningMode) => Promise<void>;
+  setCurrentLevel: (level: CefrLevel) => Promise<void>;
   setSyncStatus: (status: SyncStatus) => void;
 };
 
@@ -180,6 +184,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       goals: enrollment.goals,
       dailyMinutes: enrollment.dailyMinutes,
       studyDays: enrollment.studyDays,
+      learningMode: enrollment.learningMode,
       reviewStates,
       recentStats,
       nextLesson: nextLesson
@@ -247,6 +252,8 @@ export const useAppStore = create<AppState>((set, get) => ({
       reminderMinute: params.reminderMinute,
       startedAt: now,
       isActive: true,
+      // Todo mundo começa no modo completo; trocar é um toque no perfil.
+      learningMode: 'complete',
       updatedAt: now,
     };
 
@@ -282,12 +289,49 @@ export const useAppStore = create<AppState>((set, get) => ({
         reminderMinute: enrollment?.reminderMinute ?? null,
         startedAt: now,
         isActive: true,
+        // Herda o modo do idioma atual: quem escolheu o Essencial não quer
+        // ser jogado no modo completo ao adicionar outro idioma.
+        learningMode: enrollment?.learningMode ?? 'complete',
         updatedAt: now,
       };
       await learnerRepository.saveEnrollment(created);
       await learnerRepository.activateEnrollment(profile.id, created.id);
     }
 
+    await get().refresh();
+  },
+
+  /**
+   * Alterna entre o modo Completo e o Essencial.
+   *
+   * Só a matrícula ativa muda: o modo é uma escolha por idioma, não global.
+   * Faz sentido estudar inglês a fundo e espanhol em cinco minutos por dia.
+   */
+  async setLearningMode(mode) {
+    const { enrollment } = get();
+    if (!enrollment || enrollment.learningMode === mode) return;
+
+    await learnerRepository.saveEnrollment({ ...enrollment, learningMode: mode });
+    await get().refresh();
+  },
+
+  /**
+   * Muda o nível CEFR do curso em andamento.
+   *
+   * Nada de progresso é apagado. Lições concluídas continuam concluídas, o
+   * banco de vocabulário fica inteiro e a fila de revisão não é tocada — o
+   * nível define o **conteúdo daqui para frente** (dificuldade das lições,
+   * corte das expressões, apostila em destaque), não um estado a ser zerado.
+   *
+   * Apagar o histórico ao trocar de nível é o erro clássico do gênero: torna a
+   * correção de um nivelamento errado tão cara que o usuário prefere continuar
+   * no lugar errado.
+   */
+  async setCurrentLevel(level) {
+    const { enrollment } = get();
+    if (!enrollment || enrollment.currentLevel === level) return;
+
+    await learnerRepository.saveEnrollment({ ...enrollment, currentLevel: level });
     await get().refresh();
   },
 

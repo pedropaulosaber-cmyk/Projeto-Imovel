@@ -10,14 +10,17 @@
 import { getDatabase } from '@/db';
 import { COLLECTION, type KeyValueDoc } from '@/db/collections';
 import { contentRepository } from '@/db/repositories/content';
+import { libraryRepository } from '@/db/repositories/library';
 import { type ContentBundle, type LanguageCode, SUPPORTED_LANGUAGES } from '@/domain/types';
 import { buildAllContent } from './courses';
+import { buildAllIdioms } from './idioms';
+import { buildAllWorkbooks } from './workbooks';
 
 /**
  * Incrementar esta constante força a re-semeadura em todos os dispositivos na
  * próxima abertura. Deve subir sempre que o conteúdo gerado mudar.
  */
-export const SEED_VERSION = 3;
+export const SEED_VERSION = 4;
 
 const SEED_KEY = 'content_seed_version';
 
@@ -40,6 +43,12 @@ export async function seedContentIfNeeded(): Promise<{ seeded: boolean; version:
     await contentRepository.saveLessons(content.lessons);
     await contentRepository.saveExercises(content.exercises);
     await contentRepository.saveVocabulary(content.vocabulary);
+
+    // Apostilas e expressões são geradas das mesmas fontes das lições, então
+    // nunca saem de sincronia com a trilha.
+    await libraryRepository.saveWorkbooks(buildAllWorkbooks([...SUPPORTED_LANGUAGES]));
+    await libraryRepository.saveIdioms(buildAllIdioms([...SUPPORTED_LANGUAGES]));
+
     await db.putMany(COLLECTION.contentBundles, buildBundles());
 
     await db.put<KeyValueDoc>(COLLECTION.keyValue, {
