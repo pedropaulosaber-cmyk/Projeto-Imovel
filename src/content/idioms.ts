@@ -29,6 +29,7 @@
  */
 
 import type { CefrLevel, Idiom, LanguageCode } from '@/domain/types';
+import { extraCountByLevel, extraIdioms } from './idioms-extra';
 
 /**
  * [expressão, romanização|'', literal, significado, equivalente|'', origem|'',
@@ -533,7 +534,7 @@ const DE: IdiomEntry[] = [
     'ins Gras beißen',
     '',
     'morder a grama',
-    'Morrer.',
+    'Morrer — em registro cru, quase brutal.',
     'Bater as botas',
     'Do campo de batalha: o soldado caído mordia o chão.',
     'Er hat ins Gras gebissen.',
@@ -915,8 +916,20 @@ const RAW: Record<LanguageCode, IdiomEntry[]> = {
   zh: ZH,
 };
 
-/** Constrói os verbetes de expressões de um idioma. */
+/**
+ * Constrói os verbetes de expressões de um idioma.
+ *
+ * Junta os dois lotes — o desta arquivo e o de `idioms-extra.ts`, escrito num
+ * formato compacto e organizado por nível. A junção acontece **aqui**, num
+ * único ponto, para que apostila, tutor, catálogo e contagem enxerguem sempre
+ * o mesmo conjunto: se cada consumidor tivesse de lembrar de somar os dois
+ * lotes, um deles esqueceria.
+ */
 export function buildIdioms(language: LanguageCode): Idiom[] {
+  return [...buildCuratedIdioms(language), ...extraIdioms(language)];
+}
+
+function buildCuratedIdioms(language: LanguageCode): Idiom[] {
   return (RAW[language] ?? []).map((entry, index) => {
     const [
       expression,
@@ -962,5 +975,16 @@ export function buildAllIdioms(languages: LanguageCode[]): Idiom[] {
 
 /** Quantas expressões existem por idioma — usado nos cards de conteúdo. */
 export function idiomCount(language: LanguageCode): number {
-  return RAW[language]?.length ?? 0;
+  return (RAW[language]?.length ?? 0) + extraIdioms(language).length;
+}
+
+/**
+ * Quantas expressões existem num nível.
+ *
+ * Contar é o que revela a lacuna: a meta é 25 por nível, e sem uma contagem
+ * exposta ninguém sabe de quanto está o débito.
+ */
+export function idiomCountByLevel(language: LanguageCode, level: CefrLevel): number {
+  const curated = (RAW[language] ?? []).filter((entry) => entry[9] === level).length;
+  return curated + extraCountByLevel(language, level);
 }

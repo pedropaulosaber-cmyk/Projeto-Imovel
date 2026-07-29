@@ -21,6 +21,23 @@
       "arrowParentheses": "always"
     }
   },
+  "overrides": [
+    {
+      "include": [
+        "src/content/idioms-extra/de.ts",
+        "src/content/idioms-extra/en.ts",
+        "src/content/idioms-extra/es.ts",
+        "src/content/idioms-extra/fr.ts",
+        "src/content/idioms-extra/it.ts",
+        "src/content/idioms-extra/ja.ts",
+        "src/content/idioms-extra/ko.ts",
+        "src/content/idioms-extra/zh.ts"
+      ],
+      "formatter": {
+        "enabled": false
+      }
+    }
+  ],
   "linter": {
     "enabled": true,
     "rules": {
