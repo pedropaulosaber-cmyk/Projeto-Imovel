@@ -46,6 +46,15 @@ export type TutorContext = {
   /** Erros recorrentes detectados, para o tutor reforçar. */
   knownWeaknesses: string[];
   scenario?: string;
+  /**
+   * Modo de fala: registro e atitude do tutor (ver `ai/conversation.ts`).
+   *
+   * Eixo independente do cenário. O cenário define *onde* a conversa acontece
+   * e qual vocabulário está em jogo; o modo define *como* se fala ali. Sem ele
+   * o tutor soa igual num bate-papo entre amigos e numa reunião com o chefe —
+   * e o aluno aprende palavras sem aprender a escolher o registro.
+   */
+  speakingMode?: string;
 };
 
 export type WritingFeedback = {
@@ -203,6 +212,9 @@ function serializeContext(context: TutorContext) {
     level: context.level,
     nativeLanguage: context.nativeLanguage,
     scenario: context.scenario,
+    // Sem isto o seletor de modo na tela não teria efeito nenhum no
+    // caminho remoto — um controle que não controla nada.
+    speakingMode: context.speakingMode,
     activeVocabulary: context.activeVocabulary.slice(0, 30),
     knownWeaknesses: context.knownWeaknesses.slice(0, 10),
     history: context.history.slice(-12).map((message) => ({
