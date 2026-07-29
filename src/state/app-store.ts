@@ -12,6 +12,7 @@
  * offline-first: fechar o app não perde nada.
  */
 
+import { useMemo } from 'react';
 import { create } from 'zustand';
 
 import { seedContentIfNeeded } from '@/content/seed';
@@ -303,9 +304,35 @@ export const useAppStore = create<AppState>((set, get) => ({
  * Seletores exportados como funções nomeadas para que o Zustand possa comparar
  * por referência e evitar re-render. Arrow function inline no `useAppStore()`
  * cria uma referência nova a cada render e anula a otimização.
+ *
+ * ## Regra inegociável: um seletor NUNCA pode criar objeto ou array
+ *
+ * O Zustand v5 compara o resultado do seletor com `Object.is`. Um seletor que
+ * devolve `{...}` ou `[...]` produz uma referência nova a cada avaliação, o
+ * store considera que o estado mudou, re-renderiza, avalia de novo — e o React
+ * aborta com "Maximum update depth exceeded" (erro #185), derrubando a árvore
+ * inteira com tela branca.
+ *
+ * Foi exatamente isso que quebrou a aba Progresso: um seletor devolvia o objeto
+ * de `levelProgress()`. Sempre que precisar de um valor derivado composto,
+ * selecione o **primitivo** e derive com `useMemo` no componente — como faz
+ * `useLevelProgress()` abaixo.
  */
-export const selectLevelProgress = (state: AppState) =>
-  levelProgress(state.wallet?.totalXp ?? 0);
+
+/** XP total acumulado. Primitivo — seguro como seletor. */
+export const selectTotalXp = (state: AppState) => state.wallet?.totalXp ?? 0;
+
+/**
+ * Progresso de nível pronto para a UI.
+ *
+ * Hook em vez de seletor porque `levelProgress()` devolve um objeto: a
+ * assinatura no store é feita sobre o XP (primitivo) e o objeto é derivado
+ * depois, memorizado. Ver a regra acima.
+ */
+export function useLevelProgress() {
+  const totalXp = useAppStore(selectTotalXp);
+  return useMemo(() => levelProgress(totalXp), [totalXp]);
+}
 
 export const selectTodayXp = (state: AppState) => state.todayStat?.xpEarned ?? 0;
 

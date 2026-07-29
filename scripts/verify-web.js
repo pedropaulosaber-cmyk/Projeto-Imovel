@@ -2,29 +2,30 @@
 /**
  * Teste de fumaça da build web.
  *
- * Existe por causa de um bug real que passou por typecheck, lint e 169 testes
- * unitários e ainda assim entregou uma **tela branca em produção**:
- * `expo-sqlite` era importado estaticamente e explodia na avaliação do bundle
- * web, antes de qualquer checagem de plataforma.
+ * Existe por causa de dois bugs reais que passaram por typecheck, lint e a
+ * suíte inteira de testes unitários e ainda assim entregaram **tela branca**:
  *
- * Nenhuma verificação estática pega isso. Só carregar o bundle num navegador de
- * verdade pega. Este script faz exatamente isso:
+ *  1. `expo-sqlite` importado estaticamente, explodindo na avaliação do bundle.
+ *  2. Um seletor de Zustand que devolvia objeto novo a cada chamada, causando
+ *     "Maximum update depth exceeded" ao abrir a aba Progresso.
  *
- *   1. serve `dist/` num servidor HTTP local;
- *   2. abre no Chromium headless;
- *   3. falha se houver erro de página OU se `#root` continuar vazio.
+ * O primeiro morria na primeira tela; o segundo só aparecia **depois de quatro
+ * telas de onboarding e um clique numa aba específica**. Por isso este script
+ * não se contenta em carregar a home: ele percorre o onboarding completo e
+ * visita todas as abas, verificando a cada passo que a árvore React continua
+ * viva.
  *
  * Rode sempre depois de `npm run build:web`, e no CI antes de qualquer deploy.
  */
 
-const http = require('node:http');
 const fs = require('node:fs');
+const http = require('node:http');
 const path = require('node:path');
 
 const DIST = path.resolve(__dirname, '..', 'dist');
 const PORT = Number(process.env.VERIFY_PORT ?? 8099);
-/** Tempo para o bundle baixar, avaliar e montar a primeira tela. */
-const RENDER_WAIT_MS = 5000;
+/** Tempo para o bundle avaliar e a tela montar depois de cada interação. */
+const SETTLE_MS = 900;
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -63,21 +64,53 @@ function startServer() {
     const urlPath = decodeURIComponent((req.url ?? '/').split('?')[0]);
     let filePath = path.join(DIST, urlPath);
 
-    // SPA: qualquer rota desconhecida cai no index.html, igual ao rewrite
-    // configurado em vercel.json.
+    // SPA: rota desconhecida cai no index.html, igual ao rewrite do vercel.json.
     if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
       filePath = path.join(DIST, 'index.html');
     }
 
-    const body = fs.readFileSync(filePath);
     res.writeHead(200, {
       'Content-Type': MIME[path.extname(filePath)] ?? 'application/octet-stream',
     });
-    res.end(body);
+    res.end(fs.readFileSync(filePath));
   });
 
   return new Promise((resolve) => server.listen(PORT, '127.0.0.1', () => resolve(server)));
 }
+
+/**
+ * Clica no elemento cujo texto contém `needle`.
+ *
+ * O `react-native-web` renderiza o rótulo dentro do card, não no elemento que
+ * recebe o toque, então subimos pelos ancestrais até achar algo com papel
+ * clicável. Sem isso, um clique no texto puro não dispara nada.
+ */
+const CLICK_IN_PAGE = (needle) => {
+  const candidates = [...document.querySelectorAll('div,span,button,a,[role]')].reverse();
+  const hit = candidates.find(
+    (node) => node.innerText?.trim().includes(needle) && node.innerText.length < 200,
+  );
+  if (!hit) return false;
+
+  let element = hit;
+  for (let depth = 0; depth < 6 && element; depth += 1) {
+    const role = element.getAttribute?.('role');
+    if (
+      role === 'button' ||
+      role === 'radio' ||
+      role === 'tab' ||
+      element.tagName === 'BUTTON' ||
+      element.tagName === 'A'
+    ) {
+      element.click();
+      return true;
+    }
+    element = element.parentElement;
+  }
+
+  hit.click();
+  return true;
+};
 
 async function main() {
   if (!fs.existsSync(path.join(DIST, 'index.html'))) {
@@ -90,14 +123,12 @@ async function main() {
     ({ chromium } = require('playwright-core'));
   } catch {
     console.warn('⚠ playwright-core não instalado — teste de fumaça pulado.');
-    console.warn('  Instale com: npm i -D playwright-core');
     process.exit(0);
   }
 
   const executablePath = findChromium();
   if (!executablePath) {
     console.warn('⚠ Chromium não encontrado — teste de fumaça pulado.');
-    console.warn('  Defina CHROMIUM_PATH ou PLAYWRIGHT_BROWSERS_PATH.');
     process.exit(0);
   }
 
@@ -108,29 +139,80 @@ async function main() {
   });
 
   const failures = [];
+  let pending = [];
 
   try {
-    const page = await browser.newPage();
+    const page = await browser.newPage({ viewport: { width: 420, height: 900 } });
 
-    page.on('pageerror', (error) => failures.push(`erro de página: ${error.message}`));
+    page.on('pageerror', (error) => pending.push(`erro de página: ${error.message}`));
     page.on('console', (message) => {
-      if (message.type() === 'error') failures.push(`console.error: ${message.text()}`);
+      if (message.type() === 'error')
+        pending.push(`console.error: ${message.text().slice(0, 300)}`);
     });
 
-    await page.goto(`http://127.0.0.1:${PORT}/`, {
-      waitUntil: 'networkidle',
-      timeout: 45_000,
-    });
-    await page.waitForTimeout(RENDER_WAIT_MS);
+    const tap = async (label) => {
+      const found = await page.evaluate(CLICK_IN_PAGE, label);
+      if (!found) failures.push(`não encontrou o alvo "${label}" — o fluxo mudou?`);
+      await page.waitForTimeout(SETTLE_MS);
+    };
 
-    const rootSize = await page.evaluate(
-      () => document.getElementById('root')?.innerHTML.length ?? 0,
-    );
+    /** Verifica que a árvore React continua montada depois de cada passo. */
+    const assertAlive = async (screen) => {
+      const rootSize = await page.evaluate(
+        () => document.getElementById('root')?.innerHTML.length ?? 0,
+      );
 
-    // A verificação decisiva: HTML servido não significa app renderizado.
-    // Foi exatamente essa distinção que faltou da primeira vez.
-    if (rootSize === 0) {
-      failures.push('#root ficou vazio — o app não renderizou (tela branca).');
+      if (rootSize === 0) {
+        failures.push(`"${screen}": #root vazio — tela branca.`);
+      }
+      for (const problem of pending) {
+        failures.push(`"${screen}": ${problem}`);
+      }
+      pending = [];
+
+      console.log(`  ${rootSize === 0 ? '✗' : '·'} ${screen.padEnd(22)} root=${rootSize}`);
+    };
+
+    await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'networkidle', timeout: 45_000 });
+    await page.waitForTimeout(SETTLE_MS * 2);
+    await assertAlive('landing');
+
+    // Onboarding completo — é o caminho por onde todo usuário novo passa.
+    await tap('Começar agora');
+    await assertAlive('boas-vindas');
+
+    await tap('Vamos começar');
+    await assertAlive('setup: idioma');
+
+    await tap('Inglês');
+    await tap('Continuar');
+    await assertAlive('setup: objetivo');
+
+    await tap('Viajar');
+    await tap('Continuar');
+    await assertAlive('setup: nível');
+
+    await tap('Do zero');
+    await tap('Continuar');
+    await assertAlive('setup: tempo');
+
+    await tap('Leve');
+    await tap('Continuar');
+    await assertAlive('setup: dias');
+
+    await tap('Continuar');
+    await assertAlive('setup: nome');
+
+    await tap('Ver meu plano');
+    await assertAlive('plano gerado');
+
+    await tap('Começar a estudar');
+    await assertAlive('trilha');
+
+    // Todas as abas. O bug do seletor só aparecia aqui.
+    for (const tab of ['Praticar', 'Tutor', 'Progresso', 'Perfil', 'Aprender']) {
+      await tap(tab);
+      await assertAlive(`aba ${tab}`);
     }
 
     if (failures.length > 0) {
@@ -138,9 +220,7 @@ async function main() {
       for (const failure of failures) console.error(`  · ${failure}`);
       process.exitCode = 1;
     } else {
-      console.log(
-        `✓ Build web renderiza (#root com ${rootSize} bytes, nenhum erro de console).`,
-      );
+      console.log('\n✓ Onboarding e todas as abas renderizam sem erro.');
     }
   } finally {
     await browser.close();
