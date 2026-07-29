@@ -26,11 +26,11 @@ import {
 import { formatDuration, lastNDates } from '@/lib/date';
 import {
   selectAccuracy,
-  selectLevelProgress,
   selectPronunciation,
   selectTotalMinutes,
   selectWordsLearned,
   useAppStore,
+  useLevelProgress,
 } from '@/state/app-store';
 
 type Range = '7' | '30' | '365';
@@ -45,7 +45,7 @@ export default function Progress() {
   const wallet = useAppStore((state) => state.wallet);
   const refresh = useAppStore((state) => state.refresh);
 
-  const level = useAppStore(selectLevelProgress);
+  const level = useLevelProgress();
   const accuracy = useAppStore(selectAccuracy);
   const pronunciation = useAppStore(selectPronunciation);
   const totalMinutes = useAppStore(selectTotalMinutes);
