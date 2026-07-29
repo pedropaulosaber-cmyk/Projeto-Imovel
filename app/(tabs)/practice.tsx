@@ -264,29 +264,32 @@ export default function Practice() {
           </View>
         </View>
 
-        {/* ---------------- Vocabulário ---------------- */}
+        {/* ---------------- Biblioteca ---------------- */}
         <View style={{ marginTop: theme.space[8], gap: theme.space[3] }}>
           <Text variant="overline" tone="tertiary">
-            Seu vocabulário
+            Sua biblioteca
           </Text>
-          <Touchable
+
+          <LibraryRow
+            icon="bookmarks"
+            title="Banco de palavras"
+            subtitle={`${states.length} termos · buscar, favoritar e ouvir`}
             onPress={() => router.push('/vocabulary')}
-            haptic="light"
-            pressedScale={0.99}
-          >
-            <Card variant="flat" padding={4}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.space[3] }}>
-                <Ionicons name="library" size={22} color={theme.colors.brand} />
-                <View style={{ flex: 1 }}>
-                  <Text variant="headline">Banco de palavras</Text>
-                  <Text variant="caption" tone="secondary">
-                    {states.length} termos · buscar, favoritar e ouvir
-                  </Text>
-                </View>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-              </View>
-            </Card>
-          </Touchable>
+          />
+
+          <LibraryRow
+            icon="chatbox-ellipses"
+            title="Expressões idiomáticas"
+            subtitle="O que os nativos dizem — e o que aquilo significa em português"
+            onPress={() => router.push('/idioms')}
+          />
+
+          <LibraryRow
+            icon="library"
+            title="Apostilas"
+            subtitle="Uma por nível, para consultar offline a qualquer momento"
+            onPress={() => router.push('/workbooks')}
+          />
         </View>
 
         {profile?.plan === 'free' ? (
@@ -307,6 +310,38 @@ export default function Practice() {
         ) : null}
       </ScrollView>
     </Screen>
+  );
+}
+
+/** Linha de acesso à biblioteca: vocabulário, expressões e apostilas. */
+function LibraryRow({
+  icon,
+  title,
+  subtitle,
+  onPress,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+}) {
+  const theme = useTheme();
+
+  return (
+    <Touchable onPress={onPress} haptic="light" pressedScale={0.99}>
+      <Card variant="flat" padding={4}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.space[3] }}>
+          <Ionicons name={icon} size={22} color={theme.colors.brand} />
+          <View style={{ flex: 1 }}>
+            <Text variant="headline">{title}</Text>
+            <Text variant="caption" tone="secondary">
+              {subtitle}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+        </View>
+      </Card>
+    </Touchable>
   );
 }
 

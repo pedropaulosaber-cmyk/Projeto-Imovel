@@ -57,6 +57,10 @@ atualizar; migração aditiva-apenas é o caminho seguro.
 | `achievement_progress` | Conquistas | userId, achievementId, unlockedAt, seen |
 | `tutor_conversations` | Conversas | userId, language, updatedAt |
 | `tutor_messages` | Mensagens | conversationId, createdAt, role |
+| `workbooks` | Apostilas por nível | language, level |
+| `workbook_downloads` | Apostilas fixadas offline | workbookId, downloadedAt |
+| `idioms` | Expressões idiomáticas | language, cefr, frequency |
+| `idiom_progress` | Vistas e favoritas do usuário | userId, idiomId, starred |
 | `content_bundles` | Catálogo de download | language, scope, scopeId |
 | `downloads` | Downloads | bundleId, status |
 | `sync_queue` | **Outbox** | entity, entityId, clock, attempts |
@@ -115,6 +119,9 @@ CREATE TABLE enrollments (
   daily_minutes     INT  NOT NULL DEFAULT 10,
   study_days        SMALLINT[] NOT NULL DEFAULT '{1,2,3,4,5}',
   reminder_minute   INT,
+  -- 'complete' | 'essential'. Por matrícula, não por conta: faz sentido
+  -- estudar inglês a fundo e espanhol em cinco minutos por dia.
+  learning_mode     TEXT NOT NULL DEFAULT 'complete',
   is_active         BOOLEAN NOT NULL DEFAULT true,
   started_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -192,7 +199,70 @@ CREATE INDEX ON vocabulary (language_code, frequency_rank);
 -- Busca textual do banco de vocabulário.
 CREATE INDEX ON vocabulary USING GIN (to_tsvector('simple', term || ' ' || translation));
 
+-- Expressões idiomáticas. Fica em Conteúdo, não em Vocabulário: uma expressão
+-- não é uma palavra com tradução — é uma unidade cujo sentido não se deduz das
+-- partes, e por isso carrega campos que vocabulário nenhum tem (literal,
+-- equivalente, origem).
+CREATE TABLE idioms (
+  id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  language_code      TEXT NOT NULL REFERENCES languages(code),
+  expression         TEXT NOT NULL,
+  romanization       TEXT,
+  literal            TEXT NOT NULL,          -- tradução ao pé da letra
+  meaning            TEXT NOT NULL,          -- o que significa de verdade, em pt
+  equivalent         TEXT,                   -- NULL quando não há equivalente
+  origin             TEXT,
+  example            TEXT NOT NULL,
+  example_translation TEXT NOT NULL,
+  register           TEXT NOT NULL,          -- formal | neutro | informal | gíria
+  cefr               TEXT NOT NULL,
+  frequency          INT  NOT NULL,          -- ordena a lista: útil antes de raro
+  tags               TEXT[] NOT NULL DEFAULT '{}',
+  UNIQUE (language_code, expression)
+);
+CREATE INDEX ON idioms (language_code, frequency DESC);
+
+-- Apostilas. O corpo é JSONB porque a apostila é um documento de blocos
+-- tipados (heading, callout, vocabTable, conjugation…) e normalizar isso em
+-- tabelas daria seis joins para renderizar uma página que sempre é lida
+-- inteira.
+CREATE TABLE workbooks (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  language_code     TEXT NOT NULL REFERENCES languages(code),
+  level             TEXT NOT NULL,
+  title             TEXT NOT NULL,
+  subtitle          TEXT NOT NULL,
+  estimated_pages   INT  NOT NULL,
+  sections          JSONB NOT NULL,
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (language_code, level)
+);
+
 -- ═══════════════ Progresso ═══════════════
+
+-- Apostila fixada para consulta offline. Não guarda o conteúdo: a apostila é
+-- gerada no dispositivo a partir do conteúdo já instalado, então o registro é
+-- só a intenção de mantê-la fora da limpeza de cache.
+CREATE TABLE workbook_downloads (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id       UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  workbook_id   UUID NOT NULL REFERENCES workbooks(id) ON DELETE CASCADE,
+  downloaded_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  size_bytes    INT NOT NULL DEFAULT 0,
+  UNIQUE (user_id, workbook_id)
+);
+
+CREATE TABLE idiom_progress (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id    UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  idiom_id   UUID NOT NULL REFERENCES idioms(id) ON DELETE CASCADE,
+  seen       INT NOT NULL DEFAULT 0,
+  correct    INT NOT NULL DEFAULT 0,
+  starred    BOOLEAN NOT NULL DEFAULT false,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (user_id, idiom_id)
+);
+CREATE INDEX ON idiom_progress (user_id) WHERE starred;
 
 CREATE TABLE review_states (
   id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),

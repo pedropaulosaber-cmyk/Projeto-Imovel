@@ -20,6 +20,7 @@ import { contentRepository } from '@/db/repositories/content';
 import { learnerRepository } from '@/db/repositories/learner';
 import { xpForLesson } from '@/domain/gamification';
 import { type UserAnswer, gradeExercise } from '@/domain/grading';
+import { adaptExercisesToMode, heartsForMode } from '@/domain/learning-mode';
 import { gradeFromPerformance } from '@/domain/srs';
 import type {
   Exercise,
@@ -111,11 +112,21 @@ export const useLessonStore = create<LessonState>((set, get) => ({
             })
           : null;
 
-      // Registra os conceitos da lição no SRS já na abertura. Assim, mesmo que
+      // O modo de aprendizado decide o repertório e o tamanho da sessão. Ver
+      // `src/domain/learning-mode.ts` — a correção e o SRS não mudam, só a
+      // quantidade e a variedade de mecânicas apresentadas.
+      const mode = enrollment?.learningMode ?? 'complete';
+      const queue = adaptExercisesToMode(exercises, mode);
+
+      // Registra no SRS os conceitos da lição já na abertura. Assim, mesmo que
       // o usuário abandone no meio, o vocabulário visto entra na fila de
       // revisão — o contato já aconteceu e a memória já começou a decair.
+      //
+      // Usa a fila adaptada, não a lição inteira: no Essencial, criar estado de
+      // revisão para conceitos que não vão aparecer geraria dívida de memória
+      // sobre material nunca apresentado.
       if (userId && enrollment) {
-        const conceptIds = [...new Set(exercises.flatMap((exercise) => exercise.conceptIds))];
+        const conceptIds = [...new Set(queue.flatMap((exercise) => exercise.conceptIds))];
         await learnerRepository.ensureReviewStates({
           userId,
           language: enrollment.language,
@@ -127,10 +138,10 @@ export const useLessonStore = create<LessonState>((set, get) => ({
       set({
         phase: 'active',
         lesson,
-        exercises,
+        exercises: queue,
         index: 0,
         session,
-        hearts: isPremium ? Number.POSITIVE_INFINITY : MAX_HEARTS,
+        hearts: heartsForMode(mode, isPremium),
         attempts: [],
         retryQueue: [],
         lastResult: null,

@@ -129,6 +129,38 @@ Amigos, ranking, grupos e desafios. Depende de conta conectada.
 Lembrete no horário escolhido, alerta de ofensiva em risco, aviso de revisão
 acumulada. Máximo 2/dia.
 
+### RF-16 — Modos de aprendizado (P0)
+Dois ritmos para o mesmo curso, alternáveis a qualquer momento e escolhidos
+**por matrícula**, não por conta. **Completo**: 16 tipos de exercício, sessão
+do tamanho da meta diária, sistema de vidas. **Essencial**: 4 tipos, sessão de
+5 exercícios, sem vidas, plano do dia com no máximo 2 blocos.
+- Critério: trocar de modo não altera XP acumulado, fila de SRS nem progresso;
+  a correção é idêntica nos dois. Um modo que ensina menos seria inútil — o que
+  muda é a carga de interface, não o rigor.
+
+### RF-17 — Apostila por nível (P1)
+Uma apostila por nível CEFR em cada idioma (48 no total), gerada no dispositivo
+a partir das mesmas fontes das lições. Seções de vocabulário, gramática,
+frases, expressões e checklist de saída. Download (fixa offline) e exportação
+em texto — que o usuário salva, imprime ou converte em PDF.
+- Critério: abrir e ler sem rede; "baixar" não consome dados móveis; todo
+  exemplo é tocável e fala em voz alta.
+
+### RF-18 — Expressões idiomáticas (P1)
+Módulo por idioma com literal, sentido em português, equivalente brasileiro
+(ou a afirmação explícita de que não existe), origem e exemplo em contexto.
+Ordenado por frequência de uso real. Filtros por nível e favoritos, busca que
+ignora acentuação.
+- Critério: o sentido só aparece **depois do toque** — a tentativa de adivinhar
+  é o que fixa a memória; lista com tradução à vista vira leitura passiva.
+
+### RF-19 — Trocar o nível do curso (P1)
+O usuário muda seu nível CEFR no idioma em andamento a qualquer momento, do
+perfil.
+- Critério: nada é apagado. Lições concluídas, vocabulário e fila de revisão
+  permanecem. O nível define o conteúdo daqui para frente. Zerar progresso ao
+  corrigir um nivelamento errado torna a correção cara demais para acontecer.
+
 ## 2.6 Requisitos não funcionais
 
 | Categoria | Requisito | Verificação |

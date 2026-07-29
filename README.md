@@ -5,7 +5,7 @@
 Aplicativo de aprendizado de idiomas **offline-first** para Android, iOS e web,
 a partir de uma única base de código.
 
-Inglês · Espanhol · Francês · Italiano · Alemão
+Inglês · Espanhol · Francês · Italiano · Alemão · Japonês · Coreano · Mandarim
 
 ---
 
@@ -28,6 +28,23 @@ erros típicos de lusófonos em cada idioma e explica a regra — offline.
 **4. A ofensiva sobrevive à vida real.**
 Congelamentos automáticos protegem a sequência quando você viaja ou adoece.
 Perder 180 dias por um imprevisto é o motivo nº 1 de desinstalação.
+
+**5. Dois ritmos para o mesmo curso.**
+O modo **Completo** entrega a trilha inteira; o **Essencial** reduz a sessão a
+cinco exercícios, quatro mecânicas e nenhuma vida. O que não muda entre eles: a
+correção, o XP e a repetição espaçada. Modo mais fácil que ensina menos é modo
+inútil — ver [`src/domain/learning-mode.ts`](src/domain/learning-mode.ts).
+
+**6. Apostila por nível, gerada no aparelho.**
+Uma apostila por nível CEFR em cada idioma (8 × 6 = 48), montada a partir das
+**mesmas fontes** das lições — vocabulário, gramática, frases e expressões — de
+modo que não existe deriva entre o que a lição ensina e o que a apostila diz.
+Baixar não consome dados: o documento é gerado localmente.
+
+**7. Expressões idiomáticas explicadas em português.**
+Literal, sentido real, equivalente brasileiro (ou a admissão explícita de que
+não existe um) e origem. O card só revela depois do toque — recuperação ativa,
+não leitura passiva.
 
 ---
 
@@ -63,10 +80,16 @@ Verificações:
 
 ```bash
 npm run typecheck   # tsc --noEmit
-npm test            # 169 testes
+npm test            # 181 testes
+npm run verify:web  # abre a build no Chromium e percorre o app
 npm run lint        # biome check
 npm run build:web   # export estático em dist/
 ```
+
+`verify:web` existe porque typecheck, lint e testes unitários **não pegam** erro
+de avaliação de bundle nem loop de render — os dois já causaram tela branca em
+produção. Ele carrega `dist/` num Chromium real, faz o onboarding inteiro,
+visita todas as abas e abre cada tela empilhada. É obrigatório antes de deploy.
 
 ---
 
@@ -83,8 +106,8 @@ src/content/  Vocabulário, frases e gerador da trilha
 docs/         15 documentos: PRD, arquitetura, banco, APIs, lançamento…
 ```
 
-O domínio não importa nada de fora dele. É por isso que 169 testes rodam em
-Node puro, em 4,5 s, sem emulador.
+O domínio não importa nada de fora dele. É por isso que 181 testes rodam em
+Node puro, em ~8 s, sem emulador.
 
 ---
 
@@ -115,7 +138,9 @@ Node puro, em 4,5 s, sem emulador.
 **Funcionando de ponta a ponta, 100% offline, sem backend:** onboarding,
 trilha, 16 tipos de exercício, repetição espaçada, prática por habilidade,
 tutor, painel de progresso, vocabulário, downloads, paywall e perfil com
-exportação/exclusão de dados (LGPD).
+exportação/exclusão de dados (LGPD). Também: apostilas por nível com download e
+exportação, módulo de expressões idiomáticas, troca de nível do curso em
+andamento e alternância entre os modos Completo e Essencial.
 
 **Ainda não implementado** — lista completa e honesta em
 [`docs/11-implementacao.md#1109-limitações-conhecidas`](docs/11-implementacao.md):

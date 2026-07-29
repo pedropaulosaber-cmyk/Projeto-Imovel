@@ -56,6 +56,11 @@ function RootNavigator() {
         <Stack.Screen name="review" options={{ animation: 'slide_from_bottom' }} />
         <Stack.Screen name="paywall" options={{ animation: 'slide_from_bottom' }} />
         <Stack.Screen name="downloads" />
+        <Stack.Screen name="workbooks" />
+        <Stack.Screen name="workbook/[id]" />
+        <Stack.Screen name="idioms" />
+        <Stack.Screen name="level" options={{ animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="learning-mode" options={{ animation: 'slide_from_bottom' }} />
       </Stack>
     </View>
   );

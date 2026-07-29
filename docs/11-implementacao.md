@@ -8,18 +8,19 @@ O que foi construído, onde está, e as decisões técnicas por trás.
 
 | Camada | Arquivos | O que faz |
 |---|---|---|
-| Rotas | 15 | Onboarding, 5 abas, lição, revisão, prática, vocabulário, downloads, paywall |
+| Rotas | 20 | Onboarding, 5 abas, lição, revisão, prática, vocabulário, apostilas, leitor, expressões, nível, modo, downloads, paywall |
 | Design system | 9 | Tokens, tema, provider, 15 componentes |
-| Domínio | 5 + 4 suítes | SRS, gamificação, plano, correção, tipos |
-| Dados | 7 + 1 suíte | Porta, 2 adaptadores, 3 repositórios, coleções |
+| Domínio | 6 + 5 suítes | SRS, gamificação, plano, modos, correção, tipos |
+| Dados | 8 + 1 suíte | Porta, 2 adaptadores, 4 repositórios, coleções |
 | Sync | 3 + 1 suíte | Merge puro, motor, ciclo de vida |
 | IA | 3 | Porta, tutor offline, base de conhecimento |
-| Conteúdo | 4 | Léxico, frases, gerador de trilha, semente |
+| Conteúdo | 7 | Léxico (latino e asiático), frases, expressões, apostilas, trilha, semente |
 | Features | 4 | Exercícios, fala, gráficos, landing |
 | Estado | 3 | App, lição, onboarding |
 
-**Verificação:** `tsc --noEmit` limpo em 61 arquivos · 169 testes passando ·
-`expo export --platform web` gerando `dist/`.
+**Verificação:** `tsc --noEmit` limpo · 181 testes passando · `expo export
+--platform web` gerando `dist/` · `verify:web` percorrendo onboarding, abas e
+telas empilhadas num Chromium real.
 
 ---
 
@@ -149,6 +150,44 @@ A ordem dentro da lição segue a dificuldade de recuperação de memória:
 **reconhecer → completar → produzir**. Pedir produção livre antes de
 reconhecimento gera frustração; pedir só reconhecimento gera a ilusão de saber.
 
+As **48 apostilas** (8 idiomas × 6 níveis) seguem o mesmo princípio, levado um
+passo adiante: são geradas em `content/workbooks.ts` a partir das *mesmas*
+fontes que alimentam as lições — vocabulário, `GRAMMAR_RULES`, frases e
+expressões. Isso não é economia de esforço, é garantia de integridade: apostila
+escrita à parte deriva do curso na terceira revisão, e o aluno acaba estudando
+duas versões incompatíveis da mesma regra.
+
+A exportação é **texto puro**, não PDF. Bibliotecas de PDF em React Native
+custam ~500 KB e quebram com fontes CJK — inaceitável num app que ensina
+japonês, coreano e mandarim. Texto abre em qualquer aplicativo, imprime, e o
+próprio sistema converte em PDF se o usuário quiser.
+
+---
+
+## 11.7b Modos de aprendizado
+
+`domain/learning-mode.ts` concentra as regras; nenhuma tela decide nada por
+conta própria. O Essencial atua em quatro pontos e só neles:
+
+| Ponto | Completo | Essencial |
+|---|---|---|
+| Tipos de exercício | 16 | 4 (`multiple_choice`, `word_bank`, `listen_type`, `flashcard`) |
+| Tamanho da sessão | lição inteira | 5 itens, os de menor `difficulty` |
+| Vidas | 5 no gratuito | infinitas |
+| Blocos no plano do dia | até 4 | até 2 |
+
+Dois detalhes que parecem pequenos e não são:
+
+**O corte da sessão é por dificuldade, mas a exibição é pela ordem original.**
+Selecionar os cinco mais fáceis evita que uma sessão curta comece pelo item
+mais duro da lição; reordenar de volta preserva a construção de conceito que o
+autor da lição sequenciou.
+
+**O SRS registra só o que foi apresentado.** No Essencial, `ensureReviewStates`
+recebe a fila adaptada, não a lição inteira — criar estado de memória para
+conceitos que nunca vão aparecer geraria dívida de revisão sobre material não
+ensinado.
+
 ---
 
 ## 11.8 Desempenho na prática
@@ -177,8 +216,10 @@ Explícitas, porque um relatório honesto vale mais que um verde falso:
    porque não há CDN configurada. Trocar por `expo-file-system` é uma função.
 3. **Backend** — o transporte de sync é `OfflineOnlyTransport`. A fila enche
    corretamente e será drenada quando o transporte real for injetado.
-4. **Cobertura de conteúdo** — a semente cobre A1 nos 5 idiomas (~30–40 termos
-   e 18 frases por idioma). Produção exige o trabalho editorial da Fase 4.
+4. **Cobertura de conteúdo** — a semente cobre A1 nos 8 idiomas (~30–40 termos
+   e 18 frases por idioma) e 8 expressões idiomáticas por idioma. As apostilas
+   cobrem os 6 níveis, mas as de B2 em diante reaproveitam o léxico disponível.
+   Produção exige o trabalho editorial da Fase 4.
 5. **Pagamento** — o paywall está completo como interface; a integração com
    as lojas é da Fase 3.
 6. **Comunidade e ligas** — a interface de liga mostra o estado local; o
@@ -197,7 +238,8 @@ npm run android      # requer prebuild + Android SDK
 npm run ios          # requer prebuild + Xcode
 
 npm run typecheck    # tsc --noEmit
-npm test             # 169 testes
+npm test             # 181 testes
+npm run verify:web   # smoke test da build num Chromium real
 npm run lint         # biome check
 npm run format       # biome format --write
 npm run build:web    # export estático em dist/
