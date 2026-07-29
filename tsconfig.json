@@ -1,6 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    // O tsconfig base do Expo não define `module`, e o padrão derivado não
+    // permite `import()` dinâmico — que é justamente como carregamos o
+    // adaptador SQLite para mantê-lo fora do bundle web (ver src/db/index.ts).
+    "module": "esnext",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,

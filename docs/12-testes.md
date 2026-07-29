@@ -61,7 +61,7 @@ Exemplos de invariantes travados:
   altera o resultado; nenhum estado regride.
 - **Store** — transação que lança restaura o estado exatamente como estava.
 
-## 12.4 Dois bugs reais encontrados pelos testes
+## 12.4 Três bugs reais encontrados por verificação
 
 Vale registrar, porque justificam o investimento:
 
@@ -78,6 +78,21 @@ por transitividade, React Native. O teste não conseguia importá-las em Node.
 Em vez de mockar, extraímos `src/sync/merge.ts` — o teste apontou um problema
 real de desenho, não uma inconveniência.
 
+**3. Tela branca em produção (`src/db/index.ts`)** — o mais caro dos três
+`expo-sqlite` era importado **estaticamente**. Ele resolve o módulo nativo
+`ExpoSQLite` na *avaliação do módulo*, não na chamada de função, então o bundle
+web lançava `Cannot find native module 'ExpoSQLite'` antes de qualquer
+`Platform.OS === 'web'` e antes do `try/catch` de fallback. O app subiu, serviu
+HTTP 200 com o `<title>` correto, e renderizou **nada**.
+
+Corrigido com `await import()` dentro do ramo nativo, mais a remoção da
+reexportação (que também é import estático).
+
+**A lição:** typecheck, lint e 169 testes unitários passaram — e o site estava
+quebrado. Nenhuma verificação estática pega um erro na avaliação do bundle;
+só carregar num navegador de verdade pega. Daí o `npm run verify:web` da
+seção 12.5, que hoje é obrigatório antes de qualquer deploy.
+
 ## 12.5 Verificações automáticas
 
 ```bash
@@ -85,7 +100,13 @@ npm run typecheck   # tsc --noEmit, modo estrito
 npm test            # jest
 npm run lint        # biome check (lint + formatação + ordem de imports)
 npm run build:web   # expo export --platform web
+npm run verify:web  # carrega o bundle no Chromium e falha se não renderizar
 ```
+
+**`verify:web` é obrigatório antes de deploy.** Ele sobe `dist/` num servidor
+local, abre no Chromium headless e falha se houver erro de página ou se `#root`
+ficar vazio. É a única verificação que distingue "HTTP 200" de "o app
+funciona" — distinção que custou uma tela branca em produção.
 
 Estado atual: typecheck limpo, Biome sem nenhuma ocorrência em 75 arquivos,
 169 testes verdes e build web gerando `dist/` com sucesso.
@@ -98,6 +119,7 @@ Assumidas conscientemente para esta fase:
 |---|---|---|
 | Testes de componente (React Testing Library) | O valor está mais na lógica; a UI ainda muda muito | Fase 2 |
 | E2E em dispositivo | Exige build nativo | Fase 3 |
+| Fumaça da build nativa (Android/iOS) | Equivalente ao `verify:web`, mas exige emulador | Fase 3 |
 | `SqliteDocumentStore` em dispositivo | Precisa de emulador; o contrato está travado pelos testes do adaptador web | Fase 1 |
 | Testes de carga do backend | Não há backend | Fase 1 |
 | Testes visuais de regressão | Depende de design estabilizado | Fase 4 |
