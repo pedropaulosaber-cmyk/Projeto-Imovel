@@ -17,6 +17,7 @@ import { ScrollView, View } from 'react-native';
 
 import { learnerRepository } from '@/db/repositories/learner';
 import { Badge, Button, Card, ProgressBar, Screen, Text, Touchable, useTheme } from '@/design';
+import { shouldShowUpsell } from '@/domain/access';
 import { averageRetention, estimateReviewMinutes, forecastLoad } from '@/domain/srs';
 import type { ReviewState } from '@/domain/types';
 import { weekdayInitial } from '@/lib/date';
@@ -292,7 +293,7 @@ export default function Practice() {
           />
         </View>
 
-        {profile?.plan === 'free' ? (
+        {shouldShowUpsell(profile) ? (
           <Card variant="subtle" padding={4} style={{ marginTop: theme.space[6] }}>
             <View style={{ gap: theme.space[3] }}>
               <Badge label="Premium" tone="premium" icon="star" />

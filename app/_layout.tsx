@@ -34,6 +34,28 @@ function RootNavigator() {
     }
   }, [status]);
 
+  /**
+   * Nada é montado antes do banco abrir.
+   *
+   * Parece redundante — a splash já cobre a tela até `ready` — mas splash é
+   * pintura, não montagem: as telas montavam **atrás** dela e disparavam seus
+   * efeitos contra um banco ainda fechado. `getDatabase()` lança nesse estado,
+   * o erro era engolido pelo `try/catch` da store e a tela terminava em
+   * "Não foi possível abrir esta lição".
+   *
+   * No fluxo normal isso nunca aparecia: quem passa pelo onboarding chega às
+   * telas segundos depois, com o banco pronto. Aparecia em **deep link** — o
+   * usuário que abre um link direto para uma lição, justamente o caminho de
+   * quem recebeu a indicação de alguém.
+   *
+   * Segurar a montagem é a correção certa por ser estrutural: vale para toda
+   * tela, inclusive as que ainda serão escritas, em vez de exigir que cada uma
+   * lembre de checar o status.
+   */
+  if (status === 'idle' || status === 'loading') {
+    return <View style={{ flex: 1, backgroundColor: theme.colors.background }} />;
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />

@@ -26,6 +26,7 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { Badge, Button, Card, Screen, Text, Touchable, useTheme } from '@/design';
+import { OPEN_ACCESS } from '@/domain/access';
 import { selectWordsLearned, useAppStore } from '@/state/app-store';
 
 type Cycle = 'monthly' | 'annual';
@@ -53,7 +54,132 @@ const PRICES: Record<Cycle, { price: string; per: string; note: string; savings?
   },
 };
 
+/** Tudo que está liberado hoje. Serve de índice do produto, não de vitrine. */
+const INCLUDED: { icon: keyof typeof Ionicons.glyphMap; title: string; text: string }[] = [
+  {
+    icon: 'globe',
+    title: 'Os 8 idiomas',
+    text: 'Inglês, espanhol, francês, italiano, alemão, japonês, coreano e mandarim — todos ao mesmo tempo, se quiser.',
+  },
+  {
+    icon: 'trending-up',
+    title: 'Todos os níveis, A1 a C2',
+    text: 'Trilha inteira liberada. Você escolhe onde entrar e pode mudar de nível quando quiser.',
+  },
+  {
+    icon: 'heart',
+    title: 'Vidas infinitas',
+    text: 'Errar não interrompe a sessão nem cobra espera.',
+  },
+  {
+    icon: 'chatbubble-ellipses',
+    title: 'Tutor sem limite',
+    text: 'Conversa por voz e texto, correção de redação e explicação de gramática, sem cota diária.',
+  },
+  {
+    icon: 'library',
+    title: 'Apostilas e expressões',
+    text: 'Uma apostila por nível em cada idioma, com download, mais o módulo de expressões idiomáticas.',
+  },
+  {
+    icon: 'cloud-offline',
+    title: 'Download à vontade',
+    text: 'Baixe o que quiser para estudar sem internet. Nenhum conteúdo fica atrás de cadeado.',
+  },
+];
+
 export default function Paywall() {
+  // Com o acesso aberto não existe o que vender: esta tela vira um resumo
+  // honesto do que já está incluído. A página de assinatura continua escrita
+  // logo abaixo, intacta, para o dia em que a cobrança voltar.
+  if (OPEN_ACCESS) return <OpenAccessScreen />;
+  return <SubscriptionScreen />;
+}
+
+function OpenAccessScreen() {
+  const theme = useTheme();
+  const router = useRouter();
+
+  return (
+    <Screen padded={false}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: theme.layout.screenPadding,
+          paddingTop: theme.space[10],
+          paddingBottom: theme.space[10],
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Touchable
+          onPress={() => router.back()}
+          haptic="light"
+          accessibilityLabel="Fechar"
+          ensureTouchTarget={false}
+          style={{ alignSelf: 'flex-start', width: 34, height: 34, justifyContent: 'center' }}
+        >
+          <Ionicons name="close" size={26} color={theme.colors.textTertiary} />
+        </Touchable>
+
+        <View style={{ gap: theme.space[4], paddingTop: theme.space[4] }}>
+          <Badge label="Acesso completo" tone="premium" icon="star" />
+          <Text variant="title1">Está tudo liberado.</Text>
+          <Text variant="body" tone="secondary">
+            Não há plano pago, cadastro obrigatório nem recurso bloqueado. Tudo o que existe no
+            Lumo está disponível para você agora — sem cartão, sem teste que expira.
+          </Text>
+        </View>
+
+        <View style={{ marginTop: theme.space[8], gap: theme.space[3] }}>
+          {INCLUDED.map((item) => (
+            <Card key={item.title} variant="flat" padding={4}>
+              <View style={{ flexDirection: 'row', gap: theme.space[3] }}>
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: theme.radius.sm,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.colors.brandSubtle,
+                  }}
+                >
+                  <Ionicons name={item.icon} size={20} color={theme.colors.brand} />
+                </View>
+                <View style={{ flex: 1, gap: 3 }}>
+                  <Text variant="headline">{item.title}</Text>
+                  <Text variant="caption" tone="secondary">
+                    {item.text}
+                  </Text>
+                </View>
+                <Ionicons name="checkmark-circle" size={20} color={theme.colors.success} />
+              </View>
+            </Card>
+          ))}
+        </View>
+
+        <Card variant="outlined" padding={4} style={{ marginTop: theme.space[6] }}>
+          <View style={{ flexDirection: 'row', gap: theme.space[3] }}>
+            <Ionicons name="lock-open" size={20} color={theme.colors.info} />
+            <Text variant="caption" tone="secondary" flex>
+              Seus dados continuam neste aparelho e funcionam sem internet. Se um dia houver
+              cobrança, ela será anunciada antes — nada que você já estudou será bloqueado.
+            </Text>
+          </View>
+        </Card>
+
+        <Button
+          label="Voltar a estudar"
+          size="lg"
+          fullWidth
+          onPress={() => router.back()}
+          style={{ marginTop: theme.space[8] }}
+        />
+      </ScrollView>
+    </Screen>
+  );
+}
+
+function SubscriptionScreen() {
   const theme = useTheme();
   const router = useRouter();
   const [cycle, setCycle] = useState<Cycle>('annual');

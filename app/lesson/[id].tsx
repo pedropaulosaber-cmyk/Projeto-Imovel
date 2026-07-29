@@ -18,6 +18,7 @@ import { ScrollView, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInDown } from 'react-native-reanimated';
 
 import { Badge, Button, Card, SegmentedProgress, Text, Touchable, useTheme } from '@/design';
+import { hasUnlimitedHearts } from '@/domain/access';
 import type { UserAnswer } from '@/domain/grading';
 import { ExerciseRenderer } from '@/features/exercises/ExerciseRenderer';
 import { formatDuration } from '@/lib/date';
@@ -51,7 +52,7 @@ export default function LessonScreen() {
   const useHint = useLessonStore((state) => state.useHint);
   const abandon = useLessonStore((state) => state.abandon);
 
-  const isPremium = profile?.plan !== undefined && profile.plan !== 'free';
+  const isPremium = hasUnlimitedHearts(profile);
 
   useEffect(() => {
     if (id) void start(id, isPremium);
@@ -138,7 +139,41 @@ export default function LessonScreen() {
     );
   }
 
-  if (!exercise || !enrollment) {
+  /**
+   * Sem matrícula não há o que estudar — e isso não é carregamento.
+   *
+   * Acontece com quem chega por **link direto** sem nunca ter aberto o app:
+   * a lição existe, o banco está pronto, mas não há idioma escolhido. Antes,
+   * esta tela mostrava "Preparando a lição…" para sempre. Uma mensagem que
+   * promete um fim que nunca chega é pior que um erro: o usuário espera,
+   * recarrega, espera de novo e desiste sem saber o que fazer.
+   */
+  if (!enrollment) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors.background,
+          padding: theme.space[6],
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: theme.space[4],
+        }}
+      >
+        <Ionicons name="compass-outline" size={54} color={theme.colors.brand} />
+        <Text variant="title2" align="center">
+          Escolha um idioma primeiro
+        </Text>
+        <Text variant="callout" tone="secondary" align="center">
+          Esta lição existe, mas ainda não sabemos o que você quer aprender. Leva menos de dois
+          minutos — e você volta para cá depois.
+        </Text>
+        <Button label="Começar agora" onPress={() => router.replace('/(onboarding)/welcome')} />
+      </View>
+    );
+  }
+
+  if (!exercise) {
     return (
       <View
         style={{
@@ -328,11 +363,18 @@ function LessonComplete({
     accuracy: number;
     durationMinutes: number;
     newWords: number;
+    exam: { score: number; passed: boolean; correctCount: number; totalCount: number } | null;
   };
   onDone: () => void;
 }) {
   const theme = useTheme();
   const perfect = summary.accuracy === 1;
+  const { exam } = summary;
+
+  // Numa prova, o que importa é aprovado ou não — e o app precisa dizer isso
+  // com todas as letras. Comemorar uma reprovação com "lição concluída" seria
+  // trair a única coisa que uma prova existe para fazer: informar.
+  const failed = exam !== null && !exam.passed;
 
   return (
     <View
@@ -356,19 +398,59 @@ function LessonComplete({
               borderRadius: 48,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: perfect ? theme.colors.streakSubtle : theme.colors.successSubtle,
+              backgroundColor: failed
+                ? theme.colors.warningSubtle
+                : perfect
+                  ? theme.colors.streakSubtle
+                  : theme.colors.successSubtle,
             }}
           >
             <Ionicons
-              name={perfect ? 'trophy' : 'checkmark-circle'}
+              name={
+                failed
+                  ? 'refresh-circle'
+                  : exam
+                    ? 'ribbon'
+                    : perfect
+                      ? 'trophy'
+                      : 'checkmark-circle'
+              }
               size={48}
-              color={perfect ? theme.colors.streak : theme.colors.success}
+              color={
+                failed
+                  ? theme.colors.warning
+                  : perfect
+                    ? theme.colors.streak
+                    : theme.colors.success
+              }
             />
           </View>
 
           <Text variant="title1" align="center">
-            {perfect ? 'Lição perfeita!' : 'Lição concluída'}
+            {exam
+              ? failed
+                ? 'Ainda não passou'
+                : 'Aprovado!'
+              : perfect
+                ? 'Lição perfeita!'
+                : 'Lição concluída'}
           </Text>
+
+          {exam ? (
+            <View style={{ alignItems: 'center', gap: theme.space[2] }}>
+              <Text variant="title2" tone={failed ? 'warning' : 'success'}>
+                {Math.round(exam.score * 100)}%
+              </Text>
+              <Text variant="footnote" tone="secondary" align="center">
+                {exam.correctCount} de {exam.totalCount} corretas · nota mínima 70%
+              </Text>
+              <Text variant="caption" tone="tertiary" align="center">
+                {failed
+                  ? 'Refaça o módulo e tente de novo. A prova pode ser repetida quantas vezes quiser, e todas as tentativas ficam registradas no seu progresso.'
+                  : 'Seu resultado ficou registrado. Você pode refazer a prova quando quiser para melhorar a nota.'}
+              </Text>
+            </View>
+          ) : null}
 
           <Badge label={`+${summary.xp} XP`} tone="brand" icon="flash" />
         </View>
@@ -406,7 +488,12 @@ function LessonComplete({
         </View>
       </Animated.View>
 
-      <Button label="Continuar" size="lg" fullWidth onPress={onDone} />
+      <Button
+        label={failed ? 'Voltar e revisar' : 'Continuar'}
+        size="lg"
+        fullWidth
+        onPress={onDone}
+      />
     </View>
   );
 }

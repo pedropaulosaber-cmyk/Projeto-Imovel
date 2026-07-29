@@ -22,6 +22,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { contentRepository } from '@/db/repositories/content';
 import { learnerRepository } from '@/db/repositories/learner';
 import { Badge, Button, Card, SegmentedProgress, Text, Touchable, useTheme } from '@/design';
+import { hasFullAccess } from '@/domain/access';
 import { schedule } from '@/domain/srs';
 import type { ReviewGrade, ReviewState, VocabularyItem } from '@/domain/types';
 import { speechService } from '@/services/speech';
@@ -140,7 +141,7 @@ export default function Review() {
       await learnerRepository.addXp(profile.id, reviewed * 4);
 
       if (stat.goalMet) {
-        await learnerRepository.registerGoalMet(profile.id, profile.plan !== 'free');
+        await learnerRepository.registerGoalMet(profile.id, hasFullAccess(profile));
       }
     }
 

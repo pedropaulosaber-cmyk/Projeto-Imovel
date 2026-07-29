@@ -18,6 +18,7 @@ import { create } from 'zustand';
 
 import { contentRepository } from '@/db/repositories/content';
 import { learnerRepository } from '@/db/repositories/learner';
+import { hasFullAccess } from '@/domain/access';
 import { xpForLesson } from '@/domain/gamification';
 import { type UserAnswer, gradeExercise } from '@/domain/grading';
 import { adaptExercisesToMode, heartsForMode } from '@/domain/learning-mode';
@@ -60,6 +61,8 @@ type LessonState = {
     accuracy: number;
     durationMinutes: number;
     newWords: number;
+    /** Presente só quando a lição era uma prova de nível. */
+    exam: { score: number; passed: boolean; correctCount: number; totalCount: number } | null;
   } | null;
 
   /* Ações */
@@ -297,6 +300,8 @@ async function finishLesson(
 
   const streak = userId ? await learnerRepository.getStreak(userId) : null;
 
+  let examResult: Awaited<ReturnType<typeof learnerRepository.recordExamResult>> | null = null;
+
   const { total: xp, breakdown } = xpForLesson({
     attempts,
     difficulties,
@@ -343,7 +348,7 @@ async function finishLesson(
     // significativa em vez de decorativa.
     if (stat.goalMet) {
       const profile = await learnerRepository.getProfile(userId);
-      await learnerRepository.registerGoalMet(userId, profile?.plan !== 'free', toLocalDate());
+      await learnerRepository.registerGoalMet(userId, hasFullAccess(profile), toLocalDate());
     }
 
     if (session) {
@@ -356,10 +361,42 @@ async function finishLesson(
         attempts,
       });
     }
+
+    // Prova de nível: registra a tentativa como avaliação, além do progresso.
+    // São perguntas diferentes — o progresso diz "passou por aqui", a prova
+    // diz "sabe isto" — e por isso moram em coleções separadas.
+    if (lesson.kind === 'exam') {
+      const module = await contentRepository.getModule(lesson.moduleId);
+      const course = module ? await contentRepository.getCourse(module.courseId) : null;
+
+      examResult = await learnerRepository.recordExamResult({
+        userId,
+        lessonId: lesson.id,
+        moduleId: lesson.moduleId,
+        language: enrollment.language,
+        level: course?.level ?? enrollment.currentLevel,
+        correctCount: correct,
+        totalCount: attempts.length,
+      });
+    }
   }
 
   set({
     phase: 'complete',
-    summary: { xp, breakdown, accuracy, durationMinutes, newWords },
+    summary: {
+      xp,
+      breakdown,
+      accuracy,
+      durationMinutes,
+      newWords,
+      exam: examResult
+        ? {
+            score: examResult.score,
+            passed: examResult.passed,
+            correctCount: examResult.correctCount,
+            totalCount: examResult.totalCount,
+          }
+        : null,
+    },
   });
 }

@@ -38,6 +38,11 @@ export const contentRepository = {
    * Módulos e lições
    * ---------------------------------------------------------------- */
 
+  /** Um módulo pelo id — usado ao registrar a prova, que precisa do curso. */
+  async getModule(id: ID): Promise<Module | null> {
+    return getDatabase().get<Module>(COLLECTION.modules, id);
+  },
+
   async listModules(courseId: ID): Promise<Module[]> {
     return getDatabase().query<Module>(COLLECTION.modules, {
       where: [{ field: 'courseId', op: '=', value: courseId }],

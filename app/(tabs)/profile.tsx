@@ -29,6 +29,7 @@ import {
   Touchable,
   useTheme,
 } from '@/design';
+import { planLabel, shouldShowUpsell } from '@/domain/access';
 import { ACHIEVEMENTS, levelProgress } from '@/domain/gamification';
 import { LEARNING_MODE_META } from '@/domain/learning-mode';
 import { type LanguageCode, SUPPORTED_LANGUAGES } from '@/domain/types';
@@ -118,6 +119,12 @@ export default function Profile() {
     );
   }
 
+  // Indexar um Record por valor que veio do disco exige fallback: o repositório
+  // já normaliza, mas uma tela que fica branca por um campo ausente é cara
+  // demais para depender de uma única linha de defesa.
+  const modeMeta = LEARNING_MODE_META[enrollment.learningMode] ?? LEARNING_MODE_META.complete;
+  const plan = planLabel(profile.plan);
+
   const initials = profile.displayName
     .split(' ')
     .map((part) => part[0])
@@ -158,11 +165,7 @@ export default function Profile() {
 
           <View style={{ flexDirection: 'row', gap: theme.space[2] }}>
             <Badge label={`Nível ${level.level}`} tone="brand" icon="flash" />
-            <Badge
-              label={profile.plan === 'free' ? 'Plano gratuito' : 'Premium'}
-              tone={profile.plan === 'free' ? 'neutral' : 'premium'}
-              icon={profile.plan === 'free' ? undefined : 'star'}
-            />
+            <Badge label={plan.label} tone={plan.tone} icon={plan.icon} />
           </View>
 
           <ProgressBar
@@ -258,9 +261,9 @@ export default function Profile() {
           />
           <Divider inset={44} />
           <ListRow
-            icon={LEARNING_MODE_META[enrollment.learningMode].icon as never}
+            icon={modeMeta.icon as never}
             title="Modo de aprendizado"
-            subtitle={`${LEARNING_MODE_META[enrollment.learningMode].title} · ${LEARNING_MODE_META[enrollment.learningMode].tagline}`}
+            subtitle={`${modeMeta.title} · ${modeMeta.tagline}`}
             onPress={() => router.push('/learning-mode')}
           />
           <Divider inset={44} />
@@ -297,8 +300,8 @@ export default function Profile() {
           />
         </Section>
 
-        {/* ---------------- Assinatura ---------------- */}
-        {profile.plan === 'free' ? (
+        {/* ---------------- Acesso ---------------- */}
+        {shouldShowUpsell(profile) ? (
           <Card variant="subtle" padding={5} style={{ marginTop: theme.space[6] }}>
             <View style={{ gap: theme.space[3] }}>
               <Badge label="Premium" tone="premium" icon="star" />
@@ -309,7 +312,24 @@ export default function Profile() {
               <Button label="Ver planos" onPress={() => router.push('/paywall')} fullWidth />
             </View>
           </Card>
-        ) : null}
+        ) : (
+          <Card variant="subtle" padding={5} style={{ marginTop: theme.space[6] }}>
+            <View style={{ gap: theme.space[3] }}>
+              <Badge label="Acesso completo" tone="premium" icon="star" />
+              <Text variant="headline">Tudo liberado, sem cobrança</Text>
+              <Text variant="footnote" tone="secondary">
+                Os 8 idiomas, todas as lições, vidas infinitas, tutor sem limite e download à
+                vontade. Nada aqui está bloqueado nem pede cartão.
+              </Text>
+              <Button
+                label="Ver o que está incluso"
+                variant="secondary"
+                onPress={() => router.push('/paywall')}
+                fullWidth
+              />
+            </View>
+          </Card>
+        )}
 
         {/* ---------------- Privacidade ---------------- */}
         <Section title="Privacidade e dados">

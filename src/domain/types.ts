@@ -176,6 +176,11 @@ export type LessonKind =
   | 'shadowing'
   | 'review'
   | 'checkpoint'
+  /**
+   * Prova de nível ao fim do módulo. Diferente do `checkpoint`, tem nota,
+   * aprovação e registro — é avaliação, não revisão.
+   */
+  | 'exam'
   | 'project';
 
 export type Lesson = {
@@ -312,8 +317,15 @@ export type CorrectSentenceExercise = ExerciseBase & {
   type: 'correct_sentence';
   incorrect: string;
   acceptedAnswers: string[];
-  /** Tipo de erro plantado — usado no feedback. */
-  errorKind: 'agreement' | 'tense' | 'order' | 'preposition' | 'spelling' | 'article';
+  /**
+   * Tipo de erro plantado — usado no feedback.
+   *
+   * `usage` é o caso geral: o erro não é de concordância, tempo ou ordem, e
+   * sim de escolha inadequada da estrutura. É o rótulo certo para a maior
+   * parte dos erros de transferência do português, que não cabem nas
+   * categorias morfológicas clássicas.
+   */
+  errorKind: 'agreement' | 'tense' | 'order' | 'preposition' | 'spelling' | 'article' | 'usage';
 };
 
 export type OrderDialogueExercise = ExerciseBase & {
@@ -456,6 +468,53 @@ export type LessonProgress = {
   completedAt: Timestamp | null;
   updatedAt: Timestamp;
 };
+
+/**
+ * Resultado de uma prova de nível.
+ *
+ * Guardado separado do progresso da lição porque responde a outra pergunta.
+ * `LessonProgress` responde "o aluno passou por aqui?"; o resultado da prova
+ * responde "o aluno **sabe** isto?". Misturar os dois faria a melhor nota
+ * apagar o histórico — e o valor de uma prova está justamente em poder olhar
+ * a série de tentativas.
+ *
+ * Toda tentativa é registrada, inclusive as reprovadas. Guardar só a melhor
+ * transformaria a prova num troféu em vez de um diagnóstico.
+ */
+export type ExamResult = {
+  id: ID;
+  userId: ID;
+  lessonId: ID;
+  moduleId: ID;
+  language: LanguageCode;
+  level: CefrLevel;
+  /** Acertos sobre total, 0–1. */
+  score: number;
+  correctCount: number;
+  totalCount: number;
+  passed: boolean;
+  takenAt: Timestamp;
+};
+
+/** Nota mínima para aprovação numa prova de nível. */
+export const EXAM_PASS_THRESHOLD = 0.7;
+
+/**
+ * Nota e veredito de uma prova.
+ *
+ * Função pura e separada do repositório de propósito: a regra de aprovação é
+ * decisão pedagógica, não detalhe de persistência, e precisa ser testável sem
+ * banco. O caso `totalCount === 0` existe porque uma prova abandonada antes da
+ * primeira resposta chega aqui — e dividir por zero produziria `NaN`, que
+ * atravessaria silenciosamente até a tela.
+ */
+export function examOutcome(
+  correctCount: number,
+  totalCount: number,
+): { score: number; passed: boolean } {
+  const score = totalCount === 0 ? 0 : correctCount / totalCount;
+  return { score, passed: score >= EXAM_PASS_THRESHOLD };
+}
 
 /** Agregado por dia. É a granularidade do dashboard e da ofensiva. */
 export type DailyStat = {
