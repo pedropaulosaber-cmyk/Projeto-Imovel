@@ -6,11 +6,13 @@
  * repositório não escreve na fila de sincronização.
  */
 
+import { sortModulesForGoals } from '@/content/goal-tracks';
 import type {
   Course,
   Exercise,
   ID,
   LanguageCode,
+  LearningGoal,
   Lesson,
   Module,
   VocabularyItem,
@@ -63,15 +65,27 @@ export const contentRepository = {
    * Faz duas consultas (módulos, depois lições com `IN`) em vez de N+1 — a
    * diferença aparece imediatamente num curso com 20 módulos.
    */
-  async listLessonsForCourse(courseId: ID): Promise<Lesson[]> {
+  async listLessonsForCourse(courseId: ID, goals: LearningGoal[] = []): Promise<Lesson[]> {
     const modules = await this.listModules(courseId);
     if (modules.length === 0) return [];
 
+    // A ordem dos módulos passa a depender do **objetivo do aluno**. O
+    // conteúdo continua o mesmo para todo mundo (é semeado uma vez e
+    // compartilhado); o que muda é a sequência em que ele chega.
+    //
+    // Ordenar na leitura, e não na geração, é o que torna isso possível: o
+    // aluno pode mudar de objetivo e a trilha se reorganiza na próxima
+    // abertura, sem tocar em nada gravado.
+    const ordered = sortModulesForGoals(
+      modules.map((module) => ({ ...module, key: module.id })),
+      goals,
+    );
+
     const lessons = await getDatabase().query<Lesson>(COLLECTION.lessons, {
-      where: [{ field: 'moduleId', op: 'in', value: modules.map((m) => m.id) }],
+      where: [{ field: 'moduleId', op: 'in', value: ordered.map((m) => m.id) }],
     });
 
-    const moduleOrder = new Map(modules.map((module, index) => [module.id, index]));
+    const moduleOrder = new Map(ordered.map((module, index) => [module.id, index]));
     return lessons.sort((a, b) => {
       const moduleDiff =
         (moduleOrder.get(a.moduleId) ?? 0) - (moduleOrder.get(b.moduleId) ?? 0);

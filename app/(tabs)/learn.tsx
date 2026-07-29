@@ -14,6 +14,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 
+import { trackIntro } from '@/content/goal-tracks';
 import { LANGUAGE_META } from '@/content/vocabulary';
 import { Badge, Card, ProgressRing, Screen, Text, Touchable, useTheme } from '@/design';
 import { canOpenLesson, hasFullAccess } from '@/domain/access';
@@ -198,6 +199,22 @@ export default function Learn() {
           <Text variant="overline" tone="tertiary">
             Sua trilha
           </Text>
+
+          {/*
+            O aluno respondeu por que quer aprender; ele precisa **ver** que
+            isso mudou alguma coisa. Um onboarding que pergunta e não usa é pior
+            que um onboarding que não pergunta.
+          */}
+          {enrollment && enrollment.goals.length > 0 ? (
+            <Card variant="subtle" padding={4}>
+              <View style={{ flexDirection: 'row', gap: theme.space[3] }}>
+                <Ionicons name="navigate" size={20} color={theme.colors.brand} />
+                <Text variant="caption" tone="secondary" flex>
+                  {trackIntro(enrollment.goals)}
+                </Text>
+              </View>
+            </Card>
+          ) : null}
 
           {lessons.map((lesson, index) => {
             const progress = lessonProgress[lesson.id];

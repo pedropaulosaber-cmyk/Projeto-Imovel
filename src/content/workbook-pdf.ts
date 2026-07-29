@@ -538,7 +538,11 @@ export function estimatePages(workbook: Workbook): number {
   // apostilas no Chromium, contei as páginas do arquivo e calibrei. Prometer
   // 20 páginas e entregar 14 é exatamente o tipo de detalhe que corrói
   // confiança no material.
-  return Math.max(2, 2 + Math.ceil(lines / 33));
+  // O "+1" é a capa. O sumário cabe na mesma folha em que a primeira seção
+  // começa, então não conta — medido contra três PDFs reais (inglês B1 = 26,
+  // japonês A1 = 23, alemão C2 = 23), onde a fórmula com "+2" errava por
+  // exatamente uma página em todos.
+  return Math.max(2, 1 + Math.ceil(lines / 33));
 }
 
 export type { Idiom, VocabularyItem };

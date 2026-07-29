@@ -152,10 +152,11 @@ describe('apostila em PDF', () => {
       for (const level of CEFR_LEVELS) {
         const workbook = buildWorkbook(language, level);
         // A estimativa foi calibrada contra PDFs renderizados de verdade no
-        // Chromium (inglês B1 = 19 páginas, japonês A1 = 18). Abaixo de 15 a
-        // apostila deixou de ser material didático e virou folheto.
+        // Chromium: inglês B1 = 25 páginas, japonês A1 = 25, alemão C2 = 22,
+        // com erro máximo de uma página. Abaixo de 20 a apostila deixaria de
+        // entregar o tamanho prometido no card.
         expect(`${language}/${level}: ${workbook.estimatedPages}`).toBe(
-          workbook.estimatedPages >= 15
+          workbook.estimatedPages >= 20
             ? `${language}/${level}: ${workbook.estimatedPages}`
             : `${language}/${level}: curta demais`,
         );
@@ -177,10 +178,87 @@ describe('apostila em PDF', () => {
       for (const level of CEFR_LEVELS) {
         const titles = buildWorkbook(language, level).sections.map((section) => section.title);
         expect(titles).toContain('Verbos');
-        expect(titles).toContain('Armadilhas do português');
+        expect(titles).toContain('Gramática e armadilhas');
         expect(titles).toContain('Plano de estudo');
       }
     }
+  });
+
+  it('nenhuma apostila é igual a outra', () => {
+    // O pedido é explícito: cada PDF precisa ser diferente dos outros. Um
+    // gerador que compartilha seções entre níveis produziria 48 arquivos
+    // quase idênticos — e o aluno perceberia na segunda apostila.
+    const documents = new Map<string, string>();
+
+    for (const language of SUPPORTED_LANGUAGES) {
+      for (const level of CEFR_LEVELS) {
+        const document = workbookToPrintableHtml(buildWorkbook(language, level));
+        const previous = [...documents.entries()].find(([, body]) => body === document);
+
+        if (previous) {
+          throw new Error(`${language}/${level} é idêntica a ${previous[0]}`);
+        }
+        documents.set(`${language}/${level}`, document);
+      }
+    }
+
+    expect(documents.size).toBe(48);
+  });
+
+  it('apostilas do mesmo idioma não repetem o corpo das seções', () => {
+    // Mais exigente que o teste acima: aqui não basta a capa diferir. Compara
+    // o conteúdo de cada seção entre níveis do mesmo idioma, que é onde a
+    // repetição realmente incomodaria.
+    for (const language of SUPPORTED_LANGUAGES) {
+      const seen = new Map<string, string>();
+
+      for (const level of CEFR_LEVELS) {
+        for (const section of buildWorkbook(language, level).sections) {
+          const body = JSON.stringify(section.blocks);
+          const previous = seen.get(body);
+
+          if (previous) {
+            throw new Error(
+              `${language}: seção "${section.title}" de ${level} é idêntica à de ${previous}`,
+            );
+          }
+          seen.set(body, level);
+        }
+      }
+    }
+  });
+
+  it('traz as seções novas de pronúncia, cultura e simulado', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      for (const level of CEFR_LEVELS) {
+        const titles = buildWorkbook(language, level).sections.map((section) => section.title);
+
+        expect(titles).toContain('Pronúncia');
+        expect(titles).toContain('Palavras que enganam');
+        expect(titles).toContain('Como soar natural');
+        expect(titles).toContain('Simulado');
+      }
+    }
+  });
+
+  it('o simulado traz gabarito e não entrega a resposta na questão', () => {
+    const workbook = buildWorkbook('en', 'B1');
+    const exam = workbook.sections.find((section) => section.title === 'Simulado');
+
+    expect(exam).toBeDefined();
+
+    const headings = exam?.blocks.filter((block) => block.kind === 'heading') ?? [];
+    expect(
+      headings.some((block) => block.kind === 'heading' && block.text === 'Gabarito'),
+    ).toBe(true);
+
+    // O gabarito é o último bloco de lista, depois de todas as questões.
+    const lastQuestion = (exam?.blocks ?? []).findLastIndex(
+      (block) => block.kind === 'callout' && block.title.startsWith('Questão'),
+    );
+    const answerKey = (exam?.blocks ?? []).findIndex((block) => block.kind === 'list');
+
+    expect(answerKey).toBeGreaterThan(lastQuestion);
   });
 
   it('a numeração das seções não pula depois do filtro', () => {

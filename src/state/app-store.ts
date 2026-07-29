@@ -170,7 +170,13 @@ export const useAppStore = create<AppState>((set, get) => ({
     // O fallback para o primeiro curso cobre o caso de um nível sem conteúdo
     // gerado: melhor mostrar a trilha de A1 do que uma tela vazia.
     const course = courses.find((item) => item.level === enrollment.currentLevel) ?? courses[0];
-    const lessons = course ? await contentRepository.listLessonsForCourse(course.id) : [];
+    // Passa os objetivos: a trilha é reordenada para começar pelo que o aluno
+    // disse que quer. Ver `content/goal-tracks.ts` — nenhum módulo é removido,
+    // só reordenado, porque podar conteúdo por uma resposta de trinta segundos
+    // cria buracos que só aparecem meses depois.
+    const lessons = course
+      ? await contentRepository.listLessonsForCourse(course.id, enrollment.goals)
+      : [];
 
     const progressByLesson: Record<string, LessonProgress> = {};
     for (const progress of progressList) {
