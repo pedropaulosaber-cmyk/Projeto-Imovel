@@ -13,6 +13,7 @@
  */
 
 import type { Correction, LanguageCode } from '@/domain/types';
+import { EXTRA_SCENARIOS } from './conversation';
 
 /* ------------------------------------------------------------------ *
  * Erros comuns
@@ -646,7 +647,20 @@ export const SCENARIO_SCRIPTS: Record<string, ScenarioScript> = {
   },
 };
 
-export const SCENARIO_LIST = Object.entries(SCENARIO_SCRIPTS).map(([id, script]) => ({
+/**
+ * Catálogo completo — os cenários originais mais os de `conversation.ts`.
+ *
+ * A divisão em dois arquivos não é organizacional: os cenários novos cobrem os
+ * **oito** idiomas, enquanto os originais trazem falas em cinco e caem no texto
+ * de reserva em japonês, coreano e mandarim. Mantê-los separados deixa essa
+ * diferença visível em vez de escondida no meio de uma lista.
+ */
+export const ALL_SCENARIOS: Record<string, ScenarioScript> = {
+  ...SCENARIO_SCRIPTS,
+  ...EXTRA_SCENARIOS,
+};
+
+export const SCENARIO_LIST = Object.entries(ALL_SCENARIOS).map(([id, script]) => ({
   id,
   ...script,
 }));

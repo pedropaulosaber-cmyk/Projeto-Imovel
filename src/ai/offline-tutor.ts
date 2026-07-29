@@ -31,7 +31,7 @@ import type {
 } from '@/domain/types';
 import { ulid } from '@/lib/id';
 import { searchContext } from './context-index';
-import { COMMON_ERRORS, GRAMMAR_RULES, SCENARIO_SCRIPTS } from './knowledge';
+import { ALL_SCENARIOS, COMMON_ERRORS, GRAMMAR_RULES } from './knowledge';
 import type { AiProvider, ExplainedError, TutorContext, WritingFeedback } from './provider';
 
 export class OfflineTutorProvider implements AiProvider {
@@ -49,7 +49,7 @@ export class OfflineTutorProvider implements AiProvider {
   ): Promise<{ reply: string; corrections: Correction[] }> {
     const corrections = detectCommonErrors(message, context.language);
 
-    const script = context.scenario ? SCENARIO_SCRIPTS[context.scenario] : undefined;
+    const script = context.scenario ? ALL_SCENARIOS[context.scenario] : undefined;
     const turn = context.history.filter((m) => m.role === 'user').length;
 
     let reply: string;

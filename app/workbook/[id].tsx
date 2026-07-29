@@ -13,12 +13,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView, Share, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import { workbookToText } from '@/content/workbooks';
+import { workbookFileName, workbookToPrintableHtml } from '@/content/workbook-pdf';
 import { libraryRepository } from '@/db/repositories/library';
 import { Badge, Card, Chip, Screen, Text, Touchable, useTheme } from '@/design';
 import type { Workbook, WorkbookBlock } from '@/domain/types';
+import { exportHtmlAsPdf } from '@/services/pdf';
 import { speechService } from '@/services/speech';
 import { useAppStore } from '@/state/app-store';
 
@@ -85,15 +86,18 @@ export default function WorkbookReader() {
           </View>
 
           <Touchable
-            onPress={() =>
-              void Share.share({ message: workbookToText(workbook), title: workbook.title })
-            }
+            onPress={() => {
+              void exportHtmlAsPdf(
+                workbookToPrintableHtml(workbook),
+                workbookFileName(workbook, workbook.language),
+              );
+            }}
             haptic="light"
-            accessibilityLabel="Exportar apostila"
+            accessibilityLabel="Baixar apostila em PDF"
             ensureTouchTarget={false}
             style={{ padding: 6 }}
           >
-            <Ionicons name="share-outline" size={22} color={theme.colors.brand} />
+            <Ionicons name="document-text-outline" size={22} color={theme.colors.brand} />
           </Touchable>
         </View>
 

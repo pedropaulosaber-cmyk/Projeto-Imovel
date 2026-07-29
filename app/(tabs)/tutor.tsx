@@ -17,6 +17,7 @@ import { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { SPEAKING_MODES } from '@/ai/conversation';
 import { SCENARIO_LIST } from '@/ai/knowledge';
 import { OfflineTutorProvider } from '@/ai/offline-tutor';
 import { ResilientAiProvider } from '@/ai/provider';
@@ -43,6 +44,10 @@ export default function Tutor() {
   const [messages, setMessages] = useState<TutorMessage[]>([]);
   const [input, setInput] = useState('');
   const [scenario, setScenario] = useState<string | null>(null);
+  // O modo de fala é o segundo eixo da conversa: o cenário decide *onde* ela
+  // acontece, o modo decide *como* se fala ali. Um pedido de desculpas ao chefe
+  // e ao melhor amigo usam o mesmo vocabulário e exigem registros opostos.
+  const [mode, setMode] = useState<string>('casual');
   const [thinking, setThinking] = useState(false);
 
   const conversationId = useRef(ulid()).current;
@@ -75,6 +80,7 @@ export default function Tutor() {
             activeVocabulary: [],
             knownWeaknesses: [],
             scenario: scenario ?? undefined,
+            speakingMode: mode,
           },
           text.trim(),
         );
@@ -102,7 +108,7 @@ export default function Tutor() {
         requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
       }
     },
-    [messages, enrollment, profile, scenario, thinking, conversationId],
+    [messages, enrollment, profile, scenario, mode, thinking, conversationId],
   );
 
   const startScenario = useCallback(
@@ -178,6 +184,37 @@ export default function Tutor() {
               }}
             />
           </ScrollView>
+
+          {/* Modo de fala */}
+          <View style={{ gap: theme.space[2], marginTop: theme.space[3] }}>
+            <Text variant="caption" tone="tertiary">
+              Como você quer praticar
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: theme.space[2], paddingRight: theme.space[4] }}
+            >
+              {SPEAKING_MODES.map((item) => (
+                <Chip
+                  key={item.id}
+                  label={item.title}
+                  icon={item.icon as never}
+                  selected={mode === item.id}
+                  onPress={() => {
+                    setMode(item.id);
+                    // Trocar de modo reinicia a conversa: manter o histórico
+                    // faria o tutor mudar de registro no meio do diálogo, o que
+                    // confunde mais do que ensina.
+                    setMessages([]);
+                  }}
+                />
+              ))}
+            </ScrollView>
+            <Text variant="caption" tone="secondary">
+              {SPEAKING_MODES.find((item) => item.id === mode)?.trains ?? ''}
+            </Text>
+          </View>
         </View>
 
         {/* Conversa */}
