@@ -1,21 +1,39 @@
 /**
- * Construção da trilha de cursos.
+ * Construção da trilha de cursos
+ * ===============================
  *
  * ## Por que gerado em vez de escrito à mão
  *
- * O requisito é "arquitetura preparada para adicionar novos idiomas
- * facilmente". Um JSON gigante por idioma não atende isso: adicionar japonês
- * exigiria reescrever centenas de exercícios à mão e manter cinco arquivos em
- * sincronia sempre que a pedagogia mudar.
- *
- * Aqui, a **estrutura pedagógica é uma só** (módulos, progressão, tipos de
+ * A **estrutura pedagógica é uma só** (módulos, progressão, tipos de
  * exercício, ordem de introdução) e cada idioma fornece apenas seus *dados*:
- * vocabulário por frequência e um conjunto de frases curadas. Adicionar um
- * idioma novo é adicionar duas listas — a trilha inteira nasce pronta e
- * consistente com as outras.
+ * vocabulário por nível, pontos de gramática e frases curadas. Adicionar um
+ * idioma é adicionar listas — a trilha inteira nasce pronta e consistente.
  *
- * Conteúdo curado de nível superior (diálogos gravados, textos, vídeos) chega
- * pelos pacotes de download, sobrepondo-se a esta base.
+ * ## O que mudou nesta versão
+ *
+ * Antes existia **um curso de A1 por idioma**. Agora existem **seis**, um por
+ * nível CEFR, cada um com vocabulário e gramática próprios (ver
+ * `vocabulary-levels.ts` e `grammar-syllabus.ts`). Três consequências:
+ *
+ *  1. **Nada se repete.** Um verbete pertence a um nível só; a montagem em
+ *     `level-content.ts` deduplica dentro e entre níveis. O aluno de C1 nunca
+ *     recebe de volta a palavra que respondeu no A2.
+ *  2. **A dificuldade é real.** Não é a mesma pergunta com pontuação maior: em
+ *     A1 o exercício pede reconhecimento; em C2 pede produção e escolha de
+ *     registro. A própria composição da lição muda por nível.
+ *  3. **Todo módulo termina em prova.** Com nota, aprovação e registro de
+ *     todas as tentativas.
+ *
+ * ## O que faz um exercício "ensinar"
+ *
+ * Distrator aleatório não ensina: o aluno acerta por eliminação e sai sem ter
+ * pensado. Aqui os distratores vêm de duas fontes deliberadas:
+ *
+ *  - **Mesma classe gramatical** do alvo, para que a escolha exija saber o
+ *    significado e não só reconhecer o formato.
+ *  - **O erro que o lusófono realmente comete** — o campo `trap` de cada ponto
+ *    de gramática. "I have 25 years" não é alternativa aleatória: é a tradução
+ *    literal de "tenho 25 anos", e quem cai nela recebe a explicação na hora.
  */
 
 import type {
@@ -24,107 +42,19 @@ import type {
   Exercise,
   LanguageCode,
   Lesson,
-  LessonKind,
   Module,
   VocabularyItem,
 } from '@/domain/types';
+import { CEFR_LEVELS } from '@/domain/types';
+import { LEVEL_BLUEPRINTS, LEVEL_COURSE_META, type ModuleBlueprint } from './blueprints';
+import { type GrammarPoint, grammarPoints } from './grammar-syllabus';
+import { levelVocabulary } from './level-content';
 import { CURATED_PHRASES, type Phrase } from './phrases';
-import { buildVocabulary } from './vocabulary';
 
 /* ------------------------------------------------------------------ *
- * Estrutura pedagógica compartilhada
+ * Identificadores determinísticos
  * ------------------------------------------------------------------ */
 
-type ModuleBlueprint = {
-  key: string;
-  title: string;
-  subtitle: string;
-  icon: string;
-  canDo: string[];
-  /** Quantos verbetes do vocabulário este módulo cobre. */
-  vocabularySlice: [number, number];
-  /** Tema das frases curadas usadas aqui. */
-  phraseTopic: Phrase['topic'];
-  lessons: { title: string; kind: LessonKind; minutes: number }[];
-};
-
-/**
- * A progressão A1.
- *
- * Cada módulo termina em um checkpoint (mini prova) e o curso termina em um
- * projeto. Esse fechamento importa: sem um marco visível, o usuário não sabe
- * que "terminou" nada — e a sensação de conclusão é o que traz de volta.
- */
-const A1_BLUEPRINT: ModuleBlueprint[] = [
-  {
-    key: 'first-contact',
-    title: 'Primeiros contatos',
-    subtitle: 'Cumprimentar, se apresentar e sobreviver ao primeiro diálogo.',
-    icon: 'hand-left',
-    canDo: [
-      'Cumprimentar e se despedir em situações formais e informais',
-      'Dizer seu nome, de onde é e o que faz',
-      'Pedir que repitam quando não entender',
-    ],
-    vocabularySlice: [0, 12],
-    phraseTopic: 'greetings',
-    lessons: [
-      { title: 'Olá e tchau', kind: 'vocabulary', minutes: 4 },
-      { title: 'Quem é você', kind: 'conversation', minutes: 5 },
-      { title: 'Ouvindo apresentações', kind: 'listening', minutes: 4 },
-      { title: 'Sons e ritmo', kind: 'speaking', minutes: 5 },
-      { title: 'Checkpoint · Primeiros contatos', kind: 'checkpoint', minutes: 6 },
-    ],
-  },
-  {
-    key: 'daily-life',
-    title: 'Dia a dia',
-    subtitle: 'Falar da sua rotina, do trabalho e do que você gosta.',
-    icon: 'sunny',
-    canDo: [
-      'Descrever sua rotina no presente',
-      'Falar sobre trabalho e estudo',
-      'Expressar gostos e preferências',
-    ],
-    vocabularySlice: [12, 24],
-    phraseTopic: 'routine',
-    lessons: [
-      { title: 'Minha rotina', kind: 'vocabulary', minutes: 5 },
-      { title: 'Presente simples', kind: 'grammar', minutes: 6 },
-      { title: 'Lendo um perfil', kind: 'reading', minutes: 5 },
-      { title: 'Escrevendo sobre você', kind: 'writing', minutes: 6 },
-      { title: 'Revisão do módulo', kind: 'review', minutes: 4 },
-      { title: 'Checkpoint · Dia a dia', kind: 'checkpoint', minutes: 6 },
-    ],
-  },
-  {
-    key: 'out-and-about',
-    title: 'Saindo de casa',
-    subtitle: 'Restaurante, transporte, compras e pedidos.',
-    icon: 'walk',
-    canDo: [
-      'Pedir comida e bebida em um restaurante',
-      'Perguntar direções e usar transporte',
-      'Fazer compras e perguntar preços',
-    ],
-    vocabularySlice: [24, 40],
-    phraseTopic: 'out',
-    lessons: [
-      { title: 'No restaurante', kind: 'vocabulary', minutes: 5 },
-      { title: 'Pedindo com educação', kind: 'conversation', minutes: 6 },
-      { title: 'Entendendo o garçom', kind: 'listening', minutes: 5 },
-      { title: 'Shadowing: pedido completo', kind: 'shadowing', minutes: 6 },
-      { title: 'Revisão do módulo', kind: 'review', minutes: 4 },
-      { title: 'Projeto · Um dia na cidade', kind: 'project', minutes: 10 },
-    ],
-  },
-];
-
-/* ------------------------------------------------------------------ *
- * Geração
- * ------------------------------------------------------------------ */
-
-/** Ids determinísticos — o mesmo conteúdo tem o mesmo id em qualquer aparelho. */
 const courseId = (language: LanguageCode, level: CefrLevel) => `course:${language}:${level}`;
 const moduleId = (language: LanguageCode, key: string) => `module:${language}:${key}`;
 const lessonId = (language: LanguageCode, key: string, index: number) =>
@@ -139,101 +69,142 @@ export type GeneratedContent = {
   vocabulary: VocabularyItem[];
 };
 
-/** Gera a trilha completa de um idioma. */
-export function buildCourseContent(language: LanguageCode): GeneratedContent {
-  const vocabulary = buildVocabulary(language);
-  const phrases = CURATED_PHRASES[language] ?? [];
+/* ------------------------------------------------------------------ *
+ * Geração
+ * ------------------------------------------------------------------ */
 
-  const course: Course = {
-    id: courseId(language, 'A1'),
-    language,
-    title: 'Fundamentos',
-    description:
-      'Do zero ao primeiro diálogo real. Base de vocabulário e estruturas essenciais.',
-    level: 'A1',
-    order: 1,
-    contentVersion: 1,
+/** Gera os seis cursos (A1–C2) de um idioma. */
+export function buildCourseContent(language: LanguageCode): GeneratedContent {
+  const result: GeneratedContent = {
+    courses: [],
+    modules: [],
+    lessons: [],
+    exercises: [],
+    vocabulary: [],
   };
 
-  const modules: Module[] = [];
-  const lessons: Lesson[] = [];
-  const exercises: Exercise[] = [];
+  CEFR_LEVELS.forEach((level, levelIndex) => {
+    const vocabulary = levelVocabulary(language, level);
+    if (vocabulary.length === 0) return;
 
-  A1_BLUEPRINT.forEach((blueprint, moduleIndex) => {
-    const module: Module = {
-      id: moduleId(language, blueprint.key),
-      courseId: course.id,
-      title: blueprint.title,
-      subtitle: blueprint.subtitle,
-      icon: blueprint.icon,
-      order: moduleIndex,
-      canDoStatements: blueprint.canDo,
+    result.vocabulary.push(...vocabulary);
+
+    const meta = LEVEL_COURSE_META[level];
+    const course: Course = {
+      id: courseId(language, level),
+      language,
+      title: meta.title,
+      description: meta.description,
+      level,
+      order: levelIndex + 1,
+      contentVersion: 2,
     };
-    modules.push(module);
+    result.courses.push(course);
 
-    const moduleVocabulary = vocabulary.slice(...blueprint.vocabularySlice);
-    const modulePhrases = phrases.filter((phrase) => phrase.topic === blueprint.phraseTopic);
+    const blueprints = LEVEL_BLUEPRINTS[level];
+    const points = grammarPoints(language, level);
+    const phrases = CURATED_PHRASES[language] ?? [];
 
-    blueprint.lessons.forEach((lessonBlueprint, lessonIndex) => {
-      const id = lessonId(language, blueprint.key, lessonIndex);
-
-      const lesson: Lesson = {
-        id,
-        moduleId: module.id,
-        title: lessonBlueprint.title,
-        kind: lessonBlueprint.kind,
-        order: lessonIndex,
-        estimatedMinutes: lessonBlueprint.minutes,
-        // XP proporcional ao esforço, com bônus nos marcos.
-        xpReward:
-          lessonBlueprint.kind === 'checkpoint'
-            ? 60
-            : lessonBlueprint.kind === 'project'
-              ? 120
-              : 25,
-        prerequisites:
-          lessonIndex === 0 ? [] : [lessonId(language, blueprint.key, lessonIndex - 1)],
-        // Os dois primeiros módulos são gratuitos por inteiro. O terceiro é o
-        // ponto onde o usuário já sentiu valor — e onde a conversão acontece.
-        premium: moduleIndex >= 2 && lessonIndex >= 2,
+    blueprints.forEach((blueprint, moduleIndex) => {
+      const module: Module = {
+        id: moduleId(language, blueprint.key),
+        courseId: course.id,
+        title: blueprint.title,
+        subtitle: blueprint.subtitle,
+        icon: blueprint.icon,
+        order: moduleIndex,
+        canDoStatements: blueprint.canDo,
       };
-      lessons.push(lesson);
+      result.modules.push(module);
 
-      exercises.push(
-        ...buildExercises({
-          lesson,
-          language,
-          vocabulary: moduleVocabulary,
-          phrases: modulePhrases,
-        }),
+      // Fatia o vocabulário do nível entre os módulos, sem sobreposição. Cada
+      // módulo recebe um bloco contíguo — repetir verbete entre módulos do
+      // mesmo nível seria a repetição que este redesenho existe para eliminar.
+      const perModule = Math.ceil(vocabulary.length / blueprints.length);
+      const moduleVocabulary = vocabulary.slice(
+        moduleIndex * perModule,
+        (moduleIndex + 1) * perModule,
       );
+
+      // Mesma lógica para gramática: um ponto pertence a um módulo só.
+      const modulePoints = points.filter(
+        (_, index) => index % blueprints.length === moduleIndex,
+      );
+
+      blueprint.lessons.forEach((lessonBlueprint, lessonIndex) => {
+        const id = lessonId(language, blueprint.key, lessonIndex);
+
+        const lesson: Lesson = {
+          id,
+          moduleId: module.id,
+          title: lessonBlueprint.title,
+          kind: lessonBlueprint.kind,
+          order: lessonIndex,
+          estimatedMinutes: lessonBlueprint.minutes,
+          xpReward: xpFor(lessonBlueprint.kind, level),
+          prerequisites:
+            lessonIndex === 0 ? [] : [lessonId(language, blueprint.key, lessonIndex - 1)],
+          // Com acesso aberto nada é bloqueado. O campo continua existindo
+          // porque o modelo de planos segue íntegro — ver `domain/access.ts`.
+          premium: false,
+        };
+        result.lessons.push(lesson);
+
+        result.exercises.push(
+          ...buildExercises({
+            lesson,
+            language,
+            level,
+            vocabulary: moduleVocabulary,
+            allLevelVocabulary: vocabulary,
+            points: modulePoints,
+            phrases,
+          }),
+        );
+      });
     });
   });
 
-  return { courses: [course], modules, lessons, exercises, vocabulary };
+  return result;
+}
+
+/** XP cresce com o nível: uma prova de C1 vale mais que uma lição de A1. */
+function xpFor(kind: Lesson['kind'], level: CefrLevel): number {
+  const levelMultiplier = 1 + CEFR_LEVELS.indexOf(level) * 0.25;
+  const base =
+    kind === 'exam' ? 80 : kind === 'project' ? 120 : kind === 'checkpoint' ? 60 : 25;
+  return Math.round(base * levelMultiplier);
 }
 
 /* ------------------------------------------------------------------ *
- * Construção de exercícios por tipo de lição
+ * Construção de exercícios
  * ------------------------------------------------------------------ */
 
 type BuildParams = {
   lesson: Lesson;
   language: LanguageCode;
+  level: CefrLevel;
+  /** Vocabulário do módulo — o alvo da lição. */
   vocabulary: VocabularyItem[];
+  /** Vocabulário do nível inteiro — fonte de distratores plausíveis. */
+  allLevelVocabulary: VocabularyItem[];
+  points: GrammarPoint[];
   phrases: Phrase[];
 };
 
 /**
- * Monta a sequência de exercícios de uma lição.
+ * Dificuldade base por nível, 0–1.
  *
- * A ordem dentro da lição segue a progressão de dificuldade de recuperação
- * de memória: **reconhecer → completar → produzir**. Pedir produção livre
- * antes de reconhecimento gera frustração e abandono; pedir só reconhecimento
- * gera a ilusão de saber, que quebra na primeira conversa real.
+ * Existe para que a mesma mecânica pese diferente conforme o nível: uma
+ * múltipla escolha de C1 alimenta o SRS como item difícil, não como o item
+ * fácil que ela seria em A1.
  */
+function levelDifficulty(level: CefrLevel): number {
+  return 0.2 + CEFR_LEVELS.indexOf(level) * 0.13;
+}
+
 function buildExercises(params: BuildParams): Exercise[] {
-  const { lesson, vocabulary } = params;
+  const { lesson } = params;
 
   switch (lesson.kind) {
     case 'vocabulary':
@@ -255,15 +226,22 @@ function buildExercises(params: BuildParams): Exercise[] {
     case 'review':
       return buildReviewLesson(params);
     case 'checkpoint':
-      return buildCheckpointLesson(params);
+    case 'exam':
+      return buildExamLesson(params);
     case 'project':
       return buildProjectLesson(params);
     default:
-      return vocabulary.length > 0 ? buildVocabularyLesson(params) : [];
+      return buildVocabularyLesson(params);
   }
 }
 
-/** Distratores plausíveis: mesma classe gramatical, o que torna o exercício real. */
+/**
+ * Distratores da mesma classe gramatical.
+ *
+ * Misturar classes entrega a resposta de graça: numa pergunta cuja resposta é
+ * um verbo, duas alternativas substantivas eliminam a dúvida sem exigir
+ * conhecimento nenhum.
+ */
 function pickDistractors(
   target: VocabularyItem,
   pool: VocabularyItem[],
@@ -278,46 +256,52 @@ function pickDistractors(
   return source.slice(0, count).map((item) => item.translation);
 }
 
-function buildVocabularyLesson({ lesson, vocabulary }: BuildParams): Exercise[] {
+function buildVocabularyLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary, allLevelVocabulary } = params;
   const exercises: Exercise[] = [];
-  const items = vocabulary.slice(0, 6);
+  const base = levelDifficulty(level);
+  const advanced = CEFR_LEVELS.indexOf(level) >= 3;
 
-  items.forEach((item, index) => {
-    // 1. Reconhecimento: escolher a tradução.
-    const distractors = pickDistractors(item, vocabulary, 3);
-    const choices = [item.translation, ...distractors];
+  vocabulary.slice(0, 6).forEach((item, index) => {
+    // Em níveis avançados a múltipla escolha praticamente some: nesse ponto
+    // ela não discrimina mais nada, e o que falta treinar é produção.
+    if (!advanced || index % 3 === 0) {
+      exercises.push({
+        id: exerciseId(lesson.id, exercises.length),
+        lessonId: lesson.id,
+        order: exercises.length,
+        type: 'multiple_choice',
+        difficulty: base,
+        conceptIds: [item.id],
+        prompt: `O que significa "${item.term}"?`,
+        audioText: item.term,
+        choices: [item.translation, ...pickDistractors(item, allLevelVocabulary, 3)],
+        correctIndex: 0,
+        explanation: item.exampleSentence
+          ? `${item.exampleSentence} — ${item.exampleTranslation}`
+          : undefined,
+        hint:
+          item.romanization ??
+          (item.partOfSpeech ? `É um(a) ${item.partOfSpeech}.` : undefined),
+      });
+    }
 
-    exercises.push({
-      id: exerciseId(lesson.id, exercises.length),
-      lessonId: lesson.id,
-      order: exercises.length,
-      type: 'multiple_choice',
-      difficulty: 0.25,
-      conceptIds: [item.id],
-      prompt: `O que significa "${item.term}"?`,
-      audioText: item.term,
-      choices,
-      correctIndex: 0,
-      explanation: item.exampleSentence
-        ? `${item.exampleSentence} — ${item.exampleTranslation}`
-        : undefined,
-      hint: item.partOfSpeech ? `É um(a) ${item.partOfSpeech}.` : undefined,
-    });
-
-    // 2. Produção: escrever o termo a partir do português (a cada dois itens,
-    // para não tornar a lição cansativa).
-    if (index % 2 === 1) {
+    // Produção: escrever o termo a partir do português. Em níveis avançados
+    // todo item passa por aqui.
+    if (advanced || index % 2 === 1) {
       exercises.push({
         id: exerciseId(lesson.id, exercises.length),
         lessonId: lesson.id,
         order: exercises.length,
         type: 'translate',
-        difficulty: 0.55,
+        difficulty: Math.min(1, base + 0.2),
         conceptIds: [item.id],
         prompt: item.translation,
         direction: 'to_target',
-        acceptedAnswers: [item.term],
-        explanation: item.exampleSentence ?? undefined,
+        acceptedAnswers: item.romanization ? [item.term, item.romanization] : [item.term],
+        explanation: item.exampleSentence
+          ? `${item.exampleSentence} — ${item.exampleTranslation}`
+          : undefined,
       });
     }
   });
@@ -325,35 +309,51 @@ function buildVocabularyLesson({ lesson, vocabulary }: BuildParams): Exercise[] 
   return exercises;
 }
 
-function buildGrammarLesson({ lesson, phrases, vocabulary }: BuildParams): Exercise[] {
+/**
+ * Lição de gramática — o coração do "exercício que ensina".
+ *
+ * Cada ponto vira dois itens: um de escolha entre a forma certa e a armadilha
+ * (o erro típico do lusófono), e um de correção de frase. A explicação exibida
+ * ao errar é o campo `why`, que diz **por que a intuição do português falha**
+ * — sem isso o aluno decora o item e reproduz o erro na frase seguinte.
+ */
+function buildGrammarLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, points, phrases } = params;
   const exercises: Exercise[] = [];
+  const base = levelDifficulty(level);
 
-  phrases.slice(0, 4).forEach((phrase) => {
-    const words = phrase.target.split(' ');
-    if (words.length < 3) return;
-
-    // Lacuna no meio da frase — onde a estrutura gramatical costuma morar.
-    const blankIndex = Math.floor(words.length / 2);
-    const answer = words[blankIndex]!;
-    const template = words
-      .map((word, index) => (index === blankIndex ? '___' : word))
-      .join(' ');
+  for (const point of points) {
+    exercises.push({
+      id: exerciseId(lesson.id, exercises.length),
+      lessonId: lesson.id,
+      order: exercises.length,
+      type: 'multiple_choice',
+      difficulty: Math.min(1, base + 0.1),
+      conceptIds: [`grammar:${point.title}`],
+      prompt: `${point.rule}\n\nQual está correto?`,
+      choices: [point.correct, point.trap],
+      correctIndex: 0,
+      explanation: point.why,
+      hint: point.rule,
+    });
 
     exercises.push({
       id: exerciseId(lesson.id, exercises.length),
       lessonId: lesson.id,
       order: exercises.length,
-      type: 'fill_blank',
-      difficulty: 0.5,
-      conceptIds: [phrase.id],
-      template,
-      acceptedAnswers: [answer],
-      choices: [answer, ...vocabulary.slice(0, 3).map((item) => item.term)].sort(),
-      explanation: `Tradução: ${phrase.native}`,
+      type: 'correct_sentence',
+      difficulty: Math.min(1, base + 0.25),
+      conceptIds: [`grammar:${point.title}`],
+      // A frase errada apresentada é exatamente a que o aluno produziria.
+      incorrect: point.trap,
+      acceptedAnswers: [point.correct],
+      errorKind: point.errorKind ?? 'usage',
+      explanation: `${point.rule}\n\n${point.why}`,
     });
-  });
+  }
 
-  phrases.slice(0, 3).forEach((phrase) => {
+  // Montagem de frase a partir de material curado, quando houver.
+  phrases.slice(0, 2).forEach((phrase) => {
     const tokens = phrase.target.split(' ');
     if (tokens.length < 3) return;
 
@@ -362,11 +362,11 @@ function buildGrammarLesson({ lesson, phrases, vocabulary }: BuildParams): Exerc
       lessonId: lesson.id,
       order: exercises.length,
       type: 'word_bank',
-      difficulty: 0.6,
+      difficulty: Math.min(1, base + 0.15),
       conceptIds: [phrase.id],
       prompt: phrase.native,
-      // Ordena alfabeticamente para embaralhar de forma determinística — dois
-      // aparelhos mostram o mesmo exercício, o que importa para suporte.
+      // Ordem alfabética embaralha de forma determinística: dois aparelhos
+      // mostram o mesmo exercício, o que importa para suporte.
       tokens: [...tokens].sort((a, b) => a.localeCompare(b)),
       solution: tokens,
       explanation: `Frase completa: ${phrase.target}`,
@@ -376,32 +376,53 @@ function buildGrammarLesson({ lesson, phrases, vocabulary }: BuildParams): Exerc
   return exercises;
 }
 
-function buildListeningLesson({ lesson, phrases }: BuildParams): Exercise[] {
+function buildListeningLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary, phrases } = params;
   const exercises: Exercise[] = [];
+  const base = levelDifficulty(level);
 
-  phrases.slice(0, 5).forEach((phrase, index) => {
+  // Em nível alto o ditado usa a frase de exemplo do próprio vocabulário do
+  // nível, que é mais densa que as frases curadas de sobrevivência.
+  const source =
+    CEFR_LEVELS.indexOf(level) >= 2
+      ? vocabulary
+          .filter((item) => item.exampleSentence)
+          .map((item) => ({
+            id: item.id,
+            target: item.exampleSentence as string,
+            native: item.exampleTranslation ?? '',
+          }))
+      : phrases.slice(0, 5).map((phrase) => ({
+          id: phrase.id,
+          target: phrase.target,
+          native: phrase.native,
+        }));
+
+  source.slice(0, 5).forEach((item, index) => {
     exercises.push({
       id: exerciseId(lesson.id, exercises.length),
       lessonId: lesson.id,
       order: exercises.length,
       type: 'listen_type',
-      difficulty: 0.65,
-      conceptIds: [phrase.id],
-      audioText: phrase.target,
-      acceptedAnswers: [phrase.target],
-      // Começa devagar e acelera ao longo da lição — treina o ouvido para a
-      // velocidade real sem frustrar no primeiro item.
-      rate: index < 2 ? 0.75 : 0.95,
-      explanation: `Tradução: ${phrase.native}`,
-      hint: `Começa com "${phrase.target.split(' ')[0]}".`,
+      difficulty: Math.min(1, base + 0.2),
+      conceptIds: [item.id],
+      audioText: item.target,
+      acceptedAnswers: [item.target],
+      // Começa devagar e acelera; nos níveis altos já entra em ritmo natural,
+      // porque a dificuldade ali é justamente a velocidade real.
+      rate: CEFR_LEVELS.indexOf(level) >= 3 ? 1 : index < 2 ? 0.75 : 0.95,
+      explanation: `Tradução: ${item.native}`,
+      hint: `Começa com "${item.target.split(' ')[0]}".`,
     });
   });
 
   return exercises;
 }
 
-function buildSpeakingLesson({ lesson, phrases, vocabulary }: BuildParams): Exercise[] {
+function buildSpeakingLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary, phrases } = params;
   const exercises: Exercise[] = [];
+  const base = levelDifficulty(level);
 
   vocabulary.slice(0, 3).forEach((item) => {
     exercises.push({
@@ -409,40 +430,73 @@ function buildSpeakingLesson({ lesson, phrases, vocabulary }: BuildParams): Exer
       lessonId: lesson.id,
       order: exercises.length,
       type: 'speak',
-      difficulty: 0.4,
+      difficulty: base,
       conceptIds: [item.id],
       targetText: item.term,
-      phonetic: item.phonetic ?? undefined,
+      phonetic: item.phonetic ?? item.romanization ?? undefined,
       // Palavra isolada tem exigência menor: o reconhecedor erra mais em
       // enunciados curtos, e reprovar aqui desmotiva sem ensinar.
       passThreshold: 0.6,
     });
   });
 
-  phrases.slice(0, 3).forEach((phrase) => {
+  const sentences = vocabulary
+    .filter((item) => item.exampleSentence)
+    .slice(0, 3)
+    .map((item) => ({
+      id: item.id,
+      target: item.exampleSentence as string,
+      native: item.exampleTranslation ?? '',
+    }));
+
+  const fallback = phrases.slice(0, 3).map((phrase) => ({
+    id: phrase.id,
+    target: phrase.target,
+    native: phrase.native,
+  }));
+
+  for (const item of sentences.length > 0 ? sentences : fallback) {
     exercises.push({
       id: exerciseId(lesson.id, exercises.length),
       lessonId: lesson.id,
       order: exercises.length,
       type: 'speak',
-      difficulty: 0.65,
-      conceptIds: [phrase.id],
-      targetText: phrase.target,
+      difficulty: Math.min(1, base + 0.25),
+      conceptIds: [item.id],
+      targetText: item.target,
       passThreshold: 0.7,
-      explanation: `Tradução: ${phrase.native}`,
+      explanation: `Tradução: ${item.native}`,
     });
-  });
+  }
 
   return exercises;
 }
 
-function buildReadingLesson({ lesson, phrases }: BuildParams): Exercise[] {
-  if (phrases.length < 3) return [];
+function buildReadingLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary, phrases } = params;
 
-  const passage = phrases
-    .slice(0, 5)
-    .map((phrase) => phrase.target)
-    .join(' ');
+  // O texto é montado com as frases de exemplo do vocabulário do módulo, que
+  // são do nível certo por construção. Isso resolve o problema clássico do
+  // "texto de C1 escrito com vocabulário de A2".
+  const sentences = vocabulary
+    .filter((item) => item.exampleSentence)
+    .slice(0, 6)
+    .map((item) => ({
+      id: item.id,
+      target: item.exampleSentence as string,
+      native: item.exampleTranslation ?? '',
+    }));
+
+  const source =
+    sentences.length >= 3
+      ? sentences
+      : phrases.slice(0, 5).map((phrase) => ({
+          id: phrase.id,
+          target: phrase.target,
+          native: phrase.native,
+        }));
+
+  if (source.length < 3) return [];
 
   return [
     {
@@ -450,15 +504,15 @@ function buildReadingLesson({ lesson, phrases }: BuildParams): Exercise[] {
       lessonId: lesson.id,
       order: 0,
       type: 'reading_comprehension',
-      difficulty: 0.6,
-      conceptIds: phrases.slice(0, 5).map((phrase) => phrase.id),
-      passage,
-      questions: phrases.slice(0, 3).map((phrase, index) => ({
-        prompt: `O que significa "${phrase.target}"?`,
+      difficulty: Math.min(1, levelDifficulty(level) + 0.2),
+      conceptIds: source.map((item) => item.id),
+      passage: source.map((item) => item.target).join(' '),
+      questions: source.slice(0, 3).map((item, index) => ({
+        prompt: `O que significa "${item.target}"?`,
         choices: [
-          phrase.native,
-          phrases[(index + 1) % phrases.length]?.native ?? 'Outra coisa',
-          phrases[(index + 2) % phrases.length]?.native ?? 'Nada disso',
+          item.native,
+          source[(index + 1) % source.length]?.native ?? 'Outra coisa',
+          source[(index + 2) % source.length]?.native ?? 'Nada disso',
         ],
         correctIndex: 0,
       })),
@@ -467,34 +521,59 @@ function buildReadingLesson({ lesson, phrases }: BuildParams): Exercise[] {
   ];
 }
 
-function buildWritingLesson({ lesson, vocabulary }: BuildParams): Exercise[] {
-  return [
-    {
-      id: exerciseId(lesson.id, 0),
+function buildWritingLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary, points } = params;
+  const exercises: Exercise[] = [];
+  const base = levelDifficulty(level);
+
+  // Corrigir a frase errada vem antes de escrever livremente: é mais barato
+  // e ataca diretamente o erro que a pessoa comete.
+  for (const point of points.slice(0, 2)) {
+    exercises.push({
+      id: exerciseId(lesson.id, exercises.length),
       lessonId: lesson.id,
-      order: 0,
-      type: 'describe_image',
-      difficulty: 0.7,
-      conceptIds: vocabulary.slice(0, 4).map((item) => item.id),
-      imageUrl: '',
-      expectedKeywords: vocabulary.slice(0, 4).map((item) => item.term),
-      minWords: 20,
-      explanation:
-        'Escreva livremente. A correção detalhada chega quando você estiver online; offline verificamos estrutura e vocabulário-alvo.',
-    },
-  ];
+      order: exercises.length,
+      type: 'correct_sentence',
+      difficulty: Math.min(1, base + 0.2),
+      conceptIds: [`grammar:${point.title}`],
+      incorrect: point.trap,
+      acceptedAnswers: [point.correct],
+      errorKind: point.errorKind ?? 'usage',
+      explanation: `${point.rule}\n\n${point.why}`,
+    });
+  }
+
+  const words = Math.round(20 + CEFR_LEVELS.indexOf(level) * 25);
+
+  exercises.push({
+    id: exerciseId(lesson.id, exercises.length),
+    lessonId: lesson.id,
+    order: exercises.length,
+    type: 'describe_image',
+    difficulty: Math.min(1, base + 0.3),
+    conceptIds: vocabulary.slice(0, 4).map((item) => item.id),
+    imageUrl: '',
+    expectedKeywords: vocabulary.slice(0, 4).map((item) => item.term),
+    minWords: words,
+    explanation: `Escreva pelo menos ${words} palavras usando o vocabulário do módulo. Offline verificamos estrutura e vocabulário-alvo; a correção detalhada chega quando você estiver online.`,
+  });
+
+  return exercises;
 }
 
-function buildConversationLesson({ lesson, phrases }: BuildParams): Exercise[] {
+function buildConversationLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, phrases, vocabulary } = params;
   const exercises: Exercise[] = [];
+  const base = levelDifficulty(level);
+  const levelIndex = CEFR_LEVELS.indexOf(level);
 
-  phrases.slice(0, 4).forEach((phrase, index) => {
+  phrases.slice(0, 3).forEach((phrase, index) => {
     exercises.push({
       id: exerciseId(lesson.id, exercises.length),
       lessonId: lesson.id,
       order: exercises.length,
       type: 'listen_respond',
-      difficulty: 0.55,
+      difficulty: Math.min(1, base + 0.15),
       conceptIds: [phrase.id],
       audioText: phrase.target,
       choices: [
@@ -512,27 +591,48 @@ function buildConversationLesson({ lesson, phrases }: BuildParams): Exercise[] {
     lessonId: lesson.id,
     order: exercises.length,
     type: 'conversation',
-    difficulty: 0.7,
-    conceptIds: phrases.map((phrase) => phrase.id),
-    scenario: 'smalltalk',
-    tutorRole: 'Uma pessoa simpática que acabou de te conhecer',
-    objectives: ['Dizer seu nome', 'Dizer de onde você é', 'Fazer uma pergunta de volta'],
-    minTurns: 3,
+    difficulty: Math.min(1, base + 0.3),
+    conceptIds: vocabulary.map((item) => item.id),
+    scenario: levelIndex >= 3 ? 'business' : 'smalltalk',
+    tutorRole:
+      levelIndex >= 4
+        ? 'Um interlocutor exigente que discorda de você e pede justificativas'
+        : levelIndex >= 2
+          ? 'Um colega de trabalho discutindo um prazo apertado'
+          : 'Uma pessoa simpática que acabou de te conhecer',
+    objectives:
+      levelIndex >= 3
+        ? [
+            'Sustentar uma posição com pelo menos dois argumentos',
+            'Reconhecer um ponto do outro sem abrir mão do seu',
+            'Propor uma alternativa concreta',
+          ]
+        : ['Dizer seu nome', 'Dizer de onde você é', 'Fazer uma pergunta de volta'],
+    // Conversa longa é o que separa proficiência de sobrevivência.
+    minTurns: 3 + levelIndex,
   });
 
   return exercises;
 }
 
-function buildShadowingLesson({ lesson, phrases }: BuildParams): Exercise[] {
-  const selected = phrases.slice(0, 4);
+function buildShadowingLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary, phrases } = params;
+
+  const sentences = vocabulary
+    .filter((item) => item.exampleSentence)
+    .slice(0, 4)
+    .map((item) => item.exampleSentence as string);
+
+  const selected =
+    sentences.length > 0 ? sentences : phrases.slice(0, 4).map((phrase) => phrase.target);
   if (selected.length === 0) return [];
 
-  // Segmentos com ~2,2s cada — a janela em que a memória fonológica de
-  // trabalho consegue segurar um trecho para repetir.
+  // Segmentos de ~2,2s — a janela em que a memória fonológica de trabalho
+  // consegue segurar um trecho para repetir.
   let cursor = 0;
-  const segments = selected.map((phrase) => {
-    const durationMs = Math.max(1500, phrase.target.length * 70);
-    const segment = { text: phrase.target, startMs: cursor, endMs: cursor + durationMs };
+  const segments = selected.map((text) => {
+    const durationMs = Math.max(1500, text.length * 70);
+    const segment = { text, startMs: cursor, endMs: cursor + durationMs };
     cursor += durationMs + 300;
     return segment;
   });
@@ -543,53 +643,78 @@ function buildShadowingLesson({ lesson, phrases }: BuildParams): Exercise[] {
       lessonId: lesson.id,
       order: 0,
       type: 'shadowing',
-      difficulty: 0.75,
-      conceptIds: selected.map((phrase) => phrase.id),
+      difficulty: Math.min(1, levelDifficulty(level) + 0.3),
+      conceptIds: vocabulary.slice(0, 4).map((item) => item.id),
       segments,
-      audioText: selected.map((phrase) => phrase.target).join(' '),
+      audioText: selected.join(' '),
       explanation:
         'Fale junto com o áudio, sem esperar terminar. O objetivo é o ritmo, não a perfeição.',
     },
   ];
 }
 
-function buildReviewLesson({ lesson, vocabulary }: BuildParams): Exercise[] {
+function buildReviewLesson(params: BuildParams): Exercise[] {
+  const { lesson, level, vocabulary } = params;
+
   return vocabulary.slice(0, 8).map((item, index) => ({
     id: exerciseId(lesson.id, index),
     lessonId: lesson.id,
     order: index,
     type: 'flashcard' as const,
-    difficulty: 0.4,
+    difficulty: levelDifficulty(level),
     conceptIds: [item.id],
     front: item.term,
-    back: item.translation,
+    back: item.romanization ? `${item.romanization} · ${item.translation}` : item.translation,
     example: item.exampleSentence ?? undefined,
   }));
 }
 
-/** Checkpoint mistura todos os formatos — é a hora de provar que aprendeu. */
-function buildCheckpointLesson(params: BuildParams): Exercise[] {
-  const { lesson } = params;
+/**
+ * Prova de nível ao fim do módulo.
+ *
+ * Três decisões que a diferenciam de uma lição comum:
+ *
+ *  1. **Sem dica e sem explicação prévia.** Numa prova, a explicação vem depois
+ *     do resultado — mostrar a regra junto da pergunta mede leitura, não
+ *     conhecimento.
+ *  2. **Mistura obrigatória de formatos**, incluindo produção. Uma prova só de
+ *     múltipla escolha superestima o aluno de forma sistemática.
+ *  3. **Composição muda por nível.** Em A1 pesa reconhecimento; a partir de B1
+ *     entram correção de frase e tradução ativa, que é onde o conhecimento
+ *     frágil aparece.
+ */
+function buildExamLesson(params: BuildParams): Exercise[] {
+  const { lesson, level } = params;
+  const levelIndex = CEFR_LEVELS.indexOf(level);
 
-  const mixed = [
-    ...buildVocabularyLesson(params).slice(0, 3),
+  const pool: Exercise[] = [
+    ...buildVocabularyLesson(params).slice(0, levelIndex >= 2 ? 4 : 3),
+    ...buildGrammarLesson(params).slice(0, 4),
     ...buildListeningLesson(params).slice(0, 2),
-    ...buildGrammarLesson(params).slice(0, 3),
-    ...buildSpeakingLesson(params).slice(0, 1),
   ];
 
-  // Reindexa para que a barra de progresso da lição fique correta.
-  return mixed.map((exercise, index) => ({
-    ...exercise,
-    id: exerciseId(lesson.id, index),
-    order: index,
-    // Checkpoint é mais exigente por definição.
-    difficulty: Math.min(1, exercise.difficulty + 0.15),
-  }));
+  if (levelIndex >= 2) {
+    pool.push(...buildWritingLesson(params).slice(0, 1));
+  }
+
+  return (
+    pool
+      // Reindexa para a barra de progresso ficar correta e para os ids não
+      // colidirem com os das lições de origem.
+      .map((exercise, index) => ({
+        ...exercise,
+        id: exerciseId(lesson.id, index),
+        order: index,
+        // Prova é mais exigente por definição — e sem dica.
+        difficulty: Math.min(1, exercise.difficulty + 0.15),
+        hint: undefined,
+      }))
+  );
 }
 
 function buildProjectLesson(params: BuildParams): Exercise[] {
-  const { lesson, phrases } = params;
+  const { lesson, level, vocabulary } = params;
+  const levelIndex = CEFR_LEVELS.indexOf(level);
 
   return [
     {
@@ -597,18 +722,28 @@ function buildProjectLesson(params: BuildParams): Exercise[] {
       lessonId: lesson.id,
       order: 0,
       type: 'conversation',
-      difficulty: 0.8,
-      conceptIds: phrases.map((phrase) => phrase.id),
-      scenario: 'restaurant',
-      tutorRole: 'Garçom de um restaurante movimentado',
-      objectives: [
-        'Pedir uma mesa para duas pessoas',
-        'Pedir uma bebida e um prato principal',
-        'Perguntar o preço e pedir a conta',
-      ],
-      minTurns: 5,
+      difficulty: Math.min(1, levelDifficulty(level) + 0.35),
+      conceptIds: vocabulary.map((item) => item.id),
+      scenario: levelIndex >= 3 ? 'business' : 'restaurant',
+      tutorRole:
+        levelIndex >= 3
+          ? 'Um entrevistador que testa a consistência dos seus argumentos'
+          : 'Garçom de um restaurante movimentado',
+      objectives:
+        levelIndex >= 3
+          ? [
+              'Apresentar uma posição em até três frases',
+              'Responder a duas objeções sem repetir o argumento inicial',
+              'Fechar com uma síntese',
+            ]
+          : [
+              'Pedir uma mesa para duas pessoas',
+              'Pedir uma bebida e um prato principal',
+              'Perguntar o preço e pedir a conta',
+            ],
+      minTurns: 5 + levelIndex,
       explanation:
-        'Este é o projeto final do curso: uma conversa completa, do início ao fim, sem roteiro.',
+        'Projeto do curso: uma conversa completa, do início ao fim, sem roteiro e sem apoio.',
     },
   ];
 }
@@ -634,3 +769,5 @@ export function buildAllContent(languages: LanguageCode[]): GeneratedContent {
 
   return result;
 }
+
+export type { ModuleBlueprint };

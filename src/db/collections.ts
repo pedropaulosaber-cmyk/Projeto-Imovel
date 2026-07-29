@@ -14,6 +14,7 @@ import type {
   DailyStat,
   DownloadRecord,
   Enrollment,
+  ExamResult,
   Exercise,
   Idiom,
   IdiomProgress,
@@ -43,6 +44,7 @@ export const COLLECTION = {
   vocabulary: 'vocabulary',
   reviewStates: 'review_states',
   lessonProgress: 'lesson_progress',
+  examResults: 'exam_results',
   dailyStats: 'daily_stats',
   sessions: 'sessions',
   quests: 'quests',
@@ -205,6 +207,36 @@ export const lessonProgressCollection = spec<LessonProgress>({
     { name: 'status', type: 'text' },
   ],
   indexer: (doc) => ({ userId: doc.userId, lessonId: doc.lessonId, status: doc.status }),
+});
+
+/**
+ * Resultados de prova.
+ *
+ * Guarda **toda** tentativa, não só a melhor. O valor de uma prova está na
+ * série: três reprovações seguidas no mesmo módulo dizem algo que a melhor
+ * nota esconde.
+ */
+export const examResultsCollection = spec<ExamResult>({
+  name: COLLECTION.examResults,
+  idOf: (doc) => doc.id,
+  indexes: [
+    { name: 'userId', type: 'text', indexed: true },
+    { name: 'lessonId', type: 'text', indexed: true },
+    { name: 'moduleId', type: 'text', indexed: true },
+    { name: 'language', type: 'text', indexed: true },
+    { name: 'level', type: 'text' },
+    { name: 'passed', type: 'integer' },
+    { name: 'takenAt', type: 'integer', indexed: true },
+  ],
+  indexer: (doc) => ({
+    userId: doc.userId,
+    lessonId: doc.lessonId,
+    moduleId: doc.moduleId,
+    language: doc.language,
+    level: doc.level,
+    passed: doc.passed ? 1 : 0,
+    takenAt: doc.takenAt,
+  }),
 });
 
 export const dailyStatsCollection = spec<DailyStat>({
@@ -402,6 +434,7 @@ export const ALL_COLLECTIONS = [
   vocabularyCollection,
   reviewStatesCollection,
   lessonProgressCollection,
+  examResultsCollection,
   dailyStatsCollection,
   sessionsCollection,
   questsCollection,

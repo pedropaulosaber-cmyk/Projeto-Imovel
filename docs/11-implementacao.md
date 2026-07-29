@@ -216,10 +216,11 @@ Explícitas, porque um relatório honesto vale mais que um verde falso:
    porque não há CDN configurada. Trocar por `expo-file-system` é uma função.
 3. **Backend** — o transporte de sync é `OfflineOnlyTransport`. A fila enche
    corretamente e será drenada quando o transporte real for injetado.
-4. **Cobertura de conteúdo** — a semente cobre A1 nos 8 idiomas (~30–40 termos
-   e 18 frases por idioma) e 8 expressões idiomáticas por idioma. As apostilas
-   cobrem os 6 níveis, mas as de B2 em diante reaproveitam o léxico disponível.
-   Produção exige o trabalho editorial da Fase 4.
+4. **Densidade de conteúdo** — os 6 níveis têm vocabulário e gramática
+   próprios nos 8 idiomas (692 verbetes e 144 pontos no total, ~85 verbetes e
+   18 pontos por idioma). É suficiente para uma trilha coerente e verificada
+   contra repetição, mas um curso comercial de C1 pede ordem de grandeza maior.
+   Ampliar é acrescentar entradas nas listas — a estrutura não muda.
 5. **Pagamento** — o paywall está completo como interface; a integração com
    as lojas é da Fase 3.
 6. **Comunidade e ligas** — a interface de liga mostra o estado local; o
@@ -238,7 +239,7 @@ npm run android      # requer prebuild + Android SDK
 npm run ios          # requer prebuild + Xcode
 
 npm run typecheck    # tsc --noEmit
-npm test             # 181 testes
+npm test             # 224 testes
 npm run verify:web   # smoke test da build num Chromium real
 npm run lint         # biome check
 npm run format       # biome format --write

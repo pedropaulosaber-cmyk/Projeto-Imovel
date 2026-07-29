@@ -20,6 +20,7 @@ import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { contentRepository } from '@/db/repositories/content';
 import { learnerRepository } from '@/db/repositories/learner';
 import { Badge, Button, Card, SegmentedProgress, Text, Touchable, useTheme } from '@/design';
+import { hasFullAccess } from '@/domain/access';
 import { xpForAttempt } from '@/domain/gamification';
 import { type UserAnswer, gradeExercise } from '@/domain/grading';
 import { gradeFromPerformance } from '@/domain/srs';
@@ -189,7 +190,7 @@ export default function PracticeSession() {
       await learnerRepository.addXp(profile.id, xp);
 
       if (stat.goalMet) {
-        await learnerRepository.registerGoalMet(profile.id, profile.plan !== 'free');
+        await learnerRepository.registerGoalMet(profile.id, hasFullAccess(profile));
       }
     }
 

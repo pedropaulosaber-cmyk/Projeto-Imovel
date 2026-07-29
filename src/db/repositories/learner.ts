@@ -16,8 +16,10 @@ import {
   schedule,
 } from '@/domain/srs';
 import type {
+  CefrLevel,
   DailyStat,
   Enrollment,
+  ExamResult,
   ID,
   LanguageCode,
   LessonProgress,
@@ -30,10 +32,12 @@ import type {
   UserProfile,
   Wallet,
 } from '@/domain/types';
+import { examOutcome } from '@/domain/types';
 import { toLocalDate } from '@/lib/date';
 import { deterministicId, ulid } from '@/lib/id';
 import { COLLECTION, type KeyValueDoc } from '../collections';
 import { getDatabase } from '../index';
+import { normalizeEnrollment, normalizeProfile } from '../migrations';
 import { syncRepository } from './sync';
 
 /* ------------------------------------------------------------------ *
@@ -79,7 +83,7 @@ export const learnerRepository = {
   },
 
   async getProfile(userId: ID): Promise<UserProfile | null> {
-    return getDatabase().get<UserProfile>(COLLECTION.profiles, userId);
+    return normalizeProfile(await getDatabase().get<UserProfile>(COLLECTION.profiles, userId));
   },
 
   async saveProfile(profile: UserProfile): Promise<void> {
@@ -89,18 +93,22 @@ export const learnerRepository = {
   },
 
   async getActiveEnrollment(userId: ID): Promise<Enrollment | null> {
-    return getDatabase().first<Enrollment>(COLLECTION.enrollments, {
+    const enrollment = await getDatabase().first<Enrollment>(COLLECTION.enrollments, {
       where: [
         { field: 'userId', op: '=', value: userId },
         { field: 'isActive', op: '=', value: 1 },
       ],
     });
+    return normalizeEnrollment(enrollment);
   },
 
   async listEnrollments(userId: ID): Promise<Enrollment[]> {
-    return getDatabase().query<Enrollment>(COLLECTION.enrollments, {
+    const enrollments = await getDatabase().query<Enrollment>(COLLECTION.enrollments, {
       where: [{ field: 'userId', op: '=', value: userId }],
     });
+    // `as Enrollment[]` é seguro: normalizeEnrollment só devolve null para
+    // entrada null, e nenhum item da consulta é null.
+    return enrollments.map((item) => normalizeEnrollment(item)) as Enrollment[];
   },
 
   async saveEnrollment(enrollment: Enrollment): Promise<void> {
@@ -177,6 +185,72 @@ export const learnerRepository = {
 
     await this.saveLessonProgress(next);
     return next;
+  },
+
+  /* ---------------------------------------------------------------- *
+   * Provas de nível
+   * ---------------------------------------------------------------- */
+
+  /**
+   * Registra uma tentativa de prova.
+   *
+   * O id inclui o instante da tentativa justamente para **não** sobrescrever a
+   * anterior: cada tentativa é um registro próprio. Guardar só a melhor nota
+   * transformaria a prova num troféu; guardar a série a mantém como
+   * diagnóstico — três reprovações seguidas dizem algo que a melhor nota
+   * esconde.
+   */
+  async recordExamResult(params: {
+    userId: ID;
+    lessonId: ID;
+    moduleId: ID;
+    language: LanguageCode;
+    level: CefrLevel;
+    correctCount: number;
+    totalCount: number;
+    now?: Timestamp;
+  }): Promise<ExamResult> {
+    const now = params.now ?? Date.now();
+    const { score, passed } = examOutcome(params.correctCount, params.totalCount);
+
+    const result: ExamResult = {
+      id: deterministicId(params.userId, params.lessonId, String(now)),
+      userId: params.userId,
+      lessonId: params.lessonId,
+      moduleId: params.moduleId,
+      language: params.language,
+      level: params.level,
+      score,
+      correctCount: params.correctCount,
+      totalCount: params.totalCount,
+      passed,
+      takenAt: now,
+    };
+
+    await getDatabase().put(COLLECTION.examResults, result);
+    await syncRepository.enqueue('exam_results', result.id, 'upsert', result);
+    return result;
+  },
+
+  /** Tentativas de prova do usuário, da mais recente para a mais antiga. */
+  async listExamResults(userId: ID, lessonId?: ID): Promise<ExamResult[]> {
+    const where: { field: string; op: '='; value: string }[] = [
+      { field: 'userId', op: '=', value: userId },
+    ];
+    if (lessonId) where.push({ field: 'lessonId', op: '=', value: lessonId });
+
+    return getDatabase().query<ExamResult>(COLLECTION.examResults, {
+      where,
+      orderBy: [{ field: 'takenAt', direction: 'desc' }],
+    });
+  },
+
+  /** A melhor tentativa numa prova, ou null se nunca foi feita. */
+  async bestExamResult(userId: ID, lessonId: ID): Promise<ExamResult | null> {
+    const results = await this.listExamResults(userId, lessonId);
+    if (results.length === 0) return null;
+
+    return results.reduce((best, current) => (current.score > best.score ? current : best));
   },
 
   /* ---------------------------------------------------------------- *

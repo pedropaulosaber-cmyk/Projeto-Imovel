@@ -163,7 +163,13 @@ export const useAppStore = create<AppState>((set, get) => ({
         syncRepository.pendingCount(),
       ]);
 
-    const course = courses[0];
+    // Existem seis cursos por idioma (A1–C2). O aluno estuda o do **seu**
+    // nível — pegar `courses[0]` mandaria todo mundo para o A1 e faria a troca
+    // de nível não surtir efeito nenhum na trilha.
+    //
+    // O fallback para o primeiro curso cobre o caso de um nível sem conteúdo
+    // gerado: melhor mostrar a trilha de A1 do que uma tela vazia.
+    const course = courses.find((item) => item.level === enrollment.currentLevel) ?? courses[0];
     const lessons = course ? await contentRepository.listLessonsForCourse(course.id) : [];
 
     const progressByLesson: Record<string, LessonProgress> = {};

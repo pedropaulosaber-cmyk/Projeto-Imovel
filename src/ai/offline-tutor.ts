@@ -30,6 +30,7 @@ import type {
   WordBankExercise,
 } from '@/domain/types';
 import { ulid } from '@/lib/id';
+import { searchContext } from './context-index';
 import { COMMON_ERRORS, GRAMMAR_RULES, SCENARIO_SCRIPTS } from './knowledge';
 import type { AiProvider, ExplainedError, TutorContext, WritingFeedback } from './provider';
 
@@ -57,7 +58,22 @@ export class OfflineTutorProvider implements AiProvider {
       const line = script.turns[Math.min(turn, script.turns.length - 1)];
       reply = line?.[context.language] ?? line?.en ?? script.fallback;
     } else {
-      reply = buildGenericReply(context, message, turn);
+      // Fora de um cenário roteirizado, o usuário costuma estar **perguntando**
+      // algo — o que significa uma palavra, por que uma regra é assim. Antes de
+      // cair na resposta genérica, consultamos o índice de contexto, que cobre
+      // tudo que o curso ensina naquele idioma (gramática dos seis níveis,
+      // vocabulário, expressões, falsos cognatos e pragmática).
+      const found = searchContext(context.language, message, {
+        level: context.level,
+        limit: 2,
+      });
+
+      reply =
+        found.length > 0
+          ? found
+              .map((entry) => `**${entry.title}** · ${entry.kind}\n${entry.body}`)
+              .join('\n\n———\n\n')
+          : buildGenericReply(context, message, turn);
     }
 
     // Correções entram antes da resposta, curtas e sem tom de reprovação.

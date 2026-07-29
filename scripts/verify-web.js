@@ -246,6 +246,107 @@ async function main() {
     await page.waitForTimeout(SETTLE_MS);
     await assertAlive('leitor → voltar');
 
+    /**
+     * Lição e prova — o caminho pelo qual o usuário passa mais vezes.
+     *
+     * A prova (`kind: 'exam'`) é o mais novo e o mais arriscado: grava um
+     * registro numa coleção criada agora e lê módulo e curso para descobrir o
+     * nível. Um erro aí só aparece ao **terminar** a prova, que é tarde demais
+     * para o usuário descobrir.
+     */
+    await tap('Aprender');
+    // Primeira lição do primeiro módulo de A1. O rótulo vem do blueprint em
+    // `content/blueprints.ts` e é o mesmo nos oito idiomas.
+    await tap('Olá e tchau');
+    await assertAlive('lição aberta');
+
+    // Responde clicando na primeira alternativa e avançando, até a lição
+    // acabar ou o limite de segurança ser atingido. Não valida a correção —
+    // isso é papel dos testes unitários; aqui o alvo é a árvore continuar viva
+    // ao longo da sessão inteira, incluindo a tela de conclusão.
+    for (let step = 0; step < 25; step += 1) {
+      const finished = await page.evaluate(() => {
+        const text = document.getElementById('root')?.innerText ?? '';
+        return text.includes('Continuar') && /Lição|Aprovado|Ainda não passou/.test(text);
+      });
+      if (finished) break;
+
+      await page.evaluate(() => {
+        const nodes = [...document.querySelectorAll('[role="button"], button')];
+        const next = nodes.find((node) =>
+          /Verificar|Continuar|Confirmar/.test(node.innerText ?? ''),
+        );
+        if (next) {
+          next.click();
+          return;
+        }
+        const option = nodes.find((node) => (node.innerText ?? '').trim().length > 0);
+        option?.click();
+      });
+      await page.waitForTimeout(320);
+    }
+
+    await assertAlive('sessão de lição percorrida');
+
+    /**
+     * Prova de nível, alcançada por URL dentro da sessão já autenticada.
+     *
+     * Chegar até ela pela interface exigiria concluir o módulo inteiro, o que
+     * tornaria o teste lento e frágil. Os ids são determinísticos
+     * (`lesson:<idioma>:<módulo>:<índice>`), então a rota direta exercita
+     * exatamente o mesmo código em uma fração do tempo.
+     *
+     * A navegação acontece **depois do onboarding**, no mesmo contexto, porque
+     * é assim que um usuário real chega numa lição: com idioma escolhido. O
+     * caso de link direto sem matrícula tem tela própria e é coberto à parte.
+     */
+    const examId = encodeURIComponent('lesson:en:a1-first-contact:4');
+    await page.goto(`http://127.0.0.1:${PORT}/lesson/${examId}`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(SETTLE_MS * 3);
+    await assertAlive('prova de nível');
+
+    /*
+     * O que se verifica aqui é **renderização**, não a nota.
+     *
+     * Automatizar a resposta da prova inteira num navegador é frágil: o robô
+     * acaba clicando no botão de sair e o teste passa a medir o próprio robô.
+     * A regra de aprovação é lógica pura e está coberta com precisão em
+     * `domain/__tests__/exam.test.ts`, que roda em milissegundos e testa o
+     * limite exato. Cada camada verifica o que sabe verificar bem.
+     */
+    const examContent = await page.evaluate(() => {
+      const text = document.getElementById('root')?.innerText ?? '';
+      return {
+        loading: text.includes('Preparando'),
+        stuck: text.includes('Escolha um idioma'),
+        broken: text.includes('Não foi possível'),
+        length: text.length,
+        preview: text.replace(/\s+/g, ' ').slice(0, 90),
+      };
+    });
+
+    if (examContent.broken) failures.push('a prova não encontrou seu conteúdo');
+    if (examContent.loading) failures.push('a prova ficou presa em "Preparando a lição"');
+    if (examContent.stuck) failures.push('a prova não reconheceu a matrícula existente');
+    if (examContent.length < 40) failures.push('a prova abriu praticamente vazia');
+
+    console.log(`  · conteúdo da prova     "${examContent.preview}"`);
+
+    // Volta para o app antes dos passos seguintes: `goto` recarregou a página
+    // e o histórico do navegador não serve mais para voltar.
+    await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(SETTLE_MS * 2);
+    await assertAlive('volta para a trilha');
+
+    // Idiomas de escrita não latina exercitam a romanização em toda tela.
+    await tap('Perfil');
+    await tap('Japonês');
+    await page.waitForTimeout(SETTLE_MS);
+    await assertAlive('troca para japonês');
+
+    await tap('Aprender');
+    await assertAlive('trilha em japonês');
+
     if (failures.length > 0) {
       console.error('\n✗ Build web com falhas:\n');
       for (const failure of failures) console.error(`  · ${failure}`);

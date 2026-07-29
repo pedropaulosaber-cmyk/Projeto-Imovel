@@ -20,7 +20,7 @@ import { buildAllWorkbooks } from './workbooks';
  * Incrementar esta constante força a re-semeadura em todos os dispositivos na
  * próxima abertura. Deve subir sempre que o conteúdo gerado mudar.
  */
-export const SEED_VERSION = 4;
+export const SEED_VERSION = 5;
 
 const SEED_KEY = 'content_seed_version';
 

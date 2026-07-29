@@ -46,6 +46,25 @@ Literal, sentido real, equivalente brasileiro (ou a admissão explícita de que
 não existe um) e origem. O card só revela depois do toque — recuperação ativa,
 não leitura passiva.
 
+**8. Seis níveis com conteúdo próprio, sem repetição.**
+48 cursos (8 idiomas × A1–C2), 648 lições e 3.536 exercícios. Vocabulário e
+gramática pertencem a **um** nível: há teste automatizado que quebra se um
+termo reaparecer em outro nível. E a dificuldade é real — em A1 o exercício
+pede reconhecimento, em C2 pede produção e escolha de registro.
+
+**9. Todo módulo termina em prova de nível.**
+Nota, aprovação a partir de 70% e registro de **todas** as tentativas — não só
+da melhor. Três reprovações seguidas dizem algo que a melhor nota esconde.
+
+**10. Exercício com armadilha, não com distrator aleatório.**
+Cada um dos 144 pontos de gramática carrega o erro que o lusófono realmente
+comete. "I have 25 years" não é alternativa aleatória: é a tradução literal de
+"tenho 25 anos", e quem cai nela recebe a explicação na hora.
+
+**11. Acesso liberado para todo mundo.**
+Sem plano pago, sem cadastro, sem recurso bloqueado. O modelo de planos segue
+íntegro no código, atrás de uma única constante — ver `src/domain/access.ts`.
+
 ---
 
 ## Stack
@@ -80,8 +99,8 @@ Verificações:
 
 ```bash
 npm run typecheck   # tsc --noEmit
-npm test            # 181 testes
-npm run verify:web  # abre a build no Chromium e percorre o app
+npm test            # 224 testes
+npm run verify:all  # smoke test no Chromium + regressão de dado legado
 npm run lint        # biome check
 npm run build:web   # export estático em dist/
 ```
@@ -106,8 +125,8 @@ src/content/  Vocabulário, frases e gerador da trilha
 docs/         15 documentos: PRD, arquitetura, banco, APIs, lançamento…
 ```
 
-O domínio não importa nada de fora dele. É por isso que 181 testes rodam em
-Node puro, em ~8 s, sem emulador.
+O domínio não importa nada de fora dele. É por isso que 224 testes rodam em
+Node puro, em ~9 s, sem emulador.
 
 ---
 
@@ -140,7 +159,8 @@ trilha, 16 tipos de exercício, repetição espaçada, prática por habilidade,
 tutor, painel de progresso, vocabulário, downloads, paywall e perfil com
 exportação/exclusão de dados (LGPD). Também: apostilas por nível com download e
 exportação, módulo de expressões idiomáticas, troca de nível do curso em
-andamento e alternância entre os modos Completo e Essencial.
+andamento, alternância entre os modos Completo e Essencial, provas de nível ao
+fim de cada módulo e tutor com ~1.000 itens de contexto por idioma.
 
 **Ainda não implementado** — lista completa e honesta em
 [`docs/11-implementacao.md#1109-limitações-conhecidas`](docs/11-implementacao.md):

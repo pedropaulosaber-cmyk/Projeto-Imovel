@@ -16,6 +16,7 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 
 import { LANGUAGE_META } from '@/content/vocabulary';
 import { Badge, Card, ProgressRing, Screen, Text, Touchable, useTheme } from '@/design';
+import { canOpenLesson, hasFullAccess } from '@/domain/access';
 import type { Lesson, PlanBlock } from '@/domain/types';
 import { formatDuration } from '@/lib/date';
 import { selectGoalRatio, selectTodayXp, useAppStore } from '@/state/app-store';
@@ -211,9 +212,9 @@ export default function Learn() {
                 completed={progress?.status === 'completed'}
                 accuracy={progress?.bestAccuracy ?? null}
                 locked={!previousDone}
-                isPremiumUser={profile?.plan !== 'free'}
+                isPremiumUser={hasFullAccess(profile)}
                 onPress={() => {
-                  if (lesson.premium && profile?.plan === 'free') {
+                  if (!canOpenLesson(profile, lesson)) {
                     router.push('/paywall');
                   } else {
                     router.push(`/lesson/${lesson.id}` as never);
