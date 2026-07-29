@@ -5,11 +5,23 @@
  * utilizável em qualquer cenário. A regra de ouro aqui é: **nunca falhar de
  * forma dura.** Um erro ao abrir o SQLite não pode virar uma tela branca; ele
  * degrada para o armazenamento em memória e o app continua funcionando.
+ *
+ * ## Por que o adaptador SQLite é carregado por import dinâmico
+ *
+ * `expo-sqlite` resolve o módulo nativo `ExpoSQLite` **no momento em que o
+ * módulo é avaliado**, não quando uma função dele é chamada. Com um `import`
+ * estático no topo deste arquivo, o bundle web executava esse require assim que
+ * carregava e lançava `Cannot find native module 'ExpoSQLite'` — antes de
+ * qualquer checagem de `Platform.OS` e antes do `try/catch` abaixo. Resultado:
+ * tela branca na web, com todo o "fallback seguro" inalcançável.
+ *
+ * O `await import()` dentro do ramo nativo resolve isso de forma definitiva: na
+ * web o módulo nunca é avaliado, e no nativo a falha (se houver) acontece dentro
+ * do `try` e degrada como planejado.
  */
 
 import { Platform } from 'react-native';
 
-import { SqliteDocumentStore } from './adapters/sqlite';
 import { WebDocumentStore } from './adapters/web';
 import { ALL_COLLECTIONS } from './collections';
 import type { DocumentStore } from './store';
@@ -44,6 +56,10 @@ export async function openDatabase(): Promise<DocumentStore> {
     }
 
     try {
+      // Import dinâmico: em web este caminho nunca é alcançado, então o módulo
+      // nativo jamais é avaliado. Ver o bloco de documentação no topo.
+      const { SqliteDocumentStore } = await import('./adapters/sqlite');
+
       const store = new SqliteDocumentStore();
       await store.init(ALL_COLLECTIONS);
       await store.migrate(ALL_COLLECTIONS);
@@ -93,5 +109,8 @@ export function __setDatabaseForTests(store: DocumentStore | null): void {
 
 export * from './store';
 export * from './collections';
-export { SqliteDocumentStore } from './adapters/sqlite';
 export { WebDocumentStore } from './adapters/web';
+
+// `SqliteDocumentStore` NÃO é reexportado aqui de propósito: uma reexportação
+// é um import estático e traria de volta a avaliação de `expo-sqlite` no bundle
+// web. Quem precisar dele no nativo importa de './adapters/sqlite' diretamente.
