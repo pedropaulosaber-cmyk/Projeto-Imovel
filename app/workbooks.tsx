@@ -12,14 +12,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ScrollView, Share, View } from 'react-native';
+import { Alert, ScrollView, Share, View } from 'react-native';
 
 import { LANGUAGE_META } from '@/content/vocabulary';
+import { workbookFileName, workbookToPrintableHtml } from '@/content/workbook-pdf';
 import { workbookToText } from '@/content/workbooks';
 import { libraryRepository } from '@/db/repositories/library';
 import { Badge, Button, Card, Screen, Text, Touchable, useTheme } from '@/design';
 import { CEFR_LEVELS, type Workbook } from '@/domain/types';
 import { formatBytes } from '@/lib/date';
+import { exportHtmlAsPdf } from '@/services/pdf';
 import { useAppStore } from '@/state/app-store';
 
 export default function Workbooks() {
@@ -68,10 +70,44 @@ export default function Workbooks() {
     [downloaded, load],
   );
 
-  /** Exporta como texto: abre em qualquer app, imprime, vira PDF se quiser. */
-  const exportWorkbook = useCallback(async (workbook: Workbook) => {
-    await Share.share({ message: workbookToText(workbook), title: workbook.title });
-  }, []);
+  /**
+   * Gera o PDF.
+   *
+   * O documento é montado como HTML e impresso pelo motor do sistema — que já
+   * tem as fontes de japonês, coreano e chinês instaladas. Uma biblioteca de
+   * PDF em JS precisaria embutir essas fontes (megabytes) ou renderizar
+   * retângulos vazios no lugar dos caracteres.
+   */
+  const exportPdf = useCallback(
+    async (workbook: Workbook) => {
+      if (!enrollment) return;
+      setBusy(workbook.id);
+
+      try {
+        const result = await exportHtmlAsPdf(
+          workbookToPrintableHtml(workbook),
+          workbookFileName(workbook, enrollment.language),
+        );
+
+        // Falha honesta: se o PDF não saiu, o usuário precisa saber por quê —
+        // e ainda assim levar o conteúdo embora, em texto.
+        if (!result.ok) {
+          Alert.alert('Não foi possível gerar o PDF', result.reason, [
+            { text: 'Fechar', style: 'cancel' },
+            {
+              text: 'Exportar como texto',
+              onPress: () => {
+                void Share.share({ message: workbookToText(workbook), title: workbook.title });
+              },
+            },
+          ]);
+        }
+      } finally {
+        setBusy(null);
+      }
+    },
+    [enrollment],
+  );
 
   if (!enrollment) {
     return (
@@ -203,11 +239,12 @@ export default function Workbooks() {
                       style={{ flex: 1 }}
                     />
                     <Button
-                      label="Exportar"
+                      label="PDF"
                       size="sm"
                       variant="ghost"
-                      icon="share-outline"
-                      onPress={() => void exportWorkbook(workbook)}
+                      icon="document-text-outline"
+                      loading={busy === workbook.id}
+                      onPress={() => void exportPdf(workbook)}
                     />
                   </View>
                 </View>
@@ -221,8 +258,8 @@ export default function Workbooks() {
             <Ionicons name="information-circle" size={20} color={theme.colors.info} />
             <Text variant="caption" tone="secondary" flex>
               As apostilas são geradas no seu aparelho a partir do conteúdo já instalado —
-              baixar não consome dados móveis. "Exportar" gera um texto que você pode salvar,
-              imprimir ou converter em PDF.
+              baixar não consome dados móveis. "PDF" gera o documento completo — com capa,
+              sumário e cerca de 20 páginas — pronto para imprimir ou guardar.
             </Text>
           </View>
         </Card>

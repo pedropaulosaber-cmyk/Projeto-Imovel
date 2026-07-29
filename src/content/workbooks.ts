@@ -35,19 +35,13 @@ import type {
   WorkbookSection,
 } from '@/domain/types';
 import { usesNonLatinScript } from '@/domain/types';
+import { grammarPoints } from './grammar-syllabus';
 import { buildIdioms } from './idioms';
+import { levelVocabulary } from './level-content';
 import { CURATED_PHRASES } from './phrases';
-import { LANGUAGE_META, buildVocabulary } from './vocabulary';
-
-/** Quantos verbetes de vocabulário cada nível cobre na apostila. */
-const VOCAB_SLICE: Record<CefrLevel, [number, number]> = {
-  A1: [0, 16],
-  A2: [10, 26],
-  B1: [20, 34],
-  B2: [26, 40],
-  C1: [30, 40],
-  C2: [34, 40],
-};
+import { levelVerbs } from './verbs';
+import { LANGUAGE_META } from './vocabulary';
+import { estimatePages } from './workbook-pdf';
 
 const LEVEL_TITLE: Record<CefrLevel, { title: string; subtitle: string }> = {
   A1: {
@@ -129,13 +123,19 @@ function introSection(language: LanguageCode, level: CefrLevel): WorkbookSection
 }
 
 function vocabularySection(language: LanguageCode, level: CefrLevel): WorkbookSection {
-  const vocabulary = buildVocabulary(language).slice(...VOCAB_SLICE[level]);
+  // Vocabulário **do nível**, não uma fatia arbitrária da lista de frequência.
+  // É o que garante que a apostila de C1 fale de C1 — e que nada se repita
+  // entre apostilas, já que `levelVocabulary` deduplica dentro e entre níveis.
+  const vocabulary = levelVocabulary(language, level);
 
   const blocks: WorkbookBlock[] = [
     { kind: 'heading', text: 'Vocabulário do nível' },
     {
       kind: 'paragraph',
-      text: 'As palavras estão em ordem de frequência real: as primeiras aparecem mais na língua falada. Aprender nessa ordem rende muito mais que aprender por tema.',
+      text:
+        level === 'A1'
+          ? 'As palavras estão em ordem de frequência real: as primeiras aparecem mais na língua falada. No início, aprender nessa ordem rende muito mais que aprender por tema.'
+          : 'A partir daqui a frequência para de discriminar — as palavras deste nível têm frequências parecidas entre si, e o que muda é o domínio de uso. Por isso elas vêm agrupadas por situação, não por ranking.',
     },
     {
       kind: 'vocabTable',
@@ -148,7 +148,7 @@ function vocabularySection(language: LanguageCode, level: CefrLevel): WorkbookSe
     },
   ];
 
-  const withExamples = vocabulary.filter((item) => item.exampleSentence).slice(0, 8);
+  const withExamples = vocabulary.filter((item) => item.exampleSentence).slice(0, 14);
   if (withExamples.length > 0) {
     blocks.push(
       { kind: 'heading', text: 'Em contexto' },
@@ -267,7 +267,7 @@ function idiomsSection(language: LanguageCode, level: CefrLevel): WorkbookSectio
     },
   ];
 
-  for (const idiom of idioms.slice(0, 10)) {
+  for (const idiom of idioms.slice(0, 25)) {
     blocks.push({
       kind: 'callout',
       tone: 'tip',
@@ -291,6 +291,158 @@ function idiomsSection(language: LanguageCode, level: CefrLevel): WorkbookSectio
     order: 4,
     kind: 'idioms',
     blocks,
+  };
+}
+
+/**
+ * Seção de verbos.
+ *
+ * Verbo tem seção própria porque é a peça que carrega tempo, pessoa e modo —
+ * um aluno com 500 substantivos e 20 verbos não fala; com 100 substantivos e
+ * 80 verbos, conversa. A tabela de conjugação traz só as formas de uso real:
+ * uma grade de 6 pessoas × 8 tempos é material de consulta, não de
+ * aprendizado, e afoga quem está começando.
+ */
+function verbsSection(language: LanguageCode, level: CefrLevel): WorkbookSection | null {
+  const verbs = levelVerbs(language, level);
+  if (verbs.length === 0) return null;
+
+  const blocks: WorkbookBlock[] = [
+    { kind: 'heading', text: 'Os verbos deste nível' },
+    {
+      kind: 'paragraph',
+      text: 'Para cada verbo: como se fala, o que significa em português, as formas que você vai usar hoje e uma frase pronta. Decore a frase, não a tabela — é a frase que a memória guarda.',
+    },
+    {
+      kind: 'vocabTable',
+      rows: verbs.map((verb) => ({
+        term: verb.infinitive,
+        romanization: verb.romanization ?? undefined,
+        translation: verb.meaning,
+      })),
+    },
+  ];
+
+  for (const verb of verbs) {
+    blocks.push({
+      kind: 'conjugation',
+      verb: verb.romanization ? `${verb.infinitive} · ${verb.romanization}` : verb.infinitive,
+      forms: verb.forms,
+    });
+
+    blocks.push({
+      kind: 'examples',
+      items: [{ target: verb.example, native: verb.exampleTranslation }],
+    });
+
+    if (verb.note) {
+      blocks.push({
+        kind: 'callout',
+        tone: 'warning',
+        title: `Atenção com "${verb.infinitive}"`,
+        text: verb.note,
+      });
+    }
+  }
+
+  return {
+    id: `${workbookId(language, level)}:verbs`,
+    title: 'Verbos',
+    order: 2,
+    kind: 'vocabulary',
+    blocks,
+  };
+}
+
+/**
+ * Seção de armadilhas.
+ *
+ * Vem do programa de gramática por nível, onde cada ponto carrega o erro que o
+ * lusófono **de fato** produz. Numa apostila, ver a forma errada ao lado da
+ * certa vale mais que a regra sozinha: o aluno reconhece o próprio erro na
+ * página e é esse reconhecimento que corrige.
+ */
+function trapsSection(language: LanguageCode, level: CefrLevel): WorkbookSection | null {
+  const points = grammarPoints(language, level);
+  if (points.length === 0) return null;
+
+  const blocks: WorkbookBlock[] = [
+    { kind: 'heading', text: 'Onde o português atrapalha' },
+    {
+      kind: 'paragraph',
+      text: 'Nenhum destes erros é distração. Todos vêm da mesma origem: traduzir a estrutura do português direto para a outra língua. Reconhecer o mecanismo resolve dezenas de casos de uma vez.',
+    },
+  ];
+
+  for (const point of points) {
+    blocks.push(
+      { kind: 'callout', tone: 'rule', title: point.title, text: point.rule },
+      {
+        kind: 'examples',
+        items: [{ target: `✓ ${point.correct}`, native: `✗ ${point.trap}` }],
+      },
+      {
+        kind: 'callout',
+        tone: 'warning',
+        title: 'Por que a intuição falha aqui',
+        text: point.why,
+      },
+    );
+  }
+
+  return {
+    id: `${workbookId(language, level)}:traps`,
+    title: 'Armadilhas do português',
+    order: 4,
+    kind: 'grammar',
+    blocks,
+  };
+}
+
+/**
+ * Plano de estudo do nível.
+ *
+ * Uma apostila sem plano é um dicionário: o aluno lê, acha bonito e não sabe o
+ * que fazer amanhã de manhã. Esta seção transforma o conteúdo em rotina, com
+ * quatro semanas concretas e um critério de "pronto para o próximo nível".
+ */
+function studySection(language: LanguageCode, level: CefrLevel): WorkbookSection {
+  const meta = LANGUAGE_META[language];
+  const verbs = levelVerbs(language, level).length;
+  const words = levelVocabulary(language, level).length;
+
+  const weeks: string[] = [
+    `Semana 1 — vocabulário: leia a tabela inteira em voz alta uma vez por dia. Marque as ${Math.max(5, Math.round(words / 4))} palavras que não vieram de primeira.`,
+    `Semana 2 — verbos: escreva uma frase própria com cada um dos ${verbs} verbos. Frase sua, não a do exemplo.`,
+    'Semana 3 — armadilhas: releia a seção de erros e procure cada um deles no que você já escreveu.',
+    'Semana 4 — produção: converse com o tutor usando só o conteúdo deste nível, sem consultar a apostila.',
+  ];
+
+  return {
+    id: `${workbookId(language, level)}:study`,
+    title: 'Plano de estudo',
+    order: 7,
+    kind: 'practice',
+    blocks: [
+      { kind: 'heading', text: 'Como estudar este nível em quatro semanas' },
+      {
+        kind: 'paragraph',
+        text: `Um plano concreto vale mais que boa vontade. Este cabe em 15 minutos por dia e cobre todo o conteúdo do ${level} de ${meta.name.toLowerCase()}.`,
+      },
+      { kind: 'list', items: weeks },
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'Quando avançar de nível',
+        text: 'Quando você conseguir escrever cinco frases próprias, sem consultar nada, usando o vocabulário e os verbos deste nível — e sem cair nas armadilhas listadas. Não espere sentir 100%: 80% é o ponto certo de avançar.',
+      },
+      {
+        kind: 'callout',
+        tone: 'warning',
+        title: 'O erro mais caro',
+        text: 'Reler é confortável e quase inútil. O que fixa é tentar lembrar antes de olhar. Cubra a coluna da direita da tabela e tente traduzir de cabeça — errar e conferir ensina mais que ler dez vezes.',
+      },
+    ],
   };
 }
 
@@ -383,17 +535,19 @@ export function buildWorkbook(language: LanguageCode, level: CefrLevel): Workboo
   const sections = [
     introSection(language, level),
     vocabularySection(language, level),
+    verbsSection(language, level),
     grammarSection(language, level),
+    trapsSection(language, level),
     phrasesSection(language, level),
     idiomsSection(language, level),
+    studySection(language, level),
     summarySection(language, level),
-  ].filter((section): section is WorkbookSection => section !== null);
+  ]
+    .filter((section): section is WorkbookSection => section !== null)
+    // Reordena depois do filtro para que a numeração do sumário nunca pule.
+    .map((section, index) => ({ ...section, order: index }));
 
-  // Estimativa de páginas: ~14 blocos por página impressa. Serve só para dar
-  // ao usuário uma noção de tamanho antes de baixar.
-  const blockCount = sections.reduce((sum, section) => sum + section.blocks.length, 0);
-
-  return {
+  const workbook: Workbook = {
     id: workbookId(language, level),
     language,
     level,
@@ -401,9 +555,14 @@ export function buildWorkbook(language: LanguageCode, level: CefrLevel): Workboo
     subtitle: info.subtitle,
     courseId: `course:${language}:${level}`,
     sections,
-    estimatedPages: Math.max(4, Math.ceil(blockCount / 3)),
-    contentVersion: 1,
+    // Preenchido logo abaixo: a estimativa depende dos blocos já montados.
+    estimatedPages: 0,
+    contentVersion: 2,
   };
+
+  // Calculada a partir do conteúdo real e do CSS de impressão, não chutada.
+  // Prometer 20 páginas e entregar 6 é o tipo de detalhe que corrói confiança.
+  return { ...workbook, estimatedPages: estimatePages(workbook) };
 }
 
 /** Todas as apostilas de um idioma, um por nível CEFR. */
