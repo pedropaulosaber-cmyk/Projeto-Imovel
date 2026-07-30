@@ -21,7 +21,7 @@ import { SPEAKING_MODES } from '@/ai/conversation';
 import { SCENARIO_LIST } from '@/ai/knowledge';
 import { OfflineTutorProvider } from '@/ai/offline-tutor';
 import { ResilientAiProvider } from '@/ai/provider';
-import { Badge, Card, Chip, Screen, Text, Touchable, useTheme } from '@/design';
+import { Aurora, Badge, Card, Chip, Screen, Spot, Text, Touchable, useTheme } from '@/design';
 import type { Correction, TutorMessage } from '@/domain/types';
 import { ulid } from '@/lib/id';
 import { speechService } from '@/services/speech';
@@ -139,6 +139,8 @@ export default function Tutor() {
       keyboardVerticalOffset={90}
     >
       <Screen padded={false}>
+        <Aurora seed="tutor" height={240} />
+
         {/* Cabeçalho */}
         <View
           style={{
@@ -225,21 +227,42 @@ export default function Tutor() {
             paddingHorizontal: theme.layout.screenPadding,
             paddingBottom: theme.space[6],
             gap: theme.space[3],
+            // Sem `flexGrow`, o `flex: 1` do estado vazio não tem o que
+            // preencher e o convite volta a encostar no topo.
+            flexGrow: 1,
           }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          {/*
+            O convite fica centrado no espaço da conversa, não encostado no
+            topo. Antes sobrava meia tela em branco abaixo dele, e uma tela de
+            chat vazia com um card solto no alto lê como carregamento travado.
+          */}
           {messages.length === 0 ? (
-            <Card variant="subtle" padding={5} style={{ marginTop: theme.space[4] }}>
-              <View style={{ gap: theme.space[3] }}>
-                <Ionicons name="sparkles" size={24} color={theme.colors.brand} />
-                <Text variant="headline">Vamos conversar?</Text>
-                <Text variant="footnote" tone="secondary">
-                  Escolha um cenário acima ou escreva qualquer coisa. Eu corrijo seus erros na
-                  hora, explico a regra e continuo a conversa — mesmo sem internet.
-                </Text>
-              </View>
-            </Card>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: theme.space[4],
+                paddingVertical: theme.space[10],
+              }}
+            >
+              <Spot name="chat" size={104} label="Ilustração de conversa com o tutor" />
+              <Text variant="title3" align="center">
+                Vamos conversar?
+              </Text>
+              <Text
+                variant="footnote"
+                tone="secondary"
+                align="center"
+                style={{ maxWidth: 320 }}
+              >
+                Escolha um cenário acima ou escreva qualquer coisa. Eu corrijo seus erros na
+                hora, explico a regra e continuo a conversa — mesmo sem internet.
+              </Text>
+            </View>
           ) : null}
 
           {messages

@@ -25,6 +25,8 @@ export type SpotName =
   | 'done'
   /** Busca sem resultado. */
   | 'search'
+  /** Conversa ainda não começada. */
+  | 'chat'
   /** Conteúdo bloqueado ou indisponível offline. */
   | 'locked';
 
@@ -42,6 +44,11 @@ const STROKES: Record<SpotName, string[]> = {
     'M 46 22 A 17 17 0 1 0 49 32',
   ],
   search: ['M 29 29 m -10 0 a 10 10 0 1 0 20 0 a 10 10 0 1 0 -20 0', 'M 37 37 L 46 46'],
+  chat: [
+    // Dois balões sobrepostos: a conversa é de duas pessoas, não um aviso.
+    'M 17 22 L 39 22 A 4 4 0 0 1 43 26 L 43 36 A 4 4 0 0 1 39 40 L 26 40 L 20 45 L 20 40 A 4 4 0 0 1 17 36 L 17 26 A 4 4 0 0 1 21 22',
+    'M 30 45 L 44 45 A 3 3 0 0 0 47 42 L 47 33',
+  ],
   locked: ['M 22 30 L 42 30 L 42 46 L 22 46 Z', 'M 26 30 L 26 24 A 6 6 0 0 1 38 24 L 38 30'],
 };
 

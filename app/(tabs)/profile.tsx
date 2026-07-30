@@ -16,6 +16,7 @@ import { LANGUAGE_META } from '@/content/vocabulary';
 import { closeDatabase, getDatabase } from '@/db';
 import { learnerRepository } from '@/db/repositories/learner';
 import {
+  Aurora,
   Badge,
   Button,
   Card,
@@ -134,6 +135,8 @@ export default function Profile() {
 
   return (
     <Screen padded={false}>
+      <Aurora seed="profile" height={280} />
+
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.layout.screenPadding,

@@ -16,7 +16,18 @@ import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { learnerRepository } from '@/db/repositories/learner';
-import { Badge, Button, Card, ProgressBar, Screen, Text, Touchable, useTheme } from '@/design';
+import {
+  Aurora,
+  Badge,
+  Button,
+  Card,
+  ProgressBar,
+  Screen,
+  Spot,
+  Text,
+  Touchable,
+  useTheme,
+} from '@/design';
 import { shouldShowUpsell } from '@/domain/access';
 import { averageRetention, estimateReviewMinutes, forecastLoad } from '@/domain/srs';
 import type { ReviewState } from '@/domain/types';
@@ -92,6 +103,8 @@ export default function Practice() {
 
   return (
     <Screen padded={false}>
+      <Aurora seed="practice" height={260} />
+
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.layout.screenPadding,
@@ -108,23 +121,28 @@ export default function Practice() {
         <Card variant={dueCount > 0 ? 'subtle' : 'flat'} padding={5}>
           <View style={{ gap: theme.space[4] }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.space[3] }}>
-              <View
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: theme.radius.md,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor:
-                    dueCount > 0 ? theme.colors.brand : theme.colors.surfaceSunken,
-                }}
-              >
-                <Ionicons
-                  name="repeat"
-                  size={24}
-                  color={dueCount > 0 ? theme.colors.onBrand : theme.colors.textSecondary}
-                />
-              </View>
+              {/*
+                Com revisões pendentes, o bloco é um botão de ação e precisa do
+                peso da cor da marca. Sem elas, o quadrado cinza fazia a fila
+                vazia parecer um controle desabilitado — o spot desenhado diz o
+                que de fato aconteceu: a memória está em dia.
+              */}
+              {dueCount > 0 ? (
+                <View
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: theme.radius.md,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.colors.brand,
+                  }}
+                >
+                  <Ionicons name="repeat" size={24} color={theme.colors.onBrand} />
+                </View>
+              ) : (
+                <Spot name="done" size={52} tone="success" />
+              )}
 
               <View style={{ flex: 1, gap: 2 }}>
                 <Text variant="headline">

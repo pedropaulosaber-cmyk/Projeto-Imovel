@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import { View, useWindowDimensions } from 'react-native';
 
 import { LANGUAGE_META } from '@/content/vocabulary';
-import { Badge, Button, Card, Screen, Text, useTheme } from '@/design';
+import { Aurora, Badge, Button, Card, Screen, Text, useTheme } from '@/design';
 import { SUPPORTED_LANGUAGES } from '@/domain/types';
 
 const PILLARS = [
@@ -126,6 +126,8 @@ export function Landing() {
 
   return (
     <Screen scroll padded={false} edgeTop={false}>
+      <Aurora seed="landing" height={520} intensity={1.25} />
+
       <View style={{ paddingHorizontal: theme.space[5], paddingTop: theme.space[16] }}>
         {/* ---------------- Hero ---------------- */}
         <View style={{ gap: theme.space[5], alignItems: isWide ? 'center' : 'flex-start' }}>
@@ -161,9 +163,15 @@ export function Landing() {
             align={isWide ? 'center' : 'left'}
             style={{ maxWidth: 620, fontSize: 19, lineHeight: 30 }}
           >
-            Aprenda inglês, espanhol, francês, italiano ou alemão com repetição espaçada,
-            prática de fala e um tutor de IA que lembra do que você errou. Tudo funciona sem
-            internet — de verdade.
+            {/*
+              A contagem vem da lista de idiomas suportados, não de um número
+              digitado à mão. A frase anterior citava cinco idiomas e o app já
+              tinha oito — o tipo de mentira que ninguém escreve de propósito e
+              que ninguém revisa depois de adicionar o sexto.
+            */}
+            Aprenda {SUPPORTED_LANGUAGES.length} idiomas — do inglês ao japonês — com repetição
+            espaçada, prática de fala e um tutor de IA que lembra do que você errou. Tudo
+            funciona sem internet, de verdade.
           </Text>
 
           <View
