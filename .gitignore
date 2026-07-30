@@ -30,3 +30,6 @@ Thumbs.db
 .vercel
 coverage/
 *.tsbuildinfo
+
+# Capturas de tela para revisão visual (geradas por scripts/shoot.js)
+.shots/
