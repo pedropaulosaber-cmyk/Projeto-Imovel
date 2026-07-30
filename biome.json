@@ -24,6 +24,14 @@
   "overrides": [
     {
       "include": [
+        "src/content/verbs-extra/de.ts",
+        "src/content/verbs-extra/en.ts",
+        "src/content/verbs-extra/es.ts",
+        "src/content/verbs-extra/fr.ts",
+        "src/content/verbs-extra/it.ts",
+        "src/content/verbs-extra/ja.ts",
+        "src/content/verbs-extra/ko.ts",
+        "src/content/verbs-extra/zh.ts",
         "src/content/idioms-extra/de.ts",
         "src/content/idioms-extra/en.ts",
         "src/content/idioms-extra/es.ts",

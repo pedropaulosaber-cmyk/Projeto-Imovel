@@ -24,8 +24,10 @@ describe('catálogo de verbos', () => {
   });
 
   it('catalogou o programa inteiro', () => {
-    // 8 idiomas × 6 níveis × 8 verbos.
-    expect(verbCount()).toBe(384);
+    // 8 idiomas × 6 níveis × 20 verbos. Eram 8 por nível até a seção de verbos
+    // ficar pequena demais para ser percebida ao lado das 25 expressões
+    // idiomáticas — ver o cabeçalho de `verbs.test.ts`.
+    expect(verbCount()).toBe(960);
   });
 
   it('nenhum verbo se repete dentro de um idioma', () => {

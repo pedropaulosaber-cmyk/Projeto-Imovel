@@ -33,6 +33,7 @@
  */
 
 import type { CefrLevel, LanguageCode } from '@/domain/types';
+import { extraVerbsRaw } from './verbs-extra';
 
 export type VerbEntry = {
   infinitive: string;
@@ -2458,8 +2459,8 @@ const JA: VerbMap = {
       'yatte mimasu',
       'tentar / experimentar',
       'polido:やってみます|passado:やってみました',
-      '早く来てみます。',
-      'Vou tentar vir cedo.',
+      '新しい方法をやってみます。',
+      'Vou experimentar um método novo.',
       'A forma て + みる significa "experimentar".',
     ],
     [
@@ -3671,10 +3672,17 @@ const VERB_CATALOG: Record<LanguageCode, VerbMap> = {
   zh: ZH,
 };
 
-/** Verbos de um idioma num nível, já expandidos. */
+/**
+ * Verbos de um idioma num nível, já expandidos.
+ *
+ * Junta os dois lotes — o curado deste arquivo e o de ampliação de
+ * `verbs-extra/` — num único ponto, para que apostila, trilha e contagem
+ * enxerguem sempre o mesmo conjunto. Se cada consumidor tivesse de lembrar de
+ * somar os dois, algum esqueceria.
+ */
 export function levelVerbs(language: LanguageCode, level: CefrLevel): VerbEntry[] {
-  const raw = VERB_CATALOG[language]?.[level];
-  return raw ? expand(raw) : [];
+  const curated = VERB_CATALOG[language]?.[level] ?? [];
+  return expand([...curated, ...extraVerbsRaw(language, level)]);
 }
 
 /** Todos os verbos de um idioma, do A1 ao C2. */
