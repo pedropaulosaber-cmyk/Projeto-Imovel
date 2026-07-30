@@ -16,7 +16,18 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 
 import { trackIntro } from '@/content/goal-tracks';
 import { LANGUAGE_META } from '@/content/vocabulary';
-import { Badge, Card, ProgressRing, Screen, Text, Touchable, useTheme } from '@/design';
+import {
+  Aurora,
+  Badge,
+  Card,
+  LanguageScene,
+  ProgressRing,
+  Screen,
+  Spot,
+  Text,
+  Touchable,
+  useTheme,
+} from '@/design';
 import { canOpenLesson, hasFullAccess } from '@/domain/access';
 import type { Lesson, PlanBlock } from '@/domain/types';
 import { formatDuration } from '@/lib/date';
@@ -59,6 +70,12 @@ export default function Learn() {
 
   return (
     <Screen padded={false} scroll={false}>
+      {/*
+        Fundo ambiente. Fica atrás do conteúdo e não recebe toque — existe para
+        dar profundidade ao topo da tela, não para ser visto como um elemento.
+      */}
+      <Aurora seed={`learn-${enrollment.language}`} height={320} />
+
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.layout.screenPadding,
@@ -112,8 +129,26 @@ export default function Learn() {
         </View>
 
         {/* ------------ Meta do dia ------------ */}
-        <Card variant="raised" padding={5}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.space[5] }}>
+        {/*
+          A cena fica no topo do card, e não como fundo atrás do texto: sobre a
+          ilustração, o número da meta perderia contraste — e o número é a
+          informação mais importante da tela.
+        */}
+        <Card variant="raised" padding={0} style={{ overflow: 'hidden' }}>
+          <LanguageScene
+            language={enrollment.language}
+            height={112}
+            label={`Paisagem que representa ${meta.name}`}
+          />
+
+          <View
+            style={{
+              padding: theme.space[5],
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: theme.space[5],
+            }}
+          >
             <ProgressRing
               value={goalRatio}
               size={104}
@@ -177,10 +212,16 @@ export default function Learn() {
           </View>
 
           {plan.blocks.length === 0 ? (
-            <Card variant="subtle" padding={5}>
-              <Text variant="callout">
-                Tudo em dia por hoje. Volte amanhã ou continue no ritmo livre.
-              </Text>
+            <Card variant="subtle" padding={6}>
+              <View style={{ alignItems: 'center', gap: theme.space[3] }}>
+                <Spot name="done" size={84} tone="success" />
+                <Text variant="headline" align="center">
+                  Tudo em dia por hoje
+                </Text>
+                <Text variant="footnote" tone="secondary" align="center">
+                  Volte amanhã ou continue no ritmo livre.
+                </Text>
+              </View>
             </Card>
           ) : (
             plan.blocks.map((block, index) => (

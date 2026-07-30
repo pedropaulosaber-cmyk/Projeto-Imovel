@@ -15,7 +15,17 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
-import { Badge, Card, ProgressBar, Screen, SegmentedControl, Text, useTheme } from '@/design';
+import {
+  Aurora,
+  Badge,
+  Card,
+  ProgressBar,
+  Screen,
+  SegmentedControl,
+  Text,
+  alpha,
+  useTheme,
+} from '@/design';
 import { LEAGUE_LABEL } from '@/domain/gamification';
 import {
   ActivityHeatmap,
@@ -85,6 +95,8 @@ export default function Progress() {
 
   return (
     <Screen padded={false}>
+      <Aurora seed="progress" height={280} />
+
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.layout.screenPadding,
@@ -302,6 +314,15 @@ export default function Progress() {
   );
 }
 
+/**
+ * Um número do painel.
+ *
+ * O ícone vive dentro de um disco tingido com a própria cor da métrica. Antes
+ * ele era um glifo solto sobre o card, e as seis peças da grade ficavam
+ * indistinguíveis: mesmo fundo, mesmo tamanho, mesma silhueta. O disco dá a
+ * cada métrica uma âncora de cor, que é o que permite achar "ofensiva" sem ler
+ * as seis legendas.
+ */
 function MetricTile({
   icon,
   value,
@@ -315,17 +336,32 @@ function MetricTile({
   hint: string;
   color: string;
 }) {
+  const theme = useTheme();
+
   return (
     <Card variant="flat" padding={4} style={{ flexBasis: '47%', flexGrow: 1 }}>
-      <View style={{ gap: 4 }}>
-        <Ionicons name={icon} size={19} color={color} />
+      <View style={{ gap: theme.space[2] }}>
+        <View
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: theme.radius.pill,
+            backgroundColor: alpha(color, theme.isDark ? 0.22 : 0.13),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Ionicons name={icon} size={18} color={color} />
+        </View>
         <Text variant="title2">{value}</Text>
-        <Text variant="footnote" tone="secondary">
-          {label}
-        </Text>
-        <Text variant="caption" tone="tertiary">
-          {hint}
-        </Text>
+        <View style={{ gap: 2 }}>
+          <Text variant="footnote" tone="secondary">
+            {label}
+          </Text>
+          <Text variant="caption" tone="tertiary">
+            {hint}
+          </Text>
+        </View>
       </View>
     </Card>
   );
