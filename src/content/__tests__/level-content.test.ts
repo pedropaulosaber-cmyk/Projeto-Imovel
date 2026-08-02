@@ -90,6 +90,41 @@ describe('vocabulário por nível', () => {
       expect(ids.length).toBe(new Set(ids).size);
     }
   });
+
+  /**
+   * ## Sobre o piso de 30 por nível
+   *
+   * Pedido do produto: "10.000 palavras por língua, divididas entre os
+   * níveis". 10.000 é a meta final, perseguida em várias etapas — cada uma
+   * soma um lote sem derrubar o que já existe (é o que os testes acima
+   * garantem: nada se repete, nada perde romanização, nada fica sem exemplo).
+   * Este piso trava o que **esta etapa** entregou, para que a próxima etapa
+   * comece dali e não de um regresso silencioso.
+   */
+  it('todo nível de todo idioma tem ao menos 30 verbetes', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      for (const level of CEFR_LEVELS) {
+        expect({
+          language,
+          level,
+          count: levelVocabulary(language, level).length,
+        }).toEqual({ language, level, count: expect.any(Number) });
+        expect(levelVocabulary(language, level).length).toBeGreaterThanOrEqual(30);
+      }
+    }
+  });
+
+  it('todo verbete tem tradução e exemplo traduzido', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      for (const level of CEFR_LEVELS) {
+        for (const item of levelVocabulary(language, level)) {
+          expect(item.translation.length).toBeGreaterThan(0);
+          expect(item.exampleSentence?.length ?? 0).toBeGreaterThan(0);
+          expect(item.exampleTranslation?.length ?? 0).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
 });
 
 describe('gramática por nível', () => {

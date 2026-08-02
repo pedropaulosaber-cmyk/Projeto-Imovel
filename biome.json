@@ -39,7 +39,15 @@
         "src/content/idioms-extra/it.ts",
         "src/content/idioms-extra/ja.ts",
         "src/content/idioms-extra/ko.ts",
-        "src/content/idioms-extra/zh.ts"
+        "src/content/idioms-extra/zh.ts",
+        "src/content/vocabulary-extra/de.ts",
+        "src/content/vocabulary-extra/en.ts",
+        "src/content/vocabulary-extra/es.ts",
+        "src/content/vocabulary-extra/fr.ts",
+        "src/content/vocabulary-extra/it.ts",
+        "src/content/vocabulary-extra/ja.ts",
+        "src/content/vocabulary-extra/ko.ts",
+        "src/content/vocabulary-extra/zh.ts"
       ],
       "formatter": {
         "enabled": false
