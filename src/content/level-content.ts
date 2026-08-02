@@ -23,6 +23,7 @@
 import type { CefrLevel, LanguageCode, VocabularyItem } from '@/domain/types';
 import { usesNonLatinScript } from '@/domain/types';
 import { buildVocabulary } from './vocabulary';
+import { extraAsianVocabularyRaw, extraLatinVocabularyRaw } from './vocabulary-extra';
 import { levelVocabulary as latinLevelVocabulary } from './vocabulary-levels';
 import { asianLevelVocabulary } from './vocabulary-levels-asia';
 
@@ -43,62 +44,98 @@ function vocabularyId(
   return `vocab:${language}:${slug}`;
 }
 
+function fromAsianRaw(
+  language: LanguageCode,
+  level: CefrLevel,
+  [term, romanization, translation, partOfSpeech, example, exampleRoman, exampleTranslation]: [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+  ],
+): VocabularyItem {
+  return {
+    id: vocabularyId(language, term, romanization),
+    language,
+    term,
+    translation,
+    partOfSpeech,
+    phonetic: null,
+    romanization,
+    exampleSentence: example,
+    exampleTranslation,
+    exampleRomanization: exampleRoman,
+    frequencyRank: null,
+    cefr: level,
+    tags: [partOfSpeech, level],
+  };
+}
+
+function fromLatinRaw(
+  language: LanguageCode,
+  level: CefrLevel,
+  [term, translation, partOfSpeech, example, exampleTranslation]: [
+    string,
+    string,
+    string,
+    string,
+    string,
+  ],
+): VocabularyItem {
+  return {
+    id: vocabularyId(language, term, null),
+    language,
+    term,
+    translation,
+    partOfSpeech,
+    phonetic: null,
+    romanization: null,
+    exampleSentence: example,
+    exampleTranslation,
+    exampleRomanization: null,
+    frequencyRank: null,
+    cefr: level,
+    tags: [partOfSpeech, level],
+  };
+}
+
 /** Verbetes de um nível, já como `VocabularyItem` e sem repetição. */
 export function levelVocabulary(language: LanguageCode, level: CefrLevel): VocabularyItem[] {
-  // A1 é a lista de frequência: no início, frequência é o único critério que
-  // discrimina bem (ver o cabeçalho de `vocabulary-levels.ts`).
+  // A1 é a lista de frequência — no início, frequência é o único critério que
+  // discrimina bem (ver o cabeçalho de `vocabulary-levels.ts`) — mais o lote de
+  // ampliação do próprio A1, que segue o formato normal por nível. As duas
+  // fontes são conceitualmente distintas mas convergem no mesmo tipo de saída.
   if (level === 'A1') {
-    return dedupe(buildVocabulary(language).filter((item) => item.cefr === 'A1'));
+    const extra = usesNonLatinScript(language)
+      ? extraAsianVocabularyRaw(language, level).map((raw) =>
+          fromAsianRaw(language, level, raw),
+        )
+      : extraLatinVocabularyRaw(language, level).map((raw) =>
+          fromLatinRaw(language, level, raw),
+        );
+    const frequency = buildVocabulary(language).filter((item) => item.cefr === 'A1');
+    return dedupe([...extra, ...frequency]);
   }
 
   if (usesNonLatinScript(language)) {
-    const items = asianLevelVocabulary(language, level).map(
-      ([
-        term,
-        romanization,
-        translation,
-        partOfSpeech,
-        example,
-        exampleRoman,
-        exampleTranslation,
-      ]): VocabularyItem => ({
-        id: vocabularyId(language, term, romanization),
-        language,
-        term,
-        translation,
-        partOfSpeech,
-        phonetic: null,
-        romanization,
-        exampleSentence: example,
-        exampleTranslation,
-        exampleRomanization: exampleRoman,
-        frequencyRank: null,
-        cefr: level,
-        tags: [partOfSpeech, level],
-      }),
-    );
-    return dedupe(items);
+    // O lote de ampliação vem primeiro: em caso de colisão de id — que a
+    // dedupe() resolve por "primeira ocorrência" — o verbete mais recente e
+    // mais revisado prevalece.
+    const raw = [
+      ...extraAsianVocabularyRaw(language, level),
+      ...asianLevelVocabulary(language, level),
+    ];
+    return dedupe(raw.map((entry) => fromAsianRaw(language, level, entry)));
   }
 
-  const items = latinLevelVocabulary(language, level).map(
-    ([term, translation, partOfSpeech, example, exampleTranslation]): VocabularyItem => ({
-      id: vocabularyId(language, term, null),
-      language,
-      term,
-      translation,
-      partOfSpeech,
-      phonetic: null,
-      romanization: null,
-      exampleSentence: example,
-      exampleTranslation,
-      exampleRomanization: null,
-      frequencyRank: null,
-      cefr: level,
-      tags: [partOfSpeech, level],
-    }),
-  );
-
-  return dedupe(items);
+  const raw = [
+    ...extraLatinVocabularyRaw(language, level),
+    ...latinLevelVocabulary(language, level),
+  ];
+  return dedupe(raw.map((entry) => fromLatinRaw(language, level, entry)));
 }
 
 /** Remove repetições por id, preservando a primeira ocorrência. */
