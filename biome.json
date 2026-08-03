@@ -55,7 +55,15 @@
         "src/content/vocabulary-extra/thematic/it.ts",
         "src/content/vocabulary-extra/thematic/ja.ts",
         "src/content/vocabulary-extra/thematic/ko.ts",
-        "src/content/vocabulary-extra/thematic/zh.ts"
+        "src/content/vocabulary-extra/thematic/zh.ts",
+        "src/content/vocabulary-extra/thematic2/de.ts",
+        "src/content/vocabulary-extra/thematic2/en.ts",
+        "src/content/vocabulary-extra/thematic2/es.ts",
+        "src/content/vocabulary-extra/thematic2/fr.ts",
+        "src/content/vocabulary-extra/thematic2/it.ts",
+        "src/content/vocabulary-extra/thematic2/ja.ts",
+        "src/content/vocabulary-extra/thematic2/ko.ts",
+        "src/content/vocabulary-extra/thematic2/zh.ts"
       ],
       "formatter": {
         "enabled": false
