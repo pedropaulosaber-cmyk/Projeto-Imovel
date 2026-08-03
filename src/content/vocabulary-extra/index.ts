@@ -30,6 +30,15 @@ import { JA_THEMATIC } from './thematic/ja';
 import { KO_THEMATIC } from './thematic/ko';
 import { ZH_THEMATIC } from './thematic/zh';
 
+import { DE_THEMATIC2 } from './thematic2/de';
+import { EN_THEMATIC2 } from './thematic2/en';
+import { ES_THEMATIC2 } from './thematic2/es';
+import { FR_THEMATIC2 } from './thematic2/fr';
+import { IT_THEMATIC2 } from './thematic2/it';
+import { JA_THEMATIC2 } from './thematic2/ja';
+import { KO_THEMATIC2 } from './thematic2/ko';
+import { ZH_THEMATIC2 } from './thematic2/zh';
+
 const LATIN: Partial<Record<LanguageCode, LatinByLevel>> = {
   en: EN,
   es: ES,
@@ -60,14 +69,36 @@ const ASIAN_THEMATIC: Partial<Record<LanguageCode, AsianByLevel>> = {
   zh: ZH_THEMATIC,
 };
 
+/** Terceiro bloco — mesma lógica do anterior, campos semânticos novos. */
+const LATIN_THEMATIC2: Partial<Record<LanguageCode, LatinByLevel>> = {
+  en: EN_THEMATIC2,
+  es: ES_THEMATIC2,
+  fr: FR_THEMATIC2,
+  it: IT_THEMATIC2,
+  de: DE_THEMATIC2,
+};
+const ASIAN_THEMATIC2: Partial<Record<LanguageCode, AsianByLevel>> = {
+  ja: JA_THEMATIC2,
+  ko: KO_THEMATIC2,
+  zh: ZH_THEMATIC2,
+};
+
 /** Entradas cruas latinas dos lotes de ampliação. Vazio para idiomas asiáticos. */
 export function extraLatinVocabularyRaw(language: LanguageCode, level: CefrLevel): LatinRaw[] {
   if (usesNonLatinScript(language)) return [];
-  return [...(LATIN_THEMATIC[language]?.[level] ?? []), ...(LATIN[language]?.[level] ?? [])];
+  return [
+    ...(LATIN_THEMATIC[language]?.[level] ?? []),
+    ...(LATIN_THEMATIC2[language]?.[level] ?? []),
+    ...(LATIN[language]?.[level] ?? []),
+  ];
 }
 
 /** Entradas cruas asiáticas dos lotes de ampliação. Vazio para idiomas latinos. */
 export function extraAsianVocabularyRaw(language: LanguageCode, level: CefrLevel): AsianRaw[] {
   if (!usesNonLatinScript(language)) return [];
-  return [...(ASIAN_THEMATIC[language]?.[level] ?? []), ...(ASIAN[language]?.[level] ?? [])];
+  return [
+    ...(ASIAN_THEMATIC[language]?.[level] ?? []),
+    ...(ASIAN_THEMATIC2[language]?.[level] ?? []),
+    ...(ASIAN[language]?.[level] ?? []),
+  ];
 }
