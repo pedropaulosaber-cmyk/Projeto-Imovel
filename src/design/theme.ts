@@ -231,5 +231,4 @@ export const languageAccent: Record<string, { from: string; to: string }> = {
   it: { from: '#2B8A3E', to: '#51CF66' },
   de: { from: '#343A40', to: '#868E96' },
   pt: { from: '#087F5B', to: '#20C997' },
-  ja: { from: '#C92A2A', to: '#FF6B6B' },
 };

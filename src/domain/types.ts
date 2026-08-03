@@ -24,23 +24,34 @@ export type Timestamp = number;
 export type LocalDate = string;
 
 /** Códigos ISO 639-1 dos idiomas suportados. */
-export const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'it', 'de', 'ja', 'ko', 'zh'] as const;
+export const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'it', 'de'] as const;
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number];
 
 /**
- * Idiomas cuja escrita não usa alfabeto latino.
+ * Verdadeiro para idioma cuja escrita não usa alfabeto latino.
  *
- * Para eles, todo termo carrega **romanização obrigatória** e a interface
- * mostra os dois. O motivo é prático: um iniciante brasileiro não consegue ler
- * kanji nem hanzi na primeira semana, e não tem teclado para digitá-los. A
- * romanização é a ponte que torna esses idiomas estudáveis desde o dia 1 sem
- * exigir IME nem tipografia especial.
+ * Hoje o catálogo é só de idiomas latinos, então isto é sempre `false`. A
+ * função continua existindo porque o que ela protege é real: um termo em
+ * escrita não latina precisa de **romanização obrigatória** — sem ela o
+ * iniciante não lê nem digita a palavra — e a checagem tem que estar num lugar
+ * só, não espalhada. Se o japonês voltar, muda-se esta lista e o resto do app
+ * já sabe o que fazer.
  */
-export const NON_LATIN_LANGUAGES: LanguageCode[] = ['ja', 'ko', 'zh'];
+export const NON_LATIN_LANGUAGES: LanguageCode[] = [];
 
 export function usesNonLatinScript(language: LanguageCode): boolean {
   return NON_LATIN_LANGUAGES.includes(language);
 }
+
+/**
+ * Idiomas que já foram oferecidos e não são mais.
+ *
+ * Existe por causa de dado gravado: quem se matriculou em japonês antes da
+ * remoção tem uma matrícula apontando para um curso que não existe mais, e
+ * `listCourses` devolveria lista vazia — trilha em branco, sem erro visível.
+ * Ver `isRetiredLanguage` no `app-store`.
+ */
+export const RETIRED_LANGUAGES = ['ja', 'ko', 'zh'] as const;
 
 /** Idiomas em que a interface e as explicações podem ser apresentadas. */
 export type UILanguage = 'pt' | 'en' | 'es';

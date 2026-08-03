@@ -85,9 +85,17 @@ motivacional ("estou no B1 agora") e vira material de compartilhamento.
 ## Menor impacto / apostas
 
 ### 11. Idiomas com escrita não latina
-Japonês, coreano, mandarim, árabe, russo. A arquitetura de conteúdo já
-suporta; o trabalho é de tipografia, método de entrada e ordem de introdução do
-sistema de escrita.
+Japonês, coreano, mandarim, árabe, russo. A arquitetura de conteúdo já suporta;
+o trabalho é de tipografia, método de entrada e ordem de introdução do sistema
+de escrita.
+
+Os três primeiros chegaram a existir no catálogo e foram removidos. O motivo
+não foi técnico: manter cinco idiomas com profundidade real custa menos revisão
+do que manter oito rasos, e profundidade é o que o aluno percebe. O que ficou
+da tentativa está no código e continua útil — `usesNonLatinScript`, o campo
+`romanization` em cada verbete e o teste que o exige são as guardas prontas
+para o dia em que a decisão se inverter. Ver `RETIRED_LANGUAGES` em
+`domain/types.ts` para o tratamento de quem já tinha matrícula num deles.
 
 ### 12. Grupos de estudo síncronos
 Sessões ao vivo com 4–6 pessoas do mesmo nível, mediadas pelo tutor de IA.

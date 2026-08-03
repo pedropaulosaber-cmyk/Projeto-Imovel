@@ -16,12 +16,17 @@
  * refactor seguinte.
  */
 
-import type { CefrLevel, LanguageCode } from '@/domain/types';
+import {
+  type CefrLevel,
+  type LanguageCode,
+  NON_LATIN_LANGUAGES,
+  SUPPORTED_LANGUAGES,
+} from '@/domain/types';
 import { levelVerbs } from '../verbs';
 
-const LANGUAGES: LanguageCode[] = ['en', 'es', 'fr', 'it', 'de', 'ja', 'ko', 'zh'];
+const LANGUAGES: readonly LanguageCode[] = SUPPORTED_LANGUAGES;
 const LEVELS: CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-const NON_LATIN: LanguageCode[] = ['ja', 'ko', 'zh'];
+const NON_LATIN: LanguageCode[] = NON_LATIN_LANGUAGES;
 
 describe('volume', () => {
   it('todo nível de todo idioma tem ao menos 20 verbos', () => {
@@ -113,7 +118,6 @@ describe('integridade de cada verbete', () => {
   // por idioma; sem ele, manter o teste obrigaria a reescrever bons exemplos
   // para caber na heurística — degradar o material para agradar o teste.
   //
-  // A rodada valeu assim mesmo: o vigésimo quarto caso era real. O verbete
-  // japonês やってみます trazia o exemplo 「早く来てみます。」, que ensina outro
-  // verbo. Corrigido no dado.
+  // A rodada valeu assim mesmo: o vigésimo quarto caso era real — um verbete
+  // cujo exemplo conjugava outro verbo, não o da entrada. Corrigido no dado.
 });

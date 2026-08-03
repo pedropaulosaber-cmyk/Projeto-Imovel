@@ -15,9 +15,6 @@ import { EN } from './en';
 import { ES } from './es';
 import { FR } from './fr';
 import { IT } from './it';
-import { JA } from './ja';
-import { KO } from './ko';
-import { ZH } from './zh';
 
 const EXTRA: Record<LanguageCode, ByLevel> = {
   en: EN,
@@ -25,9 +22,6 @@ const EXTRA: Record<LanguageCode, ByLevel> = {
   fr: FR,
   it: IT,
   de: DE,
-  ja: JA,
-  ko: KO,
-  zh: ZH,
 };
 
 /**

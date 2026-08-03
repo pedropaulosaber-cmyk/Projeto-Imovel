@@ -25,8 +25,10 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
+import { LANGUAGE_META } from '@/content/vocabulary';
 import { Badge, Button, Card, Screen, Text, Touchable, useTheme } from '@/design';
 import { OPEN_ACCESS } from '@/domain/access';
+import { SUPPORTED_LANGUAGES } from '@/domain/types';
 import { selectWordsLearned, useAppStore } from '@/state/app-store';
 
 type Cycle = 'monthly' | 'annual';
@@ -54,12 +56,27 @@ const PRICES: Record<Cycle, { price: string; per: string; note: string; savings?
   },
 };
 
+/**
+ * Nomes dos idiomas em frase — "Inglês, espanhol e alemão".
+ *
+ * Sai do catálogo em vez de ser digitado aqui porque esta é a tela que promete
+ * o que o produto entrega: uma lista escrita à mão sobrevive à remoção de um
+ * idioma e vira propaganda enganosa sem que nenhum teste reclame.
+ */
+function languagePhrase(): string {
+  const names = SUPPORTED_LANGUAGES.map((code, index) =>
+    index === 0 ? LANGUAGE_META[code].name : LANGUAGE_META[code].name.toLowerCase(),
+  );
+  const last = names[names.length - 1];
+  return `${names.slice(0, -1).join(', ')} e ${last}`;
+}
+
 /** Tudo que está liberado hoje. Serve de índice do produto, não de vitrine. */
 const INCLUDED: { icon: keyof typeof Ionicons.glyphMap; title: string; text: string }[] = [
   {
     icon: 'globe',
-    title: 'Os 8 idiomas',
-    text: 'Inglês, espanhol, francês, italiano, alemão, japonês, coreano e mandarim — todos ao mesmo tempo, se quiser.',
+    title: `Os ${SUPPORTED_LANGUAGES.length} idiomas`,
+    text: `${languagePhrase()} — todos ao mesmo tempo, se quiser.`,
   },
   {
     icon: 'trending-up',

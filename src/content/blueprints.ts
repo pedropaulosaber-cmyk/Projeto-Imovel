@@ -3,7 +3,7 @@
  * ===============================
  *
  * Cada nível CEFR tem **três módulos**, e cada módulo termina numa **prova de
- * nível**. A estrutura é a mesma para os oito idiomas — o que muda é o dado
+ * nível**. A estrutura é a mesma em todo idioma — o que muda é o dado
  * que a preenche (vocabulário, gramática, frases do idioma).
  *
  * ## Por que os módulos mudam de natureza conforme o nível

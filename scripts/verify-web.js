@@ -256,7 +256,7 @@ async function main() {
      */
     await tap('Aprender');
     // Primeira lição do primeiro módulo de A1. O rótulo vem do blueprint em
-    // `content/blueprints.ts` e é o mesmo nos oito idiomas.
+    // `content/blueprints.ts` e é o mesmo em todo idioma.
     await tap('Olá e tchau');
     await assertAlive('lição aberta');
 
@@ -338,14 +338,16 @@ async function main() {
     await page.waitForTimeout(SETTLE_MS * 2);
     await assertAlive('volta para a trilha');
 
-    // Idiomas de escrita não latina exercitam a romanização em toda tela.
+    // Trocar de idioma no meio da sessão reconstrói matrícula, plano e trilha a
+    // partir de outro catálogo — o caminho onde dado da matrícula antiga
+    // sobreviveria e apareceria misturado ao novo.
     await tap('Perfil');
-    await tap('Japonês');
+    await tap('Alemão');
     await page.waitForTimeout(SETTLE_MS);
-    await assertAlive('troca para japonês');
+    await assertAlive('troca para alemão');
 
     await tap('Aprender');
-    await assertAlive('trilha em japonês');
+    await assertAlive('trilha em alemão');
 
     if (failures.length > 0) {
       console.error('\n✗ Build web com falhas:\n');

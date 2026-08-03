@@ -15,11 +15,15 @@
  *
  * ## Por que o sistema e não uma biblioteca
  *
- * Uma lib de PDF em JS precisa **embutir a fonte**. Cobrir japonês, coreano e
- * chinês custaria vários megabytes no binário — e sem isso todo caractere CJK
- * vira retângulo vazio. O motor do sistema já tem essas fontes instaladas, já
- * sabe quebrar linha em japonês (que não usa espaços) e produz PDF vetorial
- * com texto selecionável.
+ * Uma lib de PDF em JS pesa centenas de KB e precisa **embutir a fonte** —
+ * inclusive a variante em negrito e a itálica, ou o material sai todo no mesmo
+ * peso. O motor do sistema já tem as fontes instaladas, acompanha o idioma do
+ * aparelho e produz PDF vetorial com texto selecionável e pesquisável.
+ *
+ * A decisão nasceu de uma restrição mais dura — o catálogo tinha japonês,
+ * coreano e mandarim, e uma fonte que cobrisse CJK custava vários megabytes.
+ * Esses idiomas saíram; a escolha continua, agora pelo tamanho e pela
+ * qualidade do resultado.
  *
  * ## Falha honesta
  *

@@ -19,8 +19,9 @@
  * A segunda metade deste arquivo é `PRAGMATIC_NOTES`: regras de uso que não são
  * gramática nem vocabulário, e sim **o que soa apropriado**. Um brasileiro que
  * traduz literalmente sua cordialidade para o alemão soa artificial; um que
- * traduz sua objetividade para o japonês soa agressivo. Nenhum livro de
- * gramática cobre isso, e é o que mais afeta como a pessoa é percebida.
+ * traduz seu "a gente se fala" para o inglês marca um compromisso que não
+ * pretendia. Nenhum livro de gramática cobre isso, e é o que mais afeta como a
+ * pessoa é percebida.
  */
 
 import type { LanguageCode } from '@/domain/types';
@@ -337,138 +338,6 @@ export const FALSE_FRIENDS: Record<LanguageCode, FalseFriend[]> = {
       example: 'Er arbeitet in einer Fabrik. — Ele trabalha numa fábrica.',
     },
   ],
-  ja: [
-    {
-      term: 'マンション (manshon)',
-      looksLike: 'mansão',
-      actually: 'apartamento em prédio',
-      insteadSay: '大邸宅 (teitaku)',
-      example: 'マンションに住んでいます。— Moro num apartamento.',
-    },
-    {
-      term: 'サービス (sābisu)',
-      looksLike: 'serviço',
-      actually: 'cortesia / grátis',
-      insteadSay: '業務 (gyōmu)',
-      example: 'これはサービスです。— Isto é cortesia da casa.',
-    },
-    {
-      term: 'スマート (sumāto)',
-      looksLike: 'inteligente',
-      actually: 'esbelto / elegante',
-      insteadSay: '賢い (kashikoi)',
-      example: 'スマートな体型。— Um corpo esbelto.',
-    },
-    {
-      term: 'クレーム (kurēmu)',
-      looksLike: 'reivindicação',
-      actually: 'reclamação',
-      insteadSay: '請求 (seikyū)',
-      example: 'クレームを受けた。— Recebemos uma reclamação.',
-    },
-    {
-      term: 'ナイーブ (naību)',
-      looksLike: 'ingênuo (pejorativo)',
-      actually: 'sensível / delicado',
-      insteadSay: '世間知らず',
-      example: 'ナイーブな問題。— Uma questão delicada.',
-    },
-    {
-      term: 'テンション (tenshon)',
-      looksLike: 'tensão',
-      actually: 'ânimo / empolgação',
-      insteadSay: '緊張 (kinchō)',
-      example: 'テンションが高い。— Está muito animado.',
-    },
-  ],
-  ko: [
-    {
-      term: '핸드폰 (haendeupon)',
-      looksLike: 'hand phone',
-      actually: 'celular',
-      insteadSay: '휴대폰 também serve',
-      example: '핸드폰 좀 빌려주세요. — Me empresta o celular.',
-    },
-    {
-      term: '서비스 (seobiseu)',
-      looksLike: 'serviço',
-      actually: 'brinde / cortesia',
-      insteadSay: '업무',
-      example: '이건 서비스예요. — Isto é cortesia.',
-    },
-    {
-      term: '아파트 (apateu)',
-      looksLike: 'apartamento simples',
-      actually: 'prédio residencial (status)',
-      insteadSay: '빌라 para prédio menor',
-      example: '아파트에 살아요. — Moro num prédio.',
-    },
-    {
-      term: '미팅 (miting)',
-      looksLike: 'reunião',
-      actually: 'encontro para paquera',
-      insteadSay: '회의 (hoeui)',
-      example: '오늘 미팅 있어요. — Tenho um encontro hoje.',
-    },
-    {
-      term: '컨닝 (keonning)',
-      looksLike: 'cunning / astúcia',
-      actually: 'colar na prova',
-      insteadSay: '교활함',
-      example: '컨닝하지 마세요. — Não cole na prova.',
-    },
-    {
-      term: '화이팅 (hwaiting)',
-      looksLike: 'fighting / briga',
-      actually: 'força! / vai lá!',
-      insteadSay: '싸움 (ssaum)',
-      example: '화이팅! — Força!',
-    },
-  ],
-  zh: [
-    {
-      term: '爱人 (àirén)',
-      looksLike: 'amante',
-      actually: 'cônjuge (na China continental)',
-      insteadSay: '情人 (qíngrén)',
-      example: '这是我爱人。— Este é meu marido / minha esposa.',
-    },
-    {
-      term: '老板 (lǎobǎn)',
-      looksLike: 'velho',
-      actually: 'chefe / dono',
-      insteadSay: '老人 (lǎorén)',
-      example: '我们老板很好。— Nosso chefe é gente boa.',
-    },
-    {
-      term: '小心 (xiǎoxīn)',
-      looksLike: 'coração pequeno / mesquinho',
-      actually: 'cuidado!',
-      insteadSay: '小气 (xiǎoqì)',
-      example: '小心台阶。— Cuidado com o degrau.',
-    },
-    {
-      term: '大家 (dàjiā)',
-      looksLike: 'casa grande',
-      actually: 'todo mundo',
-      insteadSay: '大房子',
-      example: '大家好！— Olá a todos!',
-    },
-    {
-      term: '方便 (fāngbiàn)',
-      looksLike: 'conveniente só',
-      actually: 'também eufemismo para ir ao banheiro',
-      insteadSay: 'contexto decide',
-      example: '不太方便。— Não é muito conveniente.',
-    },
-    {
-      term: '意思 (yìsi)',
-      looksLike: 'ideia',
-      actually: 'significado / intenção / graça',
-      insteadSay: '主意 (zhǔyi) para ideia',
-      example: '什么意思？— O que quer dizer?',
-    },
-  ],
 };
 
 /* ================================================================== *
@@ -544,48 +413,6 @@ export const PRAGMATIC_NOTES: Record<LanguageCode, PragmaticNote[]> = {
     {
       title: 'Pontualidade é conteúdo, não forma',
       note: 'Chegar cinco minutos atrasado exige desculpa explícita. Não é rigidez: é o que sinaliza respeito pelo tempo do outro.',
-    },
-  ],
-  ja: [
-    {
-      title: 'Recusa direta praticamente não existe',
-      note: 'Um "ちょっと…" (chotto…) seguido de silêncio é um "não". Insistir depois disso, natural no Brasil, coloca o interlocutor numa situação constrangedora.',
-    },
-    {
-      title: 'Uchi e soto decidem a forma verbal',
-      note: 'Falar do próprio chefe para alguém de fora exige rebaixá-lo com formas humildes. A hierarquia é relativa ao interlocutor, não absoluta.',
-    },
-    {
-      title: 'Silêncio é resposta',
-      note: 'A pausa longa é parte da conversa japonesa e não precisa ser preenchida. Preenchê-la por reflexo é o hábito brasileiro que mais atrapalha ali.',
-    },
-  ],
-  ko: [
-    {
-      title: 'Idade define a fala',
-      note: 'Perguntar a idade logo no início não é indiscrição: é o que permite escolher o nível de fala correto. Sem essa informação, a conversa fica gramaticalmente indefinida.',
-    },
-    {
-      title: 'Recusar o primeiro convite é educado',
-      note: 'Aceitar de imediato pode soar ávido. O convite costuma ser repetido, e é na segunda ou terceira vez que se aceita.',
-    },
-    {
-      title: 'Servir bebida com as duas mãos',
-      note: 'Receber ou servir com uma mão só diante de alguém mais velho é falta grave. O gesto pesa mais que a palavra.',
-    },
-  ],
-  zh: [
-    {
-      title: 'Não dizer "não"',
-      note: '"再说吧" (falamos depois) e "不太方便" (não é muito conveniente) são recusas. Esperar um "não" explícito leva a mal-entendidos frequentes.',
-    },
-    {
-      title: 'Elogio se recusa',
-      note: 'Responder "谢谢" a um elogio é aceitável hoje, mas a recusa modesta ("哪里哪里") ainda é a forma mais segura em contexto formal.',
-    },
-    {
-      title: 'Mianzi: preservar a face',
-      note: 'Corrigir alguém em público, mesmo com razão, custa caro. A correção acontece em particular — e é assim que se mantém a relação de trabalho.',
     },
   ],
 };

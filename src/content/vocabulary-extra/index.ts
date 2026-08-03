@@ -1,52 +1,40 @@
 /**
  * Vocabulário de ampliação — registro.
  *
- * Ver `entry.ts` para o motivo do módulo e o formato. Idiomas latinos e
- * asiáticos ficam em mapas separados porque os formatos das tuplas divergem
- * (o asiático carrega romanização); `extraVocabularyRaw` esconde essa
- * diferença do resto do app, devolvendo sempre o formato que `level-content.ts`
- * já sabe expandir.
+ * Ver `entry.ts` para o motivo do módulo e o formato.
+ *
+ * Cada lote vive num mapa próprio em vez de ser mesclado à mão no anterior: um
+ * lote revisado continua revisado, e a ordem de concatenação em
+ * `extraLatinVocabularyRaw` é o que decide qual verbete sobrevive numa colisão
+ * de id — o mais recente, que é o mais revisado.
  */
 
 import type { CefrLevel, LanguageCode } from '@/domain/types';
-import { usesNonLatinScript } from '@/domain/types';
-import type { AsianByLevel, AsianRaw, LatinByLevel, LatinRaw } from './entry';
+import type { LatinByLevel, LatinRaw } from './entry';
 
 import { DE } from './de';
 import { EN } from './en';
 import { ES } from './es';
 import { FR } from './fr';
 import { IT } from './it';
-import { JA } from './ja';
-import { KO } from './ko';
-import { ZH } from './zh';
 
 import { DE_THEMATIC } from './thematic/de';
 import { EN_THEMATIC } from './thematic/en';
 import { ES_THEMATIC } from './thematic/es';
 import { FR_THEMATIC } from './thematic/fr';
 import { IT_THEMATIC } from './thematic/it';
-import { JA_THEMATIC } from './thematic/ja';
-import { KO_THEMATIC } from './thematic/ko';
-import { ZH_THEMATIC } from './thematic/zh';
 
 import { DE_THEMATIC2 } from './thematic2/de';
 import { EN_THEMATIC2 } from './thematic2/en';
 import { ES_THEMATIC2 } from './thematic2/es';
 import { FR_THEMATIC2 } from './thematic2/fr';
 import { IT_THEMATIC2 } from './thematic2/it';
-import { JA_THEMATIC2 } from './thematic2/ja';
-import { KO_THEMATIC2 } from './thematic2/ko';
-import { ZH_THEMATIC2 } from './thematic2/zh';
 
 import { DE_THEMATIC3 } from './thematic3/de';
 import { EN_THEMATIC3 } from './thematic3/en';
 import { ES_THEMATIC3 } from './thematic3/es';
 import { FR_THEMATIC3 } from './thematic3/fr';
 import { IT_THEMATIC3 } from './thematic3/it';
-import { JA_THEMATIC3 } from './thematic3/ja';
-import { KO_THEMATIC3 } from './thematic3/ko';
-import { ZH_THEMATIC3 } from './thematic3/zh';
 
 const LATIN: Partial<Record<LanguageCode, LatinByLevel>> = {
   en: EN,
@@ -55,7 +43,6 @@ const LATIN: Partial<Record<LanguageCode, LatinByLevel>> = {
   it: IT,
   de: DE,
 };
-const ASIAN: Partial<Record<LanguageCode, AsianByLevel>> = { ja: JA, ko: KO, zh: ZH };
 
 /**
  * Lote temático — o segundo bloco, agora organizado por campo semântico.
@@ -72,11 +59,6 @@ const LATIN_THEMATIC: Partial<Record<LanguageCode, LatinByLevel>> = {
   it: IT_THEMATIC,
   de: DE_THEMATIC,
 };
-const ASIAN_THEMATIC: Partial<Record<LanguageCode, AsianByLevel>> = {
-  ja: JA_THEMATIC,
-  ko: KO_THEMATIC,
-  zh: ZH_THEMATIC,
-};
 
 /** Terceiro bloco — mesma lógica do anterior, campos semânticos novos. */
 const LATIN_THEMATIC2: Partial<Record<LanguageCode, LatinByLevel>> = {
@@ -85,11 +67,6 @@ const LATIN_THEMATIC2: Partial<Record<LanguageCode, LatinByLevel>> = {
   fr: FR_THEMATIC2,
   it: IT_THEMATIC2,
   de: DE_THEMATIC2,
-};
-const ASIAN_THEMATIC2: Partial<Record<LanguageCode, AsianByLevel>> = {
-  ja: JA_THEMATIC2,
-  ko: KO_THEMATIC2,
-  zh: ZH_THEMATIC2,
 };
 
 /** Quarto bloco — mesma lógica, mais campos semânticos. */
@@ -100,30 +77,13 @@ const LATIN_THEMATIC3: Partial<Record<LanguageCode, LatinByLevel>> = {
   it: IT_THEMATIC3,
   de: DE_THEMATIC3,
 };
-const ASIAN_THEMATIC3: Partial<Record<LanguageCode, AsianByLevel>> = {
-  ja: JA_THEMATIC3,
-  ko: KO_THEMATIC3,
-  zh: ZH_THEMATIC3,
-};
 
-/** Entradas cruas latinas dos lotes de ampliação. Vazio para idiomas asiáticos. */
+/** Entradas cruas dos lotes de ampliação, na ordem em que devem ser lidas. */
 export function extraLatinVocabularyRaw(language: LanguageCode, level: CefrLevel): LatinRaw[] {
-  if (usesNonLatinScript(language)) return [];
   return [
     ...(LATIN_THEMATIC[language]?.[level] ?? []),
     ...(LATIN_THEMATIC2[language]?.[level] ?? []),
     ...(LATIN_THEMATIC3[language]?.[level] ?? []),
     ...(LATIN[language]?.[level] ?? []),
-  ];
-}
-
-/** Entradas cruas asiáticas dos lotes de ampliação. Vazio para idiomas latinos. */
-export function extraAsianVocabularyRaw(language: LanguageCode, level: CefrLevel): AsianRaw[] {
-  if (!usesNonLatinScript(language)) return [];
-  return [
-    ...(ASIAN_THEMATIC[language]?.[level] ?? []),
-    ...(ASIAN_THEMATIC2[language]?.[level] ?? []),
-    ...(ASIAN_THEMATIC3[language]?.[level] ?? []),
-    ...(ASIAN[language]?.[level] ?? []),
   ];
 }

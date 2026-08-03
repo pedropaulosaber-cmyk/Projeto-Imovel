@@ -36,10 +36,24 @@ import type {
   UserProfile,
   Wallet,
 } from '@/domain/types';
+import { RETIRED_LANGUAGES } from '@/domain/types';
 import { lastNDates, toLocalDate } from '@/lib/date';
 import { ulid } from '@/lib/id';
 
 export type AppStatus = 'idle' | 'loading' | 'ready' | 'error';
+
+/**
+ * A matrícula aponta para um idioma que o app não oferece mais?
+ *
+ * Japonês, coreano e mandarim saíram do catálogo. Quem tinha matrícula neles
+ * continua com o registro gravado no disco, e `listCourses` devolveria lista
+ * vazia — a trilha ficaria em branco **sem erro nenhum**, que é o pior tipo de
+ * defeito: silencioso. Aqui a matrícula obsoleta é tratada como "sem
+ * matrícula", e a interface manda o aluno escolher um idioma de novo.
+ */
+function isRetiredLanguage(language: string): boolean {
+  return (RETIRED_LANGUAGES as readonly string[]).includes(language);
+}
 
 type AppState = {
   status: AppStatus;
@@ -144,7 +158,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     if (!profile) return;
 
     const enrollment = await learnerRepository.getActiveEnrollment(profile.id);
-    if (!enrollment) {
+    // Matrícula num idioma aposentado equivale a não ter matrícula: sem isso a
+    // trilha renderiza vazia e o aluno não descobre por quê. Ver
+    // `isRetiredLanguage`.
+    if (!enrollment || isRetiredLanguage(enrollment.language)) {
       set({ enrollment: null, plan: null, lessons: [] });
       return;
     }

@@ -24,8 +24,11 @@ describe('índice de contexto', () => {
     expect(totalContextSize([...SUPPORTED_LANGUAGES])).toBeGreaterThan(1000);
   });
 
-  it('catalogou falsos cognatos e notas culturais nos oito idiomas', () => {
-    expect(contextItemCount()).toBeGreaterThan(70);
+  it('catalogou falsos cognatos e notas culturais em todo idioma', () => {
+    // Dez itens por idioma é o piso abaixo do qual o tutor começa a repetir a
+    // mesma observação — daí a régua ser por idioma e não um total global, que
+    // esconderia um idioma vazio atrás da soma dos outros.
+    expect(contextItemCount()).toBeGreaterThan(SUPPORTED_LANGUAGES.length * 10);
   });
 });
 

@@ -5,7 +5,7 @@
 Aplicativo de aprendizado de idiomas **offline-first** para Android, iOS e web,
 a partir de uma única base de código.
 
-Inglês · Espanhol · Francês · Italiano · Alemão · Japonês · Coreano · Mandarim
+Inglês · Espanhol · Francês · Italiano · Alemão
 
 ---
 
@@ -47,7 +47,7 @@ não existe um) e origem. O card só revela depois do toque — recuperação at
 não leitura passiva.
 
 **8. Seis níveis com conteúdo próprio, sem repetição.**
-48 cursos (8 idiomas × A1–C2), 648 lições e 3.536 exercícios. Vocabulário e
+30 cursos (5 idiomas × A1–C2), 405 lições e 2.530 exercícios. Vocabulário e
 gramática pertencem a **um** nível: há teste automatizado que quebra se um
 termo reaparecer em outro nível. E a dificuldade é real — em A1 o exercício
 pede reconhecimento, em C2 pede produção e escolha de registro.

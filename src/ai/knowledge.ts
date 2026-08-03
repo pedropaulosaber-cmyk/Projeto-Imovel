@@ -177,78 +177,6 @@ export const COMMON_ERRORS: Record<LanguageCode, CommonError[]> = {
       kind: 'vocabulary',
     },
   ],
-
-  ja: [
-    {
-      pattern: /\bwatashi wa .* desu ka\b/gi,
-      replacement: 'anata wa ... desu ka',
-      explanation:
-        'Perguntar usando 私 (watashi, "eu") não faz sentido: para perguntar sobre a outra pessoa use あなた (anata) ou, mais natural, omita o sujeito.',
-      kind: 'grammar',
-    },
-    {
-      pattern: /\bwatashi wa\b(?=(.|\n)*\bwatashi wa\b)/gi,
-      replacement: '',
-      explanation:
-        'O japonês omite o sujeito quando ele já está claro. Repetir 私は em toda frase soa robótico — diferente do português, onde o sujeito é opcional mas comum.',
-      kind: 'style',
-    },
-    {
-      pattern: /\bhai,? sou desu ne\b/gi,
-      replacement: 'hai, sou desu',
-      explanation:
-        'ね (ne) busca concordância do interlocutor. Ao responder uma pergunta direta sobre você, use apenas そうです.',
-      kind: 'style',
-    },
-  ],
-
-  ko: [
-    {
-      pattern: /\bjeoneun .* imnida\b/gi,
-      replacement: 'jeoneun ... ieyo',
-      explanation:
-        '-입니다 é o registro mais formal (discursos, atendimento). No dia a dia, o coreano usa -이에요/-예요. Errar o nível de formalidade é mais grave que errar a gramática.',
-      kind: 'style',
-    },
-    {
-      pattern: /\bdangsineun\b/gi,
-      replacement: '',
-      explanation:
-        '당신 (dangsin) traduz "você", mas soa distante ou até agressivo na conversa. O coreano usa o nome da pessoa + 씨, ou simplesmente omite o sujeito.',
-      kind: 'vocabulary',
-    },
-    {
-      pattern: /\bna neun\b/gi,
-      replacement: 'jeoneun',
-      explanation:
-        '나는 é o "eu" informal, usado só com amigos próximos e pessoas mais novas. Com desconhecidos use 저는 (jeoneun).',
-      kind: 'style',
-    },
-  ],
-
-  zh: [
-    {
-      pattern: /\bwo shi .* de\b/gi,
-      replacement: 'wo shi ...',
-      explanation:
-        'O 是...的 marca ênfase em circunstância (quando, onde, como). Para simplesmente dizer o que você é, basta 我是 + substantivo.',
-      kind: 'grammar',
-    },
-    {
-      pattern: /\bwo you (\d+) sui\b/gi,
-      replacement: 'wo $1 sui',
-      explanation:
-        'Idade em chinês dispensa verbo: 我二十五岁 (wǒ èrshíwǔ suì), literalmente "eu 25 anos". Não use 有 nem 是.',
-      kind: 'grammar',
-    },
-    {
-      pattern: /\bhen hao ma\b/gi,
-      replacement: 'hao ma',
-      explanation:
-        '很 e 吗 não se combinam: 很 é advérbio de grau em afirmações, 吗 marca pergunta. Use 你好吗？sem 很.',
-      kind: 'grammar',
-    },
-  ],
 };
 
 /* ------------------------------------------------------------------ *
@@ -384,95 +312,6 @@ export const GRAMMAR_RULES: Record<LanguageCode, GrammarRule[]> = {
         'O acusativo marca o objeto direto (quem sofre a ação) e o dativo o objeto indireto (a quem se destina). É o que substitui a ordem fixa de palavras do português.',
       examples: [
         { correct: 'Ich gebe dem Mann das Buch.', incorrect: 'Ich gebe den Mann das Buch.' },
-      ],
-    },
-  ],
-
-  ja: [
-    {
-      title: 'Ordem das palavras: SOV',
-      triggers: ['は', 'を', 'ます', 'desu'],
-      explanation:
-        'O japonês coloca o verbo **no fim** da frase: sujeito → objeto → verbo. "Eu como pão" vira 私はパンを食べます (eu / pão / como). Para um falante de português, é a mudança estrutural mais difícil — e a mais importante.',
-      examples: [
-        { correct: '私はパンを食べます。', incorrect: '私は食べますパンを。' },
-        { correct: '彼は日本語を話します。', incorrect: '彼は話します日本語を。' },
-      ],
-    },
-    {
-      title: 'Partículas は e が',
-      triggers: ['は', 'が'],
-      explanation:
-        'は (wa) marca o **tema** — aquilo sobre o que se fala, já conhecido. が (ga) marca o **sujeito** que traz informação nova. "私は学生です" apresenta um fato sobre mim; "誰が来ましたか" pergunta quem (informação nova) veio.',
-      examples: [
-        { correct: '猫がいます。', incorrect: '猫はいます。' },
-        { correct: '私は田中です。', incorrect: '私が田中です。' },
-      ],
-    },
-    {
-      title: 'Níveis de formalidade',
-      triggers: ['ます', 'です', 'だ'],
-      explanation:
-        'A forma です/ます é a neutra-polida, segura com qualquer pessoa. A forma simples (だ, 食べる) é para amigos próximos e família. Diferente do português, usar o registro errado é percebido como falta de educação, não como erro de gramática.',
-      examples: [{ correct: '田中さん、行きますか。', incorrect: '田中さん、行く？' }],
-    },
-  ],
-
-  ko: [
-    {
-      title: 'Ordem das palavras: SOV',
-      triggers: ['은', '는', '을', '를', '요'],
-      explanation:
-        'Como o japonês, o coreano põe o verbo no fim: sujeito → objeto → verbo. 저는 밥을 먹어요 = eu / arroz / como.',
-      examples: [{ correct: '저는 밥을 먹어요.', incorrect: '저는 먹어요 밥을.' }],
-    },
-    {
-      title: 'Partículas de tópico e objeto',
-      triggers: ['은', '는', '이', '가', '을', '를'],
-      explanation:
-        'As partículas mudam conforme a palavra termine em consoante ou vogal: 은/는 (tópico), 이/가 (sujeito), 을/를 (objeto). 책**은** (consoante) mas 커피**는** (vogal).',
-      examples: [
-        { correct: '커피는 맛있어요.', incorrect: '커피은 맛있어요.' },
-        { correct: '책을 읽어요.', incorrect: '책를 읽어요.' },
-      ],
-    },
-    {
-      title: 'Níveis de fala',
-      triggers: ['요', '습니다', '어', '아'],
-      explanation:
-        'O coreano tem níveis de fala gramaticalizados. -요 é o polido do dia a dia; -습니다 é formal; sem terminação é íntimo. Escolher o nível é obrigatório em toda frase — não existe forma neutra.',
-      examples: [{ correct: '어디에 가요?', incorrect: '어디에 가?' }],
-    },
-  ],
-
-  zh: [
-    {
-      title: 'Sem conjugação: o tempo vem do contexto',
-      triggers: ['了', '过', '会', '在'],
-      explanation:
-        'O verbo chinês **nunca muda de forma**. O tempo é marcado por advérbios (昨天 = ontem) ou partículas: 了 (ação concluída), 过 (experiência), 在 (em curso). Para um lusófono, isso é alívio na produção e dificuldade na compreensão.',
-      examples: [
-        { correct: '我昨天去了北京。', incorrect: '我昨天去过了北京了。' },
-        { correct: '我在吃饭。', incorrect: '我吃饭了在。' },
-      ],
-    },
-    {
-      title: 'Classificadores obrigatórios',
-      triggers: ['个', '本', '张', '只'],
-      explanation:
-        'Entre o número e o substantivo entra um classificador: 一**个**人 (uma pessoa), 三**本**书 (três livros). 个 é o coringa e resolve a maioria dos casos quando você não lembra o específico.',
-      examples: [{ correct: '我有两个朋友。', incorrect: '我有两朋友。' }],
-    },
-    {
-      title: 'Os quatro tons',
-      triggers: ['ā', 'á', 'ǎ', 'à', 'mā', 'má'],
-      explanation:
-        'O tom faz parte da palavra, não da entonação: mā (妈, mãe), má (麻, cânhamo), mǎ (马, cavalo), mà (骂, xingar). Falar sem tom em chinês é como trocar as vogais em português.',
-      examples: [
-        {
-          correct: '我妈妈很好。(wǒ māma hěn hǎo)',
-          incorrect: '我马马很好。(wǒ mǎmǎ hěn hǎo)',
-        },
       ],
     },
   ],
@@ -650,10 +489,10 @@ export const SCENARIO_SCRIPTS: Record<string, ScenarioScript> = {
 /**
  * Catálogo completo — os cenários originais mais os de `conversation.ts`.
  *
- * A divisão em dois arquivos não é organizacional: os cenários novos cobrem os
- * **oito** idiomas, enquanto os originais trazem falas em cinco e caem no texto
- * de reserva em japonês, coreano e mandarim. Mantê-los separados deixa essa
- * diferença visível em vez de escondida no meio de uma lista.
+ * A divisão em dois arquivos não é organizacional: os cenários de
+ * `conversation.ts` cobrem **todo** idioma suportado, enquanto estes originais
+ * nasceram com falas parciais. Mantê-los separados deixa essa diferença de
+ * cobertura visível em vez de escondida no meio de uma lista.
  */
 export const ALL_SCENARIOS: Record<string, ScenarioScript> = {
   ...SCENARIO_SCRIPTS,

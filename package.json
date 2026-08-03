@@ -17,7 +17,8 @@
     "format": "biome format --write .",
     "verify:web": "node scripts/verify-web.js",
     "verify:legacy": "node scripts/repro-profile.js",
-    "verify:all": "npm run verify:web && npm run verify:legacy"
+    "verify:retired": "node scripts/repro-retired-language.js",
+    "verify:all": "npm run verify:web && npm run verify:legacy && npm run verify:retired"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",

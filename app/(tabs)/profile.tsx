@@ -321,8 +321,8 @@ export default function Profile() {
               <Badge label="Acesso completo" tone="premium" icon="star" />
               <Text variant="headline">Tudo liberado, sem cobrança</Text>
               <Text variant="footnote" tone="secondary">
-                Os 8 idiomas, todas as lições, vidas infinitas, tutor sem limite e download à
-                vontade. Nada aqui está bloqueado nem pede cartão.
+                Os {SUPPORTED_LANGUAGES.length} idiomas, todas as lições, vidas infinitas, tutor
+                sem limite e download à vontade. Nada aqui está bloqueado nem pede cartão.
               </Text>
               <Button
                 label="Ver o que está incluso"
