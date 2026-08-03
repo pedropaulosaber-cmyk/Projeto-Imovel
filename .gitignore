@@ -33,3 +33,4 @@ coverage/
 
 # Capturas de tela para revisão visual (geradas por scripts/shoot.js)
 .shots/
+src/content/__tests__/__dump-terms.test.ts

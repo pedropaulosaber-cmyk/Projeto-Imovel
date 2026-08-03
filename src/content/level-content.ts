@@ -44,18 +44,31 @@ function vocabularyId(
   return `vocab:${language}:${slug}`;
 }
 
+/**
+ * Tags do verbete.
+ *
+ * O tema entra como tag em vez de virar campo próprio de `VocabularyItem`:
+ * `tags` já existe, já é serializado e já atravessa a camada offline sem
+ * migração. Quem consome (a apostila) só precisa saber que o tema é a terceira
+ * tag quando ela existe — ver `topicOf` em `workbooks.ts`.
+ */
+function tagsFor(partOfSpeech: string, level: CefrLevel, topic?: string): string[] {
+  return topic ? [partOfSpeech, level, topic] : [partOfSpeech, level];
+}
+
 function fromAsianRaw(
   language: LanguageCode,
   level: CefrLevel,
-  [term, romanization, translation, partOfSpeech, example, exampleRoman, exampleTranslation]: [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-  ],
+  [
+    term,
+    romanization,
+    translation,
+    partOfSpeech,
+    example,
+    exampleRoman,
+    exampleTranslation,
+    topic,
+  ]: [string, string, string, string, string, string, string, string?],
 ): VocabularyItem {
   return {
     id: vocabularyId(language, term, romanization),
@@ -70,19 +83,20 @@ function fromAsianRaw(
     exampleRomanization: exampleRoman,
     frequencyRank: null,
     cefr: level,
-    tags: [partOfSpeech, level],
+    tags: tagsFor(partOfSpeech, level, topic),
   };
 }
 
 function fromLatinRaw(
   language: LanguageCode,
   level: CefrLevel,
-  [term, translation, partOfSpeech, example, exampleTranslation]: [
+  [term, translation, partOfSpeech, example, exampleTranslation, topic]: [
     string,
     string,
     string,
     string,
     string,
+    string?,
   ],
 ): VocabularyItem {
   return {
@@ -98,7 +112,7 @@ function fromLatinRaw(
     exampleRomanization: null,
     frequencyRank: null,
     cefr: level,
-    tags: [partOfSpeech, level],
+    tags: tagsFor(partOfSpeech, level, topic),
   };
 }
 

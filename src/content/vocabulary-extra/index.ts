@@ -21,6 +21,15 @@ import { JA } from './ja';
 import { KO } from './ko';
 import { ZH } from './zh';
 
+import { DE_THEMATIC } from './thematic/de';
+import { EN_THEMATIC } from './thematic/en';
+import { ES_THEMATIC } from './thematic/es';
+import { FR_THEMATIC } from './thematic/fr';
+import { IT_THEMATIC } from './thematic/it';
+import { JA_THEMATIC } from './thematic/ja';
+import { KO_THEMATIC } from './thematic/ko';
+import { ZH_THEMATIC } from './thematic/zh';
+
 const LATIN: Partial<Record<LanguageCode, LatinByLevel>> = {
   en: EN,
   es: ES,
@@ -30,14 +39,35 @@ const LATIN: Partial<Record<LanguageCode, LatinByLevel>> = {
 };
 const ASIAN: Partial<Record<LanguageCode, AsianByLevel>> = { ja: JA, ko: KO, zh: ZH };
 
-/** Entradas cruas latinas do lote de ampliação. Vazio para idiomas asiáticos. */
+/**
+ * Lote temático — o segundo bloco, agora organizado por campo semântico.
+ *
+ * Fica num mapa separado do primeiro em vez de ser mesclado à mão nos arquivos
+ * originais: cada bloco continua revisável de forma independente, e a ordem de
+ * concatenação (temático primeiro) é o que decide qual verbete sobrevive numa
+ * colisão de id.
+ */
+const LATIN_THEMATIC: Partial<Record<LanguageCode, LatinByLevel>> = {
+  en: EN_THEMATIC,
+  es: ES_THEMATIC,
+  fr: FR_THEMATIC,
+  it: IT_THEMATIC,
+  de: DE_THEMATIC,
+};
+const ASIAN_THEMATIC: Partial<Record<LanguageCode, AsianByLevel>> = {
+  ja: JA_THEMATIC,
+  ko: KO_THEMATIC,
+  zh: ZH_THEMATIC,
+};
+
+/** Entradas cruas latinas dos lotes de ampliação. Vazio para idiomas asiáticos. */
 export function extraLatinVocabularyRaw(language: LanguageCode, level: CefrLevel): LatinRaw[] {
   if (usesNonLatinScript(language)) return [];
-  return LATIN[language]?.[level] ?? [];
+  return [...(LATIN_THEMATIC[language]?.[level] ?? []), ...(LATIN[language]?.[level] ?? [])];
 }
 
-/** Entradas cruas asiáticas do lote de ampliação. Vazio para idiomas latinos. */
+/** Entradas cruas asiáticas dos lotes de ampliação. Vazio para idiomas latinos. */
 export function extraAsianVocabularyRaw(language: LanguageCode, level: CefrLevel): AsianRaw[] {
   if (!usesNonLatinScript(language)) return [];
-  return ASIAN[language]?.[level] ?? [];
+  return [...(ASIAN_THEMATIC[language]?.[level] ?? []), ...(ASIAN[language]?.[level] ?? [])];
 }
