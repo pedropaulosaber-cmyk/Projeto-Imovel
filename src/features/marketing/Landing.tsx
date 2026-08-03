@@ -169,7 +169,7 @@ export function Landing() {
               tinha oito — o tipo de mentira que ninguém escreve de propósito e
               que ninguém revisa depois de adicionar o sexto.
             */}
-            Aprenda {SUPPORTED_LANGUAGES.length} idiomas — do inglês ao japonês — com repetição
+            Aprenda {SUPPORTED_LANGUAGES.length} idiomas — do inglês ao alemão — com repetição
             espaçada, prática de fala e um tutor de IA que lembra do que você errou. Tudo
             funciona sem internet, de verdade.
           </Text>

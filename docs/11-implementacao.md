@@ -143,24 +143,25 @@ A estrutura pedagógica é **uma só** (módulos, progressão, tipos de exercíc
 ordem de introdução); cada idioma fornece apenas seus dados: vocabulário por
 frequência e frases curadas por tema.
 
-Adicionar japonês = adicionar duas listas. A trilha inteira nasce pronta e
+Adicionar um idioma = adicionar duas listas. A trilha inteira nasce pronta e
 consistente com as outras.
 
 A ordem dentro da lição segue a dificuldade de recuperação de memória:
 **reconhecer → completar → produzir**. Pedir produção livre antes de
 reconhecimento gera frustração; pedir só reconhecimento gera a ilusão de saber.
 
-As **48 apostilas** (8 idiomas × 6 níveis) seguem o mesmo princípio, levado um
+As **30 apostilas** (5 idiomas × 6 níveis) seguem o mesmo princípio, levado um
 passo adiante: são geradas em `content/workbooks.ts` a partir das *mesmas*
 fontes que alimentam as lições — vocabulário, `GRAMMAR_RULES`, frases e
 expressões. Isso não é economia de esforço, é garantia de integridade: apostila
 escrita à parte deriva do curso na terceira revisão, e o aluno acaba estudando
 duas versões incompatíveis da mesma regra.
 
-A exportação é **texto puro**, não PDF. Bibliotecas de PDF em React Native
-custam ~500 KB e quebram com fontes CJK — inaceitável num app que ensina
-japonês, coreano e mandarim. Texto abre em qualquer aplicativo, imprime, e o
-próprio sistema converte em PDF se o usuário quiser.
+A exportação é **PDF impresso pelo motor do sistema** (`expo-print` no
+aparelho, `window.print()` na web), e não uma biblioteca de PDF em JS: aquela
+custa ~500 KB no bundle e precisa embutir cada peso e cada estilo da fonte.
+Aqui o sistema operacional faz a paginação com as fontes que já tem, e o
+arquivo sai vetorial, com texto selecionável e pesquisável.
 
 ---
 
@@ -217,10 +218,10 @@ Explícitas, porque um relatório honesto vale mais que um verde falso:
 3. **Backend** — o transporte de sync é `OfflineOnlyTransport`. A fila enche
    corretamente e será drenada quando o transporte real for injetado.
 4. **Densidade de conteúdo** — os 6 níveis têm vocabulário e gramática
-   próprios nos 8 idiomas (692 verbetes e 144 pontos no total, ~85 verbetes e
-   18 pontos por idioma). É suficiente para uma trilha coerente e verificada
-   contra repetição, mas um curso comercial de C1 pede ordem de grandeza maior.
-   Ampliar é acrescentar entradas nas listas — a estrutura não muda.
+   próprios nos 5 idiomas (4.635 verbetes e 90 pontos no total, ~925 verbetes e
+   18 pontos por idioma). Cobre uma trilha coerente e verificada contra
+   repetição em qualquer nível, mas um curso comercial de C1 ainda pede mais
+   léxico. Ampliar é acrescentar entradas nas listas — a estrutura não muda.
 5. **Pagamento** — o paywall está completo como interface; a integração com
    as lojas é da Fase 3.
 6. **Comunidade e ligas** — a interface de liga mostra o estado local; o

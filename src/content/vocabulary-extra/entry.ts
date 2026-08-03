@@ -12,10 +12,9 @@
  *
  * ## Formato
  *
- * Dois formatos, como no resto do catálogo: latino compacto e asiático com
- * romanização obrigatória. Uma linha por palavra — com centenas de entradas
- * por idioma, é a diferença entre um arquivo navegável e um arquivo que
- * ninguém revisa.
+ * Uma tupla por linha. Com centenas de entradas por idioma, o formato compacto
+ * é a diferença entre um arquivo navegável e um arquivo que ninguém revisa —
+ * e revisão é o que sustenta a promessa de "sem erro nem repetição".
  *
  * `partOfSpeech` usa os valores já aceitos por `VocabularyItem.partOfSpeech`
  * em `vocabulary-levels.ts`: substantivo, verbo, adjetivo, advérbio, etc.
@@ -39,11 +38,4 @@ import type { CefrLevel } from '@/domain/types';
 /** `[termo, tradução, classe gramatical, exemplo, tradução do exemplo, tema?]` */
 export type LatinRaw = [string, string, string, string, string, string?];
 
-/**
- * `[termo, romanização, tradução, classe gramatical, exemplo, romanização do
- *   exemplo, tradução do exemplo, tema?]`
- */
-export type AsianRaw = [string, string, string, string, string, string, string, string?];
-
 export type LatinByLevel = Partial<Record<CefrLevel, LatinRaw[]>>;
-export type AsianByLevel = Partial<Record<CefrLevel, AsianRaw[]>>;

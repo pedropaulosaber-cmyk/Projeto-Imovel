@@ -3,9 +3,9 @@
  *
  * Cada idioma recebe uma silhueta reconhecível **em forma abstrata**. A regra
  * que guiou a escolha: geometria, nunca folclore. Um sombrero no espanhol ou
- * uma gueixa no japonês seriam caricatura — e caricatura envelhece mal e ofende
- * antes disso. Um arco mourisco e um torii são arquitetura: formas que a
- * própria cultura usa para se representar.
+ * um bigode enrolado no italiano seriam caricatura — e caricatura envelhece mal
+ * e ofende antes disso. Um arco mourisco e um frontão são arquitetura: formas
+ * que a própria cultura usa para se representar.
  *
  * ## O sistema de coordenadas é uma faixa, não um quadrado
  *
@@ -56,26 +56,6 @@ export function cypress(cx: number, baseY: number, width: number, height: number
   ].join(' ');
 }
 
-/** Torii — dois pilares e duas travessas. O portal japonês. */
-export function torii(cx: number, baseY: number, width: number, height: number): string {
-  const half = width / 2;
-  const post = Math.max(1.2, width * 0.09);
-  const topY = baseY - height;
-  const beamY = topY + height * 0.2;
-  const overhang = half * 0.22;
-
-  return [
-    // Pilar esquerdo
-    `M ${cx - half} ${baseY} L ${cx - half} ${topY} L ${cx - half + post} ${topY} L ${cx - half + post} ${baseY} Z`,
-    // Pilar direito
-    `M ${cx + half - post} ${baseY} L ${cx + half - post} ${topY} L ${cx + half} ${topY} L ${cx + half} ${baseY} Z`,
-    // Travessa superior, com beiral para fora
-    `M ${cx - half - overhang} ${topY} L ${cx + half + overhang} ${topY} L ${cx + half + overhang} ${topY + post} L ${cx - half - overhang} ${topY + post} Z`,
-    // Travessa inferior
-    `M ${cx - half} ${beamY} L ${cx + half} ${beamY} L ${cx + half} ${beamY + post * 0.8} L ${cx - half} ${beamY + post * 0.8} Z`,
-  ].join(' ');
-}
-
 /** Arco de ponte — vão sobre a água. */
 export function bridge(cx: number, baseY: number, width: number, height: number): string {
   const half = width / 2;
@@ -101,26 +81,6 @@ export function gable(cx: number, baseY: number, width: number, height: number):
     `L ${cx + half} ${baseY}`,
     'Z',
   ].join(' ');
-}
-
-/** Pagode em camadas — beirais que diminuem para cima. */
-export function pagoda(cx: number, baseY: number, width: number, height: number): string {
-  const tiers = 3;
-  const parts: string[] = [];
-  for (let tier = 0; tier < tiers; tier += 1) {
-    const shrink = 1 - tier * 0.24;
-    const half = (width / 2) * shrink;
-    const y = baseY - (height / tiers) * tier;
-    const thickness = Math.max(1.1, height * 0.07);
-    parts.push(
-      `M ${cx - half} ${y} Q ${cx} ${y - thickness * 1.8} ${cx + half} ${y} L ${cx + half * 0.72} ${y - thickness} L ${cx - half * 0.72} ${y - thickness} Z`,
-    );
-  }
-  const shaft = Math.max(1.2, width * 0.07);
-  parts.push(
-    `M ${cx - shaft} ${baseY} L ${cx - shaft} ${baseY - height} L ${cx + shaft} ${baseY - height} L ${cx + shaft} ${baseY} Z`,
-  );
-  return parts.join(' ');
 }
 
 /* ------------------------------------------------------------------ *
@@ -306,121 +266,6 @@ export const SCENES: Record<string, Scene> = {
           { x: -5, y: 58 },
           { x: 62, y: 50 },
           { x: 132, y: 57 },
-          { x: 205, y: 49 },
-        ]),
-        depth: 1,
-      },
-    ],
-  },
-
-  /** Japonês — o cone truncado do Fuji e o torii. */
-  ja: {
-    disc: { x: 146, y: 14, r: 11 },
-    layers: [
-      {
-        path: ridge([
-          { x: 20, y: 46 },
-          { x: 62, y: 16 },
-          { x: 80, y: 12 },
-          { x: 98, y: 16 },
-          { x: 140, y: 46 },
-        ]),
-        depth: 0.28,
-      },
-      {
-        path: hill([
-          { x: -5, y: 48 },
-          { x: 80, y: 44 },
-          { x: 205, y: 47 },
-        ]),
-        depth: 0.55,
-      },
-      { path: torii(150, 56, 34, 24), depth: 0.92 },
-      {
-        path: hill([
-          { x: -5, y: 57 },
-          { x: 74, y: 50 },
-          { x: 146, y: 56 },
-          { x: 205, y: 50 },
-        ]),
-        depth: 1,
-      },
-    ],
-  },
-
-  /** Coreano — cordilheiras em camadas, a paisagem de tinta. */
-  ko: {
-    disc: { x: 44, y: 13, r: 10 },
-    layers: [
-      {
-        path: hill([
-          { x: -5, y: 36 },
-          { x: 50, y: 24 },
-          { x: 110, y: 34 },
-          { x: 205, y: 22 },
-        ]),
-        depth: 0.2,
-      },
-      {
-        path: hill([
-          { x: -5, y: 44 },
-          { x: 66, y: 32 },
-          { x: 136, y: 42 },
-          { x: 205, y: 34 },
-        ]),
-        depth: 0.5,
-      },
-      {
-        path: hill([
-          { x: -5, y: 52 },
-          { x: 82, y: 42 },
-          { x: 160, y: 50 },
-          { x: 205, y: 44 },
-        ]),
-        depth: 0.78,
-      },
-      {
-        path: hill([
-          { x: -5, y: 58 },
-          { x: 68, y: 50 },
-          { x: 140, y: 57 },
-          { x: 205, y: 49 },
-        ]),
-        depth: 1,
-      },
-    ],
-  },
-
-  /** Mandarim — os picos verticais de Guilin e o pagode. */
-  zh: {
-    disc: { x: 156, y: 13, r: 9 },
-    layers: [
-      {
-        path: ridge([
-          { x: 8, y: 46 },
-          { x: 22, y: 16 },
-          { x: 36, y: 46 },
-          { x: 54, y: 24 },
-          { x: 72, y: 46 },
-        ]),
-        depth: 0.26,
-      },
-      {
-        path: ridge([
-          { x: 80, y: 48 },
-          { x: 98, y: 20 },
-          { x: 112, y: 48 },
-          { x: 132, y: 28 },
-          { x: 150, y: 48 },
-        ]),
-        depth: 0.5,
-      },
-      { path: pagoda(52, 56, 24, 26), depth: 0.9 },
-      {
-        path: hill([
-          { x: -5, y: 58 },
-          { x: 78, y: 50 },
-          { x: 150, y: 57 },
           { x: 205, y: 49 },
         ]),
         depth: 1,

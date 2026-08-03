@@ -7,6 +7,7 @@
  * isso seria pior que não testar.
  */
 
+import { SUPPORTED_LANGUAGES } from '@/domain/types';
 import { alpha, mix } from '../color';
 import { SCENES, sceneFor } from '../illustrations/motifs';
 import {
@@ -17,7 +18,7 @@ import {
   svgId,
 } from '../illustrations/primitives';
 
-const LANGUAGES = ['en', 'es', 'fr', 'it', 'de', 'ja', 'ko', 'zh'];
+const LANGUAGES = [...SUPPORTED_LANGUAGES];
 
 describe('cor', () => {
   it('mistura devolve os extremos exatos', () => {
@@ -119,7 +120,7 @@ describe('cenas', () => {
   });
 
   it('cada idioma tem uma silhueta distinta', () => {
-    // Duas cenas iguais significariam que o aluno de alemão e o de japonês
+    // Duas cenas iguais significariam que o aluno de alemão e o de italiano
     // veem a mesma paisagem — o oposto do que a ilustração promete.
     const signatures = LANGUAGES.map((language) =>
       sceneFor(language)

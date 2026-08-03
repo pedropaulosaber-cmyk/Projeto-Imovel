@@ -3,7 +3,7 @@
  * ========================================
  *
  * Complementa o lote curado de `idioms.ts`. Um arquivo por idioma, porque o
- * conteúdo cresce por idioma: quem for revisar o coreano não deveria ter de
+ * conteúdo cresce por idioma: quem for revisar o alemão não deveria ter de
  * rolar por mil linhas de francês para chegar lá.
  *
  * ## Critério de seleção
@@ -36,9 +36,6 @@ import { EN } from './en';
 import { ES } from './es';
 import { FR } from './fr';
 import { IT } from './it';
-import { JA } from './ja';
-import { KO } from './ko';
-import { ZH } from './zh';
 
 const EXTRA: Record<LanguageCode, ByLevel> = {
   en: EN,
@@ -46,9 +43,6 @@ const EXTRA: Record<LanguageCode, ByLevel> = {
   fr: FR,
   it: IT,
   de: DE,
-  ja: JA,
-  ko: KO,
-  zh: ZH,
 };
 
 /** Verbetes adicionais de um idioma, já expandidos. */

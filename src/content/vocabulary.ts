@@ -21,7 +21,6 @@
 
 import type { CefrLevel, LanguageCode, VocabularyItem } from '@/domain/types';
 import { SUPPORTED_LANGUAGES } from '@/domain/types';
-import { buildAsianVocabulary } from './vocabulary-asia';
 
 /**
  * Formato compacto: [termo, tradução PT, classe, fonética, exemplo, tradução do exemplo, nível]
@@ -848,8 +847,6 @@ const DE: Entry[] = [
   ],
 ];
 
-// Parcial de propósito: japonês, coreano e mandarim vivem em
-// `vocabulary-asia.ts`, com romanização obrigatória.
 const RAW: Partial<Record<LanguageCode, Entry[]>> = { en: EN, es: ES, fr: FR, it: IT, de: DE };
 
 /**
@@ -859,11 +856,6 @@ const RAW: Partial<Record<LanguageCode, Entry[]>> = { en: EN, es: ES, fr: FR, it
  * o mesmo id em qualquer dispositivo — requisito da sincronização sem conflito.
  */
 export function buildVocabulary(language: LanguageCode): VocabularyItem[] {
-  // Japonês, coreano e mandarim vivem em `vocabulary-asia.ts` porque carregam
-  // romanização obrigatória — um campo a mais na tupla compacta.
-  const asian = buildAsianVocabulary(language);
-  if (asian.length > 0) return asian;
-
   return (RAW[language] ?? []).map((entry, index) => {
     const [term, translation, partOfSpeech, phonetic, example, exampleTranslation, cefr] =
       entry;
@@ -902,7 +894,4 @@ export const LANGUAGE_META: Record<
   fr: { name: 'Francês', nativeName: 'Français', flag: '🇫🇷', speakers: '310 milhões' },
   it: { name: 'Italiano', nativeName: 'Italiano', flag: '🇮🇹', speakers: '85 milhões' },
   de: { name: 'Alemão', nativeName: 'Deutsch', flag: '🇩🇪', speakers: '135 milhões' },
-  ja: { name: 'Japonês', nativeName: '日本語', flag: '🇯🇵', speakers: '125 milhões' },
-  ko: { name: 'Coreano', nativeName: '한국어', flag: '🇰🇷', speakers: '80 milhões' },
-  zh: { name: 'Mandarim', nativeName: '中文', flag: '🇨🇳', speakers: '1,1 bilhão' },
 };

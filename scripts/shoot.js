@@ -153,11 +153,12 @@ async function main() {
       await shot(name);
     }
 
-    // A cena de escrita não latina é a mais distinta do conjunto; vale ver.
+    // A trilha depois de trocar de idioma: vale ver que a cena e o conteúdo
+    // acompanham a troca, e não só o rótulo no topo.
     await tap('Perfil');
-    await tap('Japonês');
+    await tap('Alemão');
     await tap('Aprender');
-    await shot('10-aprender-japones');
+    await shot('10-aprender-alemao');
 
     console.log(`\n✓ Capturas em ${OUT}`);
   } finally {

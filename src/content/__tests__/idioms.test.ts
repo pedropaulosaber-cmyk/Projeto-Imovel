@@ -7,12 +7,17 @@
  * só ensina errado. Por isso os testes olham o **conteúdo**, não a forma.
  */
 
-import type { CefrLevel, LanguageCode } from '@/domain/types';
+import {
+  type CefrLevel,
+  type LanguageCode,
+  NON_LATIN_LANGUAGES,
+  SUPPORTED_LANGUAGES,
+} from '@/domain/types';
 import { buildIdioms, idiomCount, idiomCountByLevel } from '../idioms';
 
-const LANGUAGES: LanguageCode[] = ['en', 'es', 'fr', 'it', 'de', 'ja', 'ko', 'zh'];
+const LANGUAGES: readonly LanguageCode[] = SUPPORTED_LANGUAGES;
 const LEVELS: CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-const NON_LATIN: LanguageCode[] = ['ja', 'ko', 'zh'];
+const NON_LATIN: LanguageCode[] = NON_LATIN_LANGUAGES;
 
 /** Minúsculas sem acento — "está" e "estar" precisam se encontrar. */
 function fold(text: string): string {
@@ -75,9 +80,9 @@ describe('catálogo de expressões', () => {
         const example = fold(idiom.example);
 
         if (NON_LATIN.includes(language)) {
-          // `fold` também é aplicado à expressão: a normalização NFD separa o
-          // dakuten japonês (「が」→ か + ゛), e comparar um lado normalizado
-          // com o outro não normalizado nunca casaria.
+          // `fold` também é aplicado à expressão: a normalização NFD separa
+          // marcas diacríticas do caractere base, e comparar um lado
+          // normalizado com o outro não normalizado nunca casaria.
           const expression = fold(idiom.expression);
           const head = expression.slice(0, Math.ceil(expression.length / 2));
           expect({ id: idiom.id, hit: example.includes(head) }).toEqual({
@@ -109,8 +114,11 @@ describe('catálogo de expressões', () => {
   });
 
   it('idiomas de escrita não latina trazem romanização', () => {
-    // Sem romanização, o aluno de japonês vê um bloco de kanji e não consegue
-    // nem pronunciar o que está estudando.
+    // Hoje o catálogo é só latino e este laço não roda. Ele fica porque a
+    // regra que protege é real: sem romanização, quem estuda uma escrita que
+    // não lê vê um bloco de símbolos e não consegue nem pronunciar o que está
+    // estudando. É a guarda que espera o dia em que a lista voltar a ter
+    // alguém.
     for (const language of NON_LATIN) {
       for (const idiom of buildIdioms(language)) {
         expect(idiom.romanization).not.toBeNull();

@@ -14,7 +14,7 @@
  *
  * ## Por que gerada, e não escrita à mão
  *
- * São 8 idiomas × 6 níveis = 48 apostilas. Escritas à mão, divergiriam da
+ * São 5 idiomas × 6 níveis = 30 apostilas. Escritas à mão, divergiriam da
  * trilha na primeira mudança de conteúdo e ninguém perceberia. Geradas a partir
  * das **mesmas fontes** que alimentam as lições (vocabulário, frases, regras
  * gramaticais, expressões), elas não podem sair de sincronia — e adicionar um
@@ -635,7 +635,8 @@ function falseFriendsSection(language: LanguageCode, level: CefrLevel): Workbook
  *
  * O que não é gramática nem vocabulário e define como a pessoa é percebida. Um
  * brasileiro que traduz literalmente sua cordialidade para o alemão soa
- * artificial; quem traduz sua objetividade para o japonês soa agressivo.
+ * artificial; quem traduz seu "a gente se fala" para o inglês marca um
+ * compromisso que não pretendia.
  *
  * ## Por que o mesmo tema reaparece em níveis diferentes
  *

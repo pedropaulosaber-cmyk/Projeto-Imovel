@@ -4,21 +4,17 @@
  *
  * ## A decisão técnica: HTML impresso pelo sistema, não uma biblioteca de PDF
  *
- * Existem duas formas de gerar PDF num app React Native, e a diferença entre
- * elas decide se o produto funciona em japonês:
+ * Existem duas formas de gerar PDF num app React Native:
  *
  *  1. **Biblioteca de PDF em JS** (pdfmake, jsPDF). Pesa ~500 KB no bundle e,
- *     pior, precisa **embutir a fonte**. Uma fonte latina custa ~100 KB; uma
- *     que cubra japonês, coreano e chinês custa **vários megabytes**. Sem ela,
- *     todo caractere CJK vira um retângulo vazio. Num app que ensina três
- *     idiomas de escrita não latina, isso não é um detalhe: é a metade do
- *     catálogo quebrada.
+ *     pior, precisa **embutir a fonte** — cada peso e cada estilo, ou o
+ *     material inteiro sai na mesma variante. Cobrir bem os acentos e as
+ *     ligaduras dos cinco idiomas custa mais algumas centenas de KB.
  *
  *  2. **HTML renderizado pelo motor de impressão do sistema** — `expo-print`
  *     no Android e iOS, `window.print()` na web. O sistema operacional já tem
- *     as fontes de todos os scripts instaladas, já sabe quebrar linha em
- *     japonês (que não usa espaços) e já produz PDF vetorial com texto
- *     selecionável e pesquisável.
+ *     as fontes instaladas e já produz PDF vetorial com texto selecionável e
+ *     pesquisável.
  *
  * A segunda opção custa ~40 KB, não embute fonte nenhuma e produz um PDF
  * melhor. Este arquivo existe para produzir esse HTML.
@@ -539,9 +535,9 @@ export function estimatePages(workbook: Workbook): number {
   // 20 páginas e entregar 14 é exatamente o tipo de detalhe que corrói
   // confiança no material.
   // O "+1" é a capa. O sumário cabe na mesma folha em que a primeira seção
-  // começa, então não conta — medido contra três PDFs reais (inglês B1 = 26,
-  // japonês A1 = 23, alemão C2 = 23), onde a fórmula com "+2" errava por
-  // exatamente uma página em todos.
+  // começa, então não conta — medido contra PDFs reais (inglês B1 = 26,
+  // alemão C2 = 23), onde a fórmula com "+2" errava por exatamente uma página
+  // em todos.
   return Math.max(2, 1 + Math.ceil(lines / 33));
 }
 

@@ -19,6 +19,7 @@ import { LANGUAGE_META } from '@/content/vocabulary';
 import {
   Aurora,
   Badge,
+  Button,
   Card,
   LanguageScene,
   ProgressRing,
@@ -36,6 +37,7 @@ import { selectGoalRatio, selectTodayXp, useAppStore } from '@/state/app-store';
 export default function Learn() {
   const theme = useTheme();
   const router = useRouter();
+  const status = useAppStore((state) => state.status);
 
   const profile = useAppStore((state) => state.profile);
   const enrollment = useAppStore((state) => state.enrollment);
@@ -54,6 +56,25 @@ export default function Learn() {
       void refresh();
     }, [refresh]),
   );
+
+  // Sem matrícula **depois** de o app já ter carregado não é espera: é estado
+  // que só sai com uma ação do aluno. Acontece com quem estudava um idioma que
+  // saiu do catálogo (ver `isRetiredLanguage` no app-store). Mostrar
+  // "Carregando…" aqui deixaria a tela girando para sempre.
+  if (status === 'ready' && !enrollment) {
+    return (
+      <Screen>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 }}>
+          <Text variant="title">Escolha um idioma</Text>
+          <Text tone="secondary" style={{ textAlign: 'center' }}>
+            O idioma que você estudava não está mais disponível. Seu XP, sua ofensiva e seu
+            histórico continuam salvos.
+          </Text>
+          <Button label="Escolher idioma" onPress={() => router.push('/(tabs)/profile')} />
+        </View>
+      </Screen>
+    );
+  }
 
   if (!enrollment || !plan) {
     return (

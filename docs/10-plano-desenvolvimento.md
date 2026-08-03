@@ -105,7 +105,7 @@ engenharia. Começar cedo evita que o app fique pronto e vazio.
 | Telemetria de desempenho (tempo de abertura, fps, bateria) |
 | Testes A/B de paywall, onboarding e metas |
 | Ajuste do SRS com dados reais de revisão agregados |
-| Novos idiomas (japonês, coreano, mandarim — exigem trabalho de escrita) |
+| Novos idiomas (exigem curadoria de léxico e frases do zero) |
 | Modelo de pronúncia no dispositivo (ver §15) |
 
 ---

@@ -2,12 +2,11 @@
  * Conteúdo por nível — montagem
  * ==============================
  *
- * Une três fontes num único ponto de acesso, para que o gerador da trilha não
+ * Une duas fontes num único ponto de acesso, para que o gerador da trilha não
  * precise saber de onde veio cada coisa:
  *
- *  - **A1** — lista de frequência de `vocabulary.ts` / `vocabulary-asia.ts`.
- *  - **A2–C2 (latinos)** — `vocabulary-levels.ts`.
- *  - **A2–C2 (asiáticos)** — `vocabulary-levels-asia.ts`, com romanização.
+ *  - **A1** — lista de frequência de `vocabulary.ts`.
+ *  - **A2–C2** — `vocabulary-levels.ts` mais os lotes de `vocabulary-extra/`.
  *
  * ## A garantia que este módulo dá
  *
@@ -21,18 +20,17 @@
  */
 
 import type { CefrLevel, LanguageCode, VocabularyItem } from '@/domain/types';
-import { usesNonLatinScript } from '@/domain/types';
 import { buildVocabulary } from './vocabulary';
-import { extraAsianVocabularyRaw, extraLatinVocabularyRaw } from './vocabulary-extra';
+import { extraLatinVocabularyRaw } from './vocabulary-extra';
 import { levelVocabulary as latinLevelVocabulary } from './vocabulary-levels';
-import { asianLevelVocabulary } from './vocabulary-levels-asia';
 
 /**
  * Id determinístico de verbete.
  *
- * Deriva da romanização quando ela existe, porque a escrita nativa não
- * sobrevive à normalização (`締め切り` viraria uma string vazia e todos os
- * verbetes japoneses colidiriam num id só).
+ * Deriva da romanização quando ela existe. Hoje o catálogo é só latino e ela
+ * nunca existe, mas o parâmetro fica: escrita não latina não sobrevive à
+ * normalização (`締め切り` viraria string vazia e todos os verbetes colidiriam
+ * num id só), e é isso que a romanização evita.
  */
 function vocabularyId(
   language: LanguageCode,
@@ -54,37 +52,6 @@ function vocabularyId(
  */
 function tagsFor(partOfSpeech: string, level: CefrLevel, topic?: string): string[] {
   return topic ? [partOfSpeech, level, topic] : [partOfSpeech, level];
-}
-
-function fromAsianRaw(
-  language: LanguageCode,
-  level: CefrLevel,
-  [
-    term,
-    romanization,
-    translation,
-    partOfSpeech,
-    example,
-    exampleRoman,
-    exampleTranslation,
-    topic,
-  ]: [string, string, string, string, string, string, string, string?],
-): VocabularyItem {
-  return {
-    id: vocabularyId(language, term, romanization),
-    language,
-    term,
-    translation,
-    partOfSpeech,
-    phonetic: null,
-    romanization,
-    exampleSentence: example,
-    exampleTranslation,
-    exampleRomanization: exampleRoman,
-    frequencyRank: null,
-    cefr: level,
-    tags: tagsFor(partOfSpeech, level, topic),
-  };
 }
 
 function fromLatinRaw(
@@ -123,28 +90,16 @@ export function levelVocabulary(language: LanguageCode, level: CefrLevel): Vocab
   // ampliação do próprio A1, que segue o formato normal por nível. As duas
   // fontes são conceitualmente distintas mas convergem no mesmo tipo de saída.
   if (level === 'A1') {
-    const extra = usesNonLatinScript(language)
-      ? extraAsianVocabularyRaw(language, level).map((raw) =>
-          fromAsianRaw(language, level, raw),
-        )
-      : extraLatinVocabularyRaw(language, level).map((raw) =>
-          fromLatinRaw(language, level, raw),
-        );
+    const extra = extraLatinVocabularyRaw(language, level).map((raw) =>
+      fromLatinRaw(language, level, raw),
+    );
     const frequency = buildVocabulary(language).filter((item) => item.cefr === 'A1');
     return dedupe([...extra, ...frequency]);
   }
 
-  if (usesNonLatinScript(language)) {
-    // O lote de ampliação vem primeiro: em caso de colisão de id — que a
-    // dedupe() resolve por "primeira ocorrência" — o verbete mais recente e
-    // mais revisado prevalece.
-    const raw = [
-      ...extraAsianVocabularyRaw(language, level),
-      ...asianLevelVocabulary(language, level),
-    ];
-    return dedupe(raw.map((entry) => fromAsianRaw(language, level, entry)));
-  }
-
+  // O lote de ampliação vem primeiro: em caso de colisão de id — que a
+  // dedupe() resolve por "primeira ocorrência" — o verbete mais recente e mais
+  // revisado prevalece.
   const raw = [
     ...extraLatinVocabularyRaw(language, level),
     ...latinLevelVocabulary(language, level),

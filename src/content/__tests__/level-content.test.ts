@@ -10,7 +10,12 @@
  * Isso é o comportamento desejado.
  */
 
-import { CEFR_LEVELS, type CefrLevel, SUPPORTED_LANGUAGES } from '@/domain/types';
+import {
+  CEFR_LEVELS,
+  type CefrLevel,
+  NON_LATIN_LANGUAGES,
+  SUPPORTED_LANGUAGES,
+} from '@/domain/types';
 import { buildCourseContent } from '../courses';
 import { grammarPointCount, grammarPoints } from '../grammar-syllabus';
 import { allLevelVocabulary, levelVocabulary } from '../level-content';
@@ -72,7 +77,7 @@ describe('vocabulário por nível', () => {
   });
 
   it('idiomas de escrita não latina trazem romanização em todo verbete', () => {
-    for (const language of ['ja', 'ko', 'zh'] as const) {
+    for (const language of NON_LATIN_LANGUAGES) {
       for (const level of CEFR_LEVELS) {
         for (const item of levelVocabulary(language, level)) {
           expect(`${language}/${level}/${item.term}`).toBe(
@@ -178,8 +183,8 @@ describe('gramática por nível', () => {
   });
 
   it('catalogou o programa inteiro', () => {
-    // 8 idiomas × 6 níveis × 3 pontos.
-    expect(grammarPointCount()).toBe(144);
+    // 5 idiomas × 6 níveis × 3 pontos.
+    expect(grammarPointCount()).toBe(90);
   });
 });
 

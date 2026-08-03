@@ -7,7 +7,7 @@
  * navegador, e é o que se faz aqui.
  */
 
-import { CEFR_LEVELS, SUPPORTED_LANGUAGES } from '@/domain/types';
+import { CEFR_LEVELS, NON_LATIN_LANGUAGES, SUPPORTED_LANGUAGES } from '@/domain/types';
 import { levelVerbs, verbCount } from '../verbs';
 import { estimatePages, workbookFileName, workbookToPrintableHtml } from '../workbook-pdf';
 import { buildWorkbook } from '../workbooks';
@@ -24,10 +24,10 @@ describe('catálogo de verbos', () => {
   });
 
   it('catalogou o programa inteiro', () => {
-    // 8 idiomas × 6 níveis × 20 verbos. Eram 8 por nível até a seção de verbos
+    // 5 idiomas × 6 níveis × 20 verbos. Eram 8 por nível até a seção de verbos
     // ficar pequena demais para ser percebida ao lado das 25 expressões
     // idiomáticas — ver o cabeçalho de `verbs.test.ts`.
-    expect(verbCount()).toBe(960);
+    expect(verbCount()).toBe(600);
   });
 
   it('nenhum verbo se repete dentro de um idioma', () => {
@@ -56,7 +56,7 @@ describe('catálogo de verbos', () => {
   });
 
   it('idiomas de escrita não latina trazem romanização em todo verbo', () => {
-    for (const language of ['ja', 'ko', 'zh'] as const) {
+    for (const language of NON_LATIN_LANGUAGES) {
       for (const level of CEFR_LEVELS) {
         for (const verb of levelVerbs(language, level)) {
           expect(verb.romanization).not.toBeNull();
@@ -154,9 +154,9 @@ describe('apostila em PDF', () => {
       for (const level of CEFR_LEVELS) {
         const workbook = buildWorkbook(language, level);
         // A estimativa foi calibrada contra PDFs renderizados de verdade no
-        // Chromium: inglês B1 = 25 páginas, japonês A1 = 25, alemão C2 = 22,
-        // com erro máximo de uma página. Abaixo de 20 a apostila deixaria de
-        // entregar o tamanho prometido no card.
+        // Chromium: inglês B1 = 25 páginas, alemão C2 = 22, com erro máximo
+        // de uma página. Abaixo de 20 a apostila deixaria de entregar o
+        // tamanho prometido no card.
         expect(`${language}/${level}: ${workbook.estimatedPages}`).toBe(
           workbook.estimatedPages >= 20
             ? `${language}/${level}: ${workbook.estimatedPages}`
@@ -168,10 +168,10 @@ describe('apostila em PDF', () => {
   });
 
   it('dá nome de arquivo previsível e sem acento', () => {
-    const workbook = buildWorkbook('ja', 'C1');
-    const name = workbookFileName(workbook, 'ja');
+    const workbook = buildWorkbook('de', 'C1');
+    const name = workbookFileName(workbook, 'de');
 
-    expect(name).toBe('lumo-japones-c1.pdf');
+    expect(name).toBe('lumo-alemao-c1.pdf');
     expect(name).toMatch(/^[a-z0-9-]+\.pdf$/);
   });
 
@@ -204,7 +204,7 @@ describe('apostila em PDF', () => {
       }
     }
 
-    expect(documents.size).toBe(48);
+    expect(documents.size).toBe(30);
   });
 
   it('apostilas do mesmo idioma não repetem o corpo das seções', () => {

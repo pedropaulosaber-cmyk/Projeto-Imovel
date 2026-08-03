@@ -73,10 +73,9 @@ export default function Workbooks() {
   /**
    * Gera o PDF.
    *
-   * O documento é montado como HTML e impresso pelo motor do sistema — que já
-   * tem as fontes de japonês, coreano e chinês instaladas. Uma biblioteca de
-   * PDF em JS precisaria embutir essas fontes (megabytes) ou renderizar
-   * retângulos vazios no lugar dos caracteres.
+   * O documento é montado como HTML e impresso pelo motor do sistema, que já
+   * tem as fontes instaladas. Uma biblioteca de PDF em JS teria de embutir
+   * cada peso e cada estilo no bundle para produzir o mesmo material.
    */
   const exportPdf = useCallback(
     async (workbook: Workbook) => {

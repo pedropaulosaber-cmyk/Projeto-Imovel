@@ -79,11 +79,11 @@ lumo/
 │   │   └── knowledge.ts                # Erros de lusófonos · regras · cenários
 │   │
 │   ├── content/                        # CONTEÚDO
-│   │   ├── vocabulary.ts               # Léxico por frequência (latinos)
-│   │   ├── vocabulary-asia.ts          # Léxico ja/ko/zh com romanização
+│   │   ├── vocabulary.ts               # Léxico por frequência
+│   │   ├── vocabulary-extra/           # Lotes de ampliação, por tema
 │   │   ├── phrases.ts                  # Frases curadas por tema
-│   │   ├── idioms.ts                   # Expressões idiomáticas (8 idiomas)
-│   │   ├── workbooks.ts                # Gerador das 48 apostilas
+│   │   ├── idioms.ts                   # Expressões idiomáticas
+│   │   ├── workbooks.ts                # Gerador das 30 apostilas
 │   │   ├── courses.ts                  # Gerador da trilha
 │   │   └── seed.ts                     # Semeadura idempotente
 │   │
@@ -132,6 +132,6 @@ sinal de que o desenho quebrou.
 árvore paralela — quem mexe no SRS vê o teste do SRS.
 
 **5. Conteúdo é dado, não código.** `content/` guarda listas; a estrutura
-pedagógica é uma só e vale para todos os idiomas. Adicionar japonês foi
-adicionar duas listas — e as 48 apostilas saem das *mesmas* fontes que as
+pedagógica é uma só e vale para todos os idiomas. Adicionar um idioma é
+adicionar duas listas — e as 30 apostilas saem das *mesmas* fontes que as
 lições, justamente para que nunca divirjam do que é ensinado.
