@@ -30,6 +30,7 @@ import { FALSE_FRIENDS, PRAGMATIC_NOTES } from '@/ai/false-friends';
 import type {
   CefrLevel,
   LanguageCode,
+  VocabularyItem,
   Workbook,
   WorkbookBlock,
   WorkbookSection,
@@ -74,6 +75,27 @@ const LEVEL_TITLE: Record<CefrLevel, { title: string; subtitle: string }> = {
 
 const workbookId = (language: LanguageCode, level: CefrLevel) =>
   `workbook:${language}:${level}`;
+
+/**
+ * Tema do verbete, quando o lote de origem trouxe um.
+ *
+ * As duas primeiras tags são classe gramatical e nível (ver `tagsFor` em
+ * `level-content.ts`); a terceira, quando existe, é o campo semântico. Os lotes
+ * antigos não têm tema e caem no grupo genérico — por isso o retorno é
+ * opcional em vez de um valor padrão inventado aqui.
+ */
+function topicOf(item: VocabularyItem): string | undefined {
+  return item.tags?.[2];
+}
+
+function toRow(item: VocabularyItem) {
+  return {
+    term: item.term,
+    romanization: item.romanization ?? undefined,
+    translation: item.translation,
+    note: item.partOfSpeech ?? undefined,
+  };
+}
 
 /* ------------------------------------------------------------------ *
  * Seções
@@ -139,16 +161,37 @@ function vocabularySection(language: LanguageCode, level: CefrLevel): WorkbookSe
           ? 'As palavras estão em ordem de frequência real: as primeiras aparecem mais na língua falada. No início, aprender nessa ordem rende muito mais que aprender por tema.'
           : 'A partir daqui a frequência para de discriminar — as palavras deste nível têm frequências parecidas entre si, e o que muda é o domínio de uso. Por isso elas vêm agrupadas por situação, não por ranking.',
     },
-    {
-      kind: 'vocabTable',
-      rows: vocabulary.map((item) => ({
-        term: item.term,
-        romanization: item.romanization ?? undefined,
-        translation: item.translation,
-        note: item.partOfSpeech ?? undefined,
-      })),
-    },
   ];
+
+  // Verbetes com tema viram blocos separados, um por campo semântico; o resto
+  // cai numa tabela única no fim. Aprender "sol, chuva, neve, vento" junto
+  // gruda mais que aprender as mesmas quatro palavras espalhadas numa lista de
+  // trinta — é o ganho mais barato que a apostila tem.
+  const byTopic = new Map<string, VocabularyItem[]>();
+  const untagged: VocabularyItem[] = [];
+
+  for (const item of vocabulary) {
+    const topic = topicOf(item);
+    if (!topic) {
+      untagged.push(item);
+      continue;
+    }
+    const bucket = byTopic.get(topic);
+    if (bucket) bucket.push(item);
+    else byTopic.set(topic, [item]);
+  }
+
+  for (const [topic, items] of byTopic) {
+    blocks.push(
+      { kind: 'heading', text: topic },
+      { kind: 'vocabTable', rows: items.map(toRow) },
+    );
+  }
+
+  if (untagged.length > 0) {
+    if (byTopic.size > 0) blocks.push({ kind: 'heading', text: 'Outras palavras do nível' });
+    blocks.push({ kind: 'vocabTable', rows: untagged.map(toRow) });
+  }
 
   // Todos os exemplos, não uma amostra. O corte em 14 existia quando a
   // apostila era curta; agora ele só tirava material útil de graça.

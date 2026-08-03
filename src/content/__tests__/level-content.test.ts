@@ -92,16 +92,16 @@ describe('vocabulário por nível', () => {
   });
 
   /**
-   * ## Sobre o piso de 30 por nível
+   * ## Sobre o piso de 90 por nível
    *
    * Pedido do produto: "10.000 palavras por língua, divididas entre os
-   * níveis". 10.000 é a meta final, perseguida em várias etapas — cada uma
-   * soma um lote sem derrubar o que já existe (é o que os testes acima
-   * garantem: nada se repete, nada perde romanização, nada fica sem exemplo).
-   * Este piso trava o que **esta etapa** entregou, para que a próxima etapa
-   * comece dali e não de um regresso silencioso.
+   * níveis". 10.000 é a meta final, perseguida em lotes — cada um soma sem
+   * derrubar o que já existe (é o que os testes acima garantem: nada se
+   * repete, nada perde romanização, nada fica sem exemplo). Este piso trava o
+   * que já foi entregue, para que o próximo lote comece dali e não de um
+   * regresso silencioso. Subiu de 30 para 90 com o lote temático.
    */
-  it('todo nível de todo idioma tem ao menos 30 verbetes', () => {
+  it('todo nível de todo idioma tem ao menos 90 verbetes', () => {
     for (const language of SUPPORTED_LANGUAGES) {
       for (const level of CEFR_LEVELS) {
         expect({
@@ -109,7 +109,25 @@ describe('vocabulário por nível', () => {
           level,
           count: levelVocabulary(language, level).length,
         }).toEqual({ language, level, count: expect.any(Number) });
-        expect(levelVocabulary(language, level).length).toBeGreaterThanOrEqual(30);
+        expect(levelVocabulary(language, level).length).toBeGreaterThanOrEqual(90);
+      }
+    }
+  });
+
+  /**
+   * O tema é o que faz a apostila agrupar o vocabulário por campo semântico em
+   * vez de despejar uma lista só. Se um lote novo esquecer o campo, a seção
+   * degrada em silêncio para "Outras palavras do nível" — daí o teste.
+   */
+  it('o lote temático chega com tema em todo nível de todo idioma', () => {
+    for (const language of SUPPORTED_LANGUAGES) {
+      for (const level of CEFR_LEVELS) {
+        const withTopic = levelVocabulary(language, level).filter(
+          (item) => (item.tags?.length ?? 0) > 2,
+        );
+        expect(`${language}/${level}: ${withTopic.length >= 60}`).toBe(
+          `${language}/${level}: true`,
+        );
       }
     }
   });

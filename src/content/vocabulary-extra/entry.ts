@@ -23,14 +23,27 @@
 
 import type { CefrLevel } from '@/domain/types';
 
-/** `[termo, tradução, classe gramatical, exemplo, tradução do exemplo]` */
-export type LatinRaw = [string, string, string, string, string];
+/**
+ * ## O tema, no fim da tupla
+ *
+ * O último campo é opcional de propósito. Os lotes antigos não têm tema e
+ * continuam válidos; os novos trazem o campo semântico ("Cores", "Viagem",
+ * "Retórica") que a apostila usa para agrupar a tabela de vocabulário.
+ *
+ * Agrupar por campo semântico não é enfeite: palavra aprendida em bloco
+ * temático gruda mais do que palavra aprendida em lista alfabética — é o
+ * princípio mais antigo e mais bem medido do ensino de léxico. Sem tema, a
+ * seção cai no agrupamento por classe gramatical, que ainda é melhor que nada.
+ */
+
+/** `[termo, tradução, classe gramatical, exemplo, tradução do exemplo, tema?]` */
+export type LatinRaw = [string, string, string, string, string, string?];
 
 /**
  * `[termo, romanização, tradução, classe gramatical, exemplo, romanização do
- *   exemplo, tradução do exemplo]`
+ *   exemplo, tradução do exemplo, tema?]`
  */
-export type AsianRaw = [string, string, string, string, string, string, string];
+export type AsianRaw = [string, string, string, string, string, string, string, string?];
 
 export type LatinByLevel = Partial<Record<CefrLevel, LatinRaw[]>>;
 export type AsianByLevel = Partial<Record<CefrLevel, AsianRaw[]>>;
