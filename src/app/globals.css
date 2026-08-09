@@ -1,0 +1,197 @@
+@import 'tailwindcss';
+
+/**
+ * Tokens da AUTOMATIZE
+ * ====================
+ *
+ * Os valores vêm do design do Canvas, sem reinterpretação. O que está aqui é a
+ * fonte única: nenhum componente deve escrever `#2563EB` no meio do JSX, porque
+ * a segunda vez que alguém faz isso a marca já começou a divergir.
+ *
+ * A paleta coincide com as escalas `slate` e `blue` do Tailwind — não por
+ * acaso, foi assim que o design foi construído. Manter os nomes semânticos
+ * (`ink`, `muted`, `line`) em vez de `slate-900` é o que permite trocar a
+ * escala inteira depois sem varrer o código: o componente pede "a cor do
+ * texto", não "cinza 900".
+ */
+@theme {
+  /* Marca */
+  --color-brand: #2563eb;
+  --color-brand-strong: #1d4ed8;
+  --color-brand-deep: #0b1f3a;
+  --color-brand-subtle: #eff6ff;
+
+  /* Superfícies */
+  --color-paper: #ffffff;
+  --color-canvas: #f8fafc;
+
+  /* Texto e traço */
+  --color-ink: #0f172a;
+  --color-ink-soft: #334155;
+  --color-ink-body: #475569;
+  --color-muted: #64748b;
+  --color-faint: #94a3b8;
+  --color-line: #e2e8f0;
+  --color-line-soft: #f1f5f9;
+
+  /* Estados */
+  --color-positive: #059669;
+  --color-positive-subtle: #ecfdf5;
+  --color-warning: #b45309;
+  --color-warning-subtle: #fffbeb;
+  --color-danger: #dc2626;
+  --color-danger-subtle: #fef2f2;
+
+  /* Tipografia — Manrope em toda a interface, como no design */
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  /* Raios do design: 8 em botão, 10 em thumb, 12 em campo, 14 em card */
+  --radius-btn: 8px;
+  --radius-thumb: 10px;
+  --radius-field: 12px;
+  --radius-card: 14px;
+  --radius-panel: 16px;
+
+  /* Sombras — sempre com a tinta da marca, nunca preto puro */
+  --shadow-card: 0 12px 28px rgba(15, 23, 42, 0.1);
+  --shadow-panel: 0 18px 48px rgba(15, 23, 42, 0.1);
+  --shadow-brand: 0 6px 18px rgba(37, 99, 235, 0.28);
+  --shadow-sheet: 0 -8px 40px rgba(15, 23, 42, 0.24);
+}
+
+@layer base {
+  html {
+    /* Âncora que cai atrás do topbar fixo é um defeito de navegação, não de
+       estilo: o usuário clica no índice e aterrissa no lugar errado. */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /**
+   * Foco visível, sempre.
+   *
+   * `:focus-visible` mostra o anel para quem navega por teclado sem poluir o
+   * clique de mouse. Remover o outline sem repor um equivalente é o defeito de
+   * acessibilidade mais comum que existe — quem depende de teclado perde a
+   * noção de onde está na página.
+   */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Alvo de toque mínimo em telas de dedo. WCAG 2.5.8 pede 24px; 44px é o que
+     a prática mostra que evita erro de toque de verdade. */
+  @media (pointer: coarse) {
+    button,
+    a[role='button'],
+    [role='tab'] {
+      min-height: 44px;
+    }
+  }
+
+  ::selection {
+    background: var(--color-brand-subtle);
+    color: var(--color-brand-deep);
+  }
+}
+
+@layer utilities {
+  /**
+   * Conteúdo só para leitor de tela.
+   *
+   * Usado em rótulos que a interface comunica visualmente (por ícone ou
+   * posição) mas que não existem como texto. `display:none` não serve: some
+   * também para o leitor de tela, que é justamente quem precisa.
+   */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* O gradiente das miniaturas de produto, do design. */
+  .thumb-gradient {
+    background: linear-gradient(140deg, #eff6ff 0%, #dbeafe 55%, #e0e7ff 100%);
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--color-line-soft) 25%,
+      var(--color-line) 37%,
+      var(--color-line-soft) 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0 50%;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/**
+ * Movimento é preferência do usuário, não decisão nossa.
+ *
+ * Para quem tem transtorno vestibular, animação de entrada não é enfeite — é
+ * náusea. O sistema operacional já sabe a resposta; só precisamos perguntar.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,770 @@
+// Schema da AUTOMATIZE
+// ====================
+//
+// Decisões que valem por todo o arquivo:
+//
+//  · **Dinheiro é `Int` em centavos.** `Float` para valor monetário produz
+//    R$ 0,01 de diferença que ninguém reproduz e todo mundo reclama.
+//    `Decimal` seria correto, mas obriga a conversão em toda leitura; centavo
+//    inteiro é exato, cabe em 32 bits até R$ 21 milhões e comparação continua
+//    sendo comparação.
+//
+//  · **Soft delete só onde há motivo.** `deletedAt` existe em User e Product,
+//    onde apagar de verdade destruiria histórico financeiro de terceiros (a
+//    nota fiscal de quem comprou). No resto, deleção é deleção — soft delete
+//    universal é uma dívida que se paga em toda query esquecendo o filtro.
+//
+//  · **`onDelete` explícito em toda relação.** O padrão do Prisma varia com a
+//    obrigatoriedade do campo, e "varia" é como se apaga o pedido de um
+//    comprador ao remover um produto.
+//
+//  · **Índice em toda coluna que aparece em WHERE ou ORDER BY.** Marketplace
+//    é leitura-pesada; um seq scan em `Product` com 100 mil linhas é a
+//    diferença entre 8ms e 900ms na página que mais converte.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+// A URL de conexão não mora mais aqui (Prisma 7): fica em `prisma.config.ts`
+// para o CLI de migração e chega ao runtime pelo adaptador, em
+// `src/server/db/prisma.ts`.
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Identidade e acesso
+// ---------------------------------------------------------------------------
+
+/// Papéis. Uma conta acumula papéis (`UserRole`) em vez de ter um só: quem
+/// vende também compra, e forçar duas contas para a mesma pessoa é a fricção
+/// que mata a adesão do lado da oferta.
+enum Role {
+  BUYER
+  CREATOR
+  PROFESSIONAL
+  ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  emailVerified DateTime?
+  /// Hash argon2id. O nome diz `hash` para que ninguém confunda com senha.
+  passwordHash  String
+  name          String
+  avatarUrl     String?
+  status        AccountStatus @default(ACTIVE)
+
+  /// Marcação de exclusão a pedido do titular (LGPD art. 18). O registro fica
+  /// para preservar o histórico fiscal de quem comprou dele; os dados pessoais
+  /// são anonimizados no mesmo movimento — ver `anonymizeUser`.
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roles               UserRole[]
+  sessions            Session[]
+  profile             Profile?
+  professionalProfile ProfessionalProfile?
+  products            Product[]            @relation("ProductAuthor")
+  orders              Order[]
+  reviews             Review[]
+  favorites           Favorite[]
+  demands             Demand[]
+  proposals           Proposal[]
+  conversationMembers ConversationMember[]
+  messages            Message[]
+  notifications       Notification[]
+  auditLogs           AuditLog[]           @relation("AuditActor")
+  downloads           DownloadLog[]
+  reviewResponses     ReviewResponse[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model UserRole {
+  userId    String
+  role      Role
+  grantedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Chave composta: o banco garante que ninguém acumule o mesmo papel duas
+  /// vezes. Deduplicar na aplicação seria confiar que todo caminho de escrita
+  /// lembrou — e um deles não lembraria.
+  @@id([userId, role])
+  @@index([role])
+  @@map("user_roles")
+}
+
+/// Sessão de login.
+///
+/// Guarda o **hash** do token, nunca o token. Um dump do banco não deve dar ao
+/// atacante a capacidade de se passar por qualquer usuário logado — que é
+/// exatamente o que aconteceria com o token em claro.
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  /// Rotacionado a cada uso para detectar reuso de token roubado.
+  lastUsedAt DateTime @default(now())
+  ipHash     String?
+  userAgent  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  bio       String?  @db.Text
+  company   String?
+  website   String?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// ---------------------------------------------------------------------------
+// Catálogo
+// ---------------------------------------------------------------------------
+
+enum ProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+/// Natureza do que está sendo vendido. Muda o que a página precisa mostrar
+/// (um prompt não tem "requisitos de infraestrutura"; um agente tem).
+enum ProductKind {
+  AI_AGENT
+  AUTOMATION
+  WORKFLOW
+  TEMPLATE
+  PROMPT_PACK
+  DATASET
+  INTEGRATION
+}
+
+model ProductCategory {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  description String?
+  icon        String?
+  /// Subcategoria aponta para a categoria-mãe. Auto-relação mantém a árvore
+  /// numa tabela só e permite profundidade maior sem migração.
+  parentId    String?
+  position    Int     @default(0)
+
+  parent   ProductCategory?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children ProductCategory[] @relation("CategoryTree")
+  products Product[]
+
+  @@index([parentId])
+  @@map("product_categories")
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  tagline     String
+  description String        @db.Text
+  kind        ProductKind
+  categoryId  String
+  authorId    String
+  status      ProductStatus @default(DRAFT)
+
+  /// Preço em centavos, decidido e validado **no servidor**. O frontend nunca
+  /// envia preço; envia o id do produto. Ver `createCheckout`.
+  priceCents Int
+  currency   String @default("BRL")
+
+  coverImageUrl String?
+  demoVideoUrl  String?
+
+  /// Ferramentas e integrações de que o produto depende (n8n, Make, OpenAI…).
+  /// Array nativo do Postgres em vez de tabela: são valores sem identidade
+  /// própria e sempre lidos junto com o produto.
+  requiredTools String[] @default([])
+  integrations  String[] @default([])
+  requirements  String?  @db.Text
+
+  /// Agregados desnormalizados. Existem porque a listagem ordena por avaliação
+  /// e por vendas, e recalcular `AVG` sobre `Review` a cada página é um join
+  /// que cresce com o sucesso do produto. São atualizados em transação com a
+  /// escrita que os altera — ver `recomputeProductStats`.
+  ratingSum   Int @default(0)
+  ratingCount Int @default(0)
+  salesCount  Int @default(0)
+
+  publishedAt DateTime?
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  /// Motivo da recusa na moderação. Sem isto, o criador recebe "rejeitado" e
+  /// nenhuma informação sobre o que corrigir — e reenvia igual.
+  moderationNote String? @db.Text
+
+  author     User            @relation("ProductAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  category   ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  images     ProductImage[]
+  files      ProductFile[]
+  tags       ProductTag[]
+  reviews    Review[]
+  favorites  Favorite[]
+  orderItems OrderItem[]
+
+  /// Índice composto: a consulta que mais roda é "publicados desta categoria,
+  /// mais recentes primeiro". Índices separados obrigariam o Postgres a fazer
+  /// bitmap AND; o composto responde direto.
+  @@index([status, categoryId, publishedAt])
+  @@index([status, publishedAt])
+  @@index([authorId, status])
+  @@index([kind])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String @id @default(cuid())
+  productId String
+  url       String
+  alt       String
+  position  Int    @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, position])
+  @@map("product_images")
+}
+
+/// Arquivo entregue na compra.
+///
+/// `storageKey` é a chave no bucket **privado**. Nunca é enviada ao navegador:
+/// o cliente pede o download, o servidor confere a compra e devolve uma URL
+/// assinada de vida curta. Ver `issueDownloadUrl`.
+model ProductFile {
+  id          String   @id @default(cuid())
+  productId   String
+  storageKey  String   @unique
+  filename    String
+  contentType String
+  sizeBytes   Int
+  /// SHA-256 do conteúdo, para o comprador conferir integridade e para
+  /// detectar reenvio do mesmo arquivo.
+  checksum    String?
+  version     String   @default("1.0.0")
+  createdAt   DateTime @default(now())
+
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  downloads DownloadLog[]
+
+  @@index([productId])
+  @@map("product_files")
+}
+
+model ProductTag {
+  productId String
+  tag       String
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tag])
+  @@index([tag])
+  @@map("product_tags")
+}
+
+// ---------------------------------------------------------------------------
+// Comércio
+// ---------------------------------------------------------------------------
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  REQUIRES_ACTION
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+model Order {
+  id      String      @id @default(cuid())
+  /// Número curto e legível para o comprador citar no suporte. O cuid não
+  /// serve: ninguém lê "cmld3k..." por telefone.
+  number  String      @unique
+  buyerId String
+  status  OrderStatus @default(PENDING)
+
+  /// Totais congelados no momento da compra. Não são derivados do produto na
+  /// leitura de propósito: o preço pode mudar amanhã, e a nota do comprador
+  /// não pode mudar junto.
+  subtotalCents Int
+  feeCents      Int
+  totalCents    Int
+  currency      String @default("BRL")
+
+  createdAt DateTime  @default(now())
+  paidAt    DateTime?
+  updatedAt DateTime  @updatedAt
+
+  buyer    User        @relation(fields: [buyerId], references: [id], onDelete: Restrict)
+  items    OrderItem[]
+  payments Payment[]
+
+  @@index([buyerId, status])
+  @@index([status, createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+
+  /// Nome e preço no momento da compra. Duplicação deliberada: o histórico
+  /// tem de sobreviver ao produto ser renomeado, ter o preço alterado ou ser
+  /// removido do catálogo.
+  productName    String
+  unitPriceCents Int
+  quantity       Int    @default(1)
+  /// Parte do valor que fica com a plataforma, congelada igual ao preço.
+  feeCents       Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  /// O mesmo produto não entra duas vezes no mesmo pedido — é produto digital,
+  /// comprar dois não significa nada. A regra vive no banco porque a aplicação
+  /// tem mais de um caminho de escrita.
+  @@unique([orderId, productId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Payment {
+  id       String        @id @default(cuid())
+  orderId  String
+  status   PaymentStatus @default(PROCESSING)
+  provider String        @default("stripe")
+
+  /// Identificador do lado do provedor. `@unique` é o que torna o webhook
+  /// idempotente: a segunda entrega do mesmo evento colide em vez de creditar
+  /// a compra de novo.
+  providerRef String @unique
+
+  amountCents Int
+  currency    String @default("BRL")
+
+  /// Payload bruto do provedor, para auditoria e para reprocessar um evento
+  /// sem depender de o provedor reenviar.
+  rawEvent Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([status])
+  @@map("payments")
+}
+
+/// Evento de webhook já processado.
+///
+/// Segunda linha de defesa da idempotência, antes mesmo de olhar o pedido: o
+/// provedor reenvia por design (timeout, retry), e processar duas vezes é
+/// creditar duas vezes.
+model WebhookEvent {
+  id          String   @id @default(cuid())
+  provider    String
+  eventId     String
+  type        String
+  processedAt DateTime @default(now())
+
+  @@unique([provider, eventId])
+  @@index([type])
+  @@map("webhook_events")
+}
+
+/// Cada download efetivo de arquivo comprado.
+///
+/// Serve para três coisas: provar entrega numa disputa, detectar compartilhamento
+/// de conta (mesmo pedido, cem IPs) e alimentar o limite de abuso.
+model DownloadLog {
+  id        String   @id @default(cuid())
+  userId    String
+  fileId    String
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  user User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  file ProductFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([fileId])
+  @@map("download_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Reputação
+// ---------------------------------------------------------------------------
+
+model Review {
+  id        String @id @default(cuid())
+  productId String
+  authorId  String
+  rating    Int
+  comment   String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product  Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  author   User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  response ReviewResponse?
+
+  /// Uma avaliação por pessoa por produto. Sem esta constraint, dez avaliações
+  /// cinco-estrelas do mesmo comprador são um script de dez linhas.
+  @@unique([productId, authorId])
+  @@index([productId, createdAt])
+  @@map("reviews")
+}
+
+model ReviewResponse {
+  id        String   @id @default(cuid())
+  reviewId  String   @unique
+  authorId  String
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("review_responses")
+}
+
+model Favorite {
+  id                    String   @id @default(cuid())
+  userId                String
+  productId             String?
+  professionalProfileId String?
+  createdAt             DateTime @default(now())
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product      Product?             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  professional ProfessionalProfile? @relation(fields: [professionalProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@unique([userId, professionalProfileId])
+  @@index([userId, createdAt])
+  @@map("favorites")
+}
+
+// ---------------------------------------------------------------------------
+// Profissionais e demandas
+// ---------------------------------------------------------------------------
+
+enum Availability {
+  AVAILABLE
+  LIMITED
+  UNAVAILABLE
+}
+
+model ProfessionalProfile {
+  id       String @id @default(cuid())
+  userId   String @unique
+  slug     String @unique
+  headline String
+  bio      String @db.Text
+
+  specialties     String[]     @default([])
+  tools           String[]     @default([])
+  /// Piso de contratação, em centavos. Filtro de faixa de preço na busca.
+  startingAtCents Int
+  availability    Availability @default(AVAILABLE)
+  location        String?
+  responseHours   Int          @default(24)
+
+  ratingSum      Int @default(0)
+  ratingCount    Int @default(0)
+  projectsClosed Int @default(0)
+
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  portfolio PortfolioItem[]
+  services  Service[]
+  proposals Proposal[]
+  favorites Favorite[]
+
+  @@index([availability, startingAtCents])
+  @@map("professional_profiles")
+}
+
+model PortfolioItem {
+  id          String   @id @default(cuid())
+  profileId   String
+  title       String
+  summary     String   @db.Text
+  outcome     String?
+  imageUrl    String?
+  externalUrl String?
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  profile ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, position])
+  @@map("portfolio_items")
+}
+
+model Service {
+  id           String @id @default(cuid())
+  profileId    String
+  name         String
+  description  String @db.Text
+  priceCents   Int
+  deliveryDays Int
+
+  profile ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@map("services")
+}
+
+enum DemandStatus {
+  OPEN
+  IN_REVIEW
+  AWARDED
+  CLOSED
+  CANCELLED
+}
+
+model Demand {
+  id         String       @id @default(cuid())
+  buyerId    String
+  title      String
+  problem    String       @db.Text
+  goal       String       @db.Text
+  categoryId String?
+  tools      String[]     @default([])
+  status     DemandStatus @default(OPEN)
+
+  budgetMinCents Int
+  budgetMaxCents Int
+  deadlineDays   Int
+
+  proposalCount Int @default(0)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  closedAt  DateTime?
+
+  buyer     User       @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  proposals Proposal[]
+
+  @@index([status, createdAt])
+  @@index([buyerId])
+  @@map("demands")
+}
+
+enum ProposalStatus {
+  SENT
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+model Proposal {
+  id        String @id @default(cuid())
+  demandId  String
+  /// Autor da proposta. Guardado como `User` **e** como perfil profissional: a
+  /// autorização pergunta pelo usuário, a exibição pergunta pelo perfil.
+  authorId  String
+  profileId String
+
+  amountCents  Int
+  deliveryDays Int
+  pitch        String  @db.Text
+  scope        String  @db.Text
+  notes        String?
+
+  status    ProposalStatus @default(SENT)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  demand  Demand              @relation(fields: [demandId], references: [id], onDelete: Cascade)
+  author  User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  profile ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  /// Uma proposta por profissional por demanda. Reenviar é editar, não empilhar.
+  @@unique([demandId, authorId])
+  @@index([demandId, status])
+  @@index([authorId])
+  @@map("proposals")
+}
+
+// ---------------------------------------------------------------------------
+// Conversas
+// ---------------------------------------------------------------------------
+
+/// Conversa entre duas ou mais pessoas.
+///
+/// A participação vive em `ConversationMember`, e é ela que a autorização
+/// consulta. Guardar `userAId`/`userBId` na conversa pareceria mais simples e
+/// travaria o produto na primeira vez que uma conversa precisar de três
+/// participantes — o que acontece assim que a plataforma media uma disputa.
+model Conversation {
+  id        String   @id @default(cuid())
+  subject   String?
+  demandId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  ConversationMember[]
+  messages Message[]
+
+  @@index([updatedAt])
+  @@map("conversations")
+}
+
+model ConversationMember {
+  conversationId String
+  userId         String
+  lastReadAt     DateTime?
+  joinedAt       DateTime  @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId])
+  @@map("conversation_members")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  body           String   @db.Text
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+// ---------------------------------------------------------------------------
+// Notificações e auditoria
+// ---------------------------------------------------------------------------
+
+enum NotificationType {
+  ORDER_PAID
+  PRODUCT_SOLD
+  PROPOSAL_RECEIVED
+  PROPOSAL_ACCEPTED
+  REVIEW_RECEIVED
+  PRODUCT_APPROVED
+  PRODUCT_REJECTED
+  MESSAGE_RECEIVED
+  PRODUCT_UPDATED
+}
+
+model Notification {
+  id     String           @id @default(cuid())
+  userId String
+  type   NotificationType
+  title  String
+  body   String
+  /// Para onde levar quem clicar. Guardado como caminho relativo — URL
+  /// absoluta gravada em banco quebra quando o domínio muda.
+  href   String?
+
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Índice parcial: a consulta quente é "não lidas deste usuário". Indexar
+  /// todas as notificações desperdiça espaço com as que já foram vistas.
+  @@index([userId, readAt, createdAt])
+  @@map("notifications")
+}
+
+/// Registro imutável de ação sensível.
+///
+/// Não tem `updatedAt` nem caminho de escrita que altere linha existente: um
+/// log de auditoria editável não é log de auditoria. `actorId` é opcional
+/// porque ação de sistema (webhook, job) também precisa ser registrada.
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  /// Entidade afetada, no formato `product:cmld3k...`. String única em vez de
+  /// FK porque o alvo varia de tabela e o log precisa sobreviver à remoção do
+  /// alvo — é justamente a remoção que se quer auditar.
+  target    String
+  metadata  Json?
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([target])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
+
+/// Contador de janela deslizante para limite de taxa.
+///
+/// Fica no Postgres por uma razão prática: memória de processo não serve em
+/// serverless (cada instância tem a sua, e o atacante distribui entre elas).
+/// Redis seria melhor sob carga alta — a interface em `server/ratelimit` está
+/// preparada para a troca sem tocar em quem chama.
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  bucket    String
+  createdAt DateTime @default(now())
+
+  @@index([bucket, createdAt])
+  @@map("rate_limit_hits")
+}
