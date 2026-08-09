@@ -1,175 +1,132 @@
-# Lumo
+# AUTOMATIZE
 
-**Fluência, um dia de cada vez.**
-
-Aplicativo de aprendizado de idiomas **offline-first** para Android, iOS e web,
-a partir de uma única base de código.
-
-Inglês · Espanhol · Francês · Italiano · Alemão
+Marketplace de soluções de IA: criadores publicam agentes, automações e
+workflows; empresas compram pronto, publicam demandas ou contratam
+especialistas.
 
 ---
 
-## O que torna o Lumo diferente
+## Stack e por quê
 
-**1. Offline-first de verdade, não "modo offline".**
-Toda interação escreve primeiro no dispositivo. Correção de exercício,
-agendamento de repetição espaçada, XP, ofensiva, pronúncia e tutor têm caminho
-local completo. A rede é um detalhe de sincronização, nunca um requisito.
-
-**2. A nota do SRS vem do desempenho, não de auto-avaliação.**
-Apps de flashcard perguntam "você lembrou?". O Lumo observa: acertou, em quanto
-tempo, e se pediu dica. Auto-avaliação é onde a repetição espaçada
-silenciosamente para de funcionar nos concorrentes.
-
-**3. Correção pensada para quem fala português.**
-"I have 25 years", "je suis 25 ans", "ich habe 25 Jahre". O corretor conhece os
-erros típicos de lusófonos em cada idioma e explica a regra — offline.
-
-**4. A ofensiva sobrevive à vida real.**
-Congelamentos automáticos protegem a sequência quando você viaja ou adoece.
-Perder 180 dias por um imprevisto é o motivo nº 1 de desinstalação.
-
-**5. Dois ritmos para o mesmo curso.**
-O modo **Completo** entrega a trilha inteira; o **Essencial** reduz a sessão a
-cinco exercícios, quatro mecânicas e nenhuma vida. O que não muda entre eles: a
-correção, o XP e a repetição espaçada. Modo mais fácil que ensina menos é modo
-inútil — ver [`src/domain/learning-mode.ts`](src/domain/learning-mode.ts).
-
-**6. Apostila por nível, gerada no aparelho.**
-Uma apostila por nível CEFR em cada idioma (8 × 6 = 48), montada a partir das
-**mesmas fontes** das lições — vocabulário, gramática, frases e expressões — de
-modo que não existe deriva entre o que a lição ensina e o que a apostila diz.
-Baixar não consome dados: o documento é gerado localmente.
-
-**7. Expressões idiomáticas explicadas em português.**
-Literal, sentido real, equivalente brasileiro (ou a admissão explícita de que
-não existe um) e origem. O card só revela depois do toque — recuperação ativa,
-não leitura passiva.
-
-**8. Seis níveis com conteúdo próprio, sem repetição.**
-30 cursos (5 idiomas × A1–C2), 405 lições e 2.530 exercícios. Vocabulário e
-gramática pertencem a **um** nível: há teste automatizado que quebra se um
-termo reaparecer em outro nível. E a dificuldade é real — em A1 o exercício
-pede reconhecimento, em C2 pede produção e escolha de registro.
-
-**9. Todo módulo termina em prova de nível.**
-Nota, aprovação a partir de 70% e registro de **todas** as tentativas — não só
-da melhor. Três reprovações seguidas dizem algo que a melhor nota esconde.
-
-**10. Exercício com armadilha, não com distrator aleatório.**
-Cada um dos 144 pontos de gramática carrega o erro que o lusófono realmente
-comete. "I have 25 years" não é alternativa aleatória: é a tradução literal de
-"tenho 25 anos", e quem cai nela recebe a explicação na hora.
-
-**11. Acesso liberado para todo mundo.**
-Sem plano pago, sem cadastro, sem recurso bloqueado. O modelo de planos segue
-íntegro no código, atrás de uma única constante — ver `src/domain/access.ts`.
-
----
-
-## Stack
-
-| Camada | Escolha | Por quê |
-|---|---|---|
-| App | **Expo SDK 52 + React Native 0.76** | Android, iOS **e web** de uma base só |
-| Linguagem | **TypeScript** estrito | Contrato único entre app, domínio e backend |
-| Rotas | **Expo Router** | File-based, deep link automático, export web |
-| Estado | **Zustand** | Seletores granulares; legível fora de componentes |
-| Animação | **Reanimated 3** | Roda na thread de UI — 60fps com o JS ocupado |
-| Banco local | **SQLite** (nativo) / IndexedDB (web) | Porta única, dois adaptadores reais |
-| Gráficos | **react-native-svg** | Componentes próprios em vez de ~200 KB de lib |
-| Lint/format | **Biome** | Binário único sem dependências JS — ver `docs/11` |
-
-Detalhes e alternativas descartadas em [`docs/03-arquitetura.md`](docs/03-arquitetura.md).
+| Camada | Escolha | Motivo |
+| --- | --- | --- |
+| Framework | **Next.js 16, App Router** | Server Components deixam a consulta ao banco no servidor, sem API intermediária nem dado sensível no bundle |
+| Linguagem | **TypeScript strict** | `noUncheckedIndexedAccess` incluído — o acesso a índice que "sempre existe" é de onde vem metade dos `undefined` em produção |
+| Estilo | **Tailwind v4** | Tokens do design em `globals.css`, uma fonte de verdade para a marca |
+| Banco | **PostgreSQL + Prisma 7** | Constraints e transações no banco, não na aplicação |
+| Sessão | **Token opaco em banco** | Revogação imediata: banimento, troca de senha e mudança de papel valem no ato — o que JWT não permite |
+| Senha | **argon2id** | Custa memória, não só CPU; é o que derruba a vantagem da GPU |
+| Validação | **Zod 4** | O mesmo schema no formulário e no servidor; o do servidor é o que protege |
+| Pagamento | **Stripe Checkout** | O cartão não toca nosso servidor (escopo PCI-DSS SAQ A) |
+| Arquivos | **S3 privado + URL assinada** | Nada de link público "difícil de adivinhar" |
 
 ---
 
 ## Rodando
 
 ```bash
-npm install --legacy-peer-deps
+npm install
 
-npm run start       # Expo Dev Server (QR code para o celular)
-npm run web         # navegador
-npm run android     # requer prebuild + Android SDK
-npm run ios         # requer prebuild + Xcode
+cp .env.example .env      # preencha DATABASE_URL e AUTH_SECRET
+npx prisma migrate dev    # cria o schema
+npm run db:seed           # catálogo de desenvolvimento
+
+npm run dev
 ```
 
-Verificações:
+Contas de desenvolvimento (senha `automatize-dev-2026`):
+
+| E-mail | Papéis |
+| --- | --- |
+| `admin@automatize.com.br` | ADMIN, BUYER |
+| `mariana@exemplo.com.br` | BUYER, CREATOR, PROFESSIONAL |
+| `rafael@exemplo.com.br` | BUYER, CREATOR, PROFESSIONAL |
+| `carlos@exemplo.com.br` | BUYER, CREATOR, PROFESSIONAL |
+| `bruno@empresaexemplo.com.br` | BUYER |
+
+---
+
+## Verificação
 
 ```bash
-npm run typecheck   # tsc --noEmit
-npm test            # 224 testes
-npm run verify:all  # smoke test no Chromium + regressão de dado legado
-npm run lint        # biome check
-npm run build:web   # export estático em dist/
+npm run verify        # typecheck + lint + testes
+npm run build
+node scripts/verify-web.mjs   # navegador real: rotas, autorização, mobile
 ```
 
-`verify:web` existe porque typecheck, lint e testes unitários **não pegam** erro
-de avaliação de bundle nem loop de render — os dois já causaram tela branca em
-produção. Ele carrega `dist/` num Chromium real, faz o onboarding inteiro,
-visita todas as abas e abre cada tela empilhada. É obrigatório antes de deploy.
+`verify-web.mjs` sobe a build de produção num Chromium e percorre as rotas
+públicas, o fluxo autenticado e o mobile. Existe porque typecheck, lint e teste
+unitário passam com folga em cima de uma tela branca — e já pegou três defeitos
+reais neste projeto: CSP quebrando a página 404, um grid estourando a viewport
+no celular e um link para uma rota que não existia.
 
 ---
 
-## Estrutura
+## Arquitetura
 
 ```
-app/          Rotas (Expo Router)
-src/design/   Design system — tokens, tema claro/escuro, 15 componentes
-src/domain/   Núcleo puro: SRS, gamificação, plano, correção  ← zero I/O
-src/db/       Persistência local: porta + 2 adaptadores + repositórios
-src/sync/     Outbox e políticas de merge
-src/ai/       Tutor: porta, implementação offline, base de conhecimento
-src/content/  Vocabulário, frases e gerador da trilha
-docs/         15 documentos: PRD, arquitetura, banco, APIs, lançamento…
+src/
+  app/          Rotas (App Router). Só apresentação — não consulta o banco.
+  components/   Design system e UI compartilhada, sem regra de negócio.
+  features/     UI com estado, por domínio (produtos, demandas, mensagens…).
+  server/
+    auth/       Sessão, senha, RBAC e ownership.
+    services/   Regra de negócio. Único lugar que fala com o Prisma.
+    actions/    Server Actions: validam, autorizam, chamam o service.
+    payments/   Stripe: checkout e verificação de webhook.
+    storage/    S3 privado e URLs assinadas.
+    ratelimit/  Limite por janela deslizante.
+    audit/      Registro de ação sensível.
+  lib/          Utilidades isomórficas (dinheiro, texto, erros, validação).
+  config/       Variáveis de ambiente validadas na inicialização.
 ```
 
-O domínio não importa nada de fora dele. É por isso que 224 testes rodam em
-Node puro, em ~9 s, sem emulador.
+**A regra que estrutura tudo:** a camada de apresentação não consulta o banco.
+Não é convenção — é uma regra de lint (`no-restricted-imports`) que quebra o
+build. O motivo é concreto: a checagem de ownership vive dentro do service, na
+mesma função que escreve. Uma página que consulta direto pula essa checagem, e
+é exatamente assim que nasce um IDOR.
 
 ---
 
-## Documentação
+## Segurança
 
-| # | Documento |
-|---|---|
-| 1 | [Benchmark e pesquisa](docs/01-benchmark.md) |
-| 2 | [PRD](docs/02-prd.md) |
-| 3 | [Arquitetura](docs/03-arquitetura.md) |
-| 4 | [Fluxo do usuário](docs/04-fluxo-usuario.md) |
-| 5 | [Wireframes](docs/05-wireframes.md) |
-| 6 | [Design system](docs/06-design-system.md) |
-| 7 | [Estrutura de pastas](docs/07-estrutura.md) |
-| 8 | [Banco de dados](docs/08-banco-de-dados.md) |
-| 9 | [APIs](docs/09-apis.md) |
-| 10 | [Plano de desenvolvimento](docs/10-plano-desenvolvimento.md) |
-| 11 | [Implementação](docs/11-implementacao.md) |
-| 12 | [Testes](docs/12-testes.md) |
-| 13 | [Estratégia de lançamento](docs/13-lancamento.md) |
-| 14 | [Estratégia de crescimento](docs/14-crescimento.md) |
-| 15 | [Melhorias futuras](docs/15-melhorias-futuras.md) |
+O que está implementado e onde conferir:
 
----
-
-## Estado atual
-
-**Funcionando de ponta a ponta, 100% offline, sem backend:** onboarding,
-trilha, 16 tipos de exercício, repetição espaçada, prática por habilidade,
-tutor, painel de progresso, vocabulário, downloads, paywall e perfil com
-exportação/exclusão de dados (LGPD). Também: apostilas por nível com download e
-exportação, módulo de expressões idiomáticas, troca de nível do curso em
-andamento, alternância entre os modos Completo e Essencial, provas de nível ao
-fim de cada módulo e tutor com ~1.000 itens de contexto por idioma.
-
-**Ainda não implementado** — lista completa e honesta em
-[`docs/11-implementacao.md#1109-limitações-conhecidas`](docs/11-implementacao.md):
-backend e contas, reconhecimento de voz nativo (Android/iOS), download real de
-pacotes por CDN, integração de pagamento e ligas com ranking real.
+- **Preço e comissão decididos no servidor** — `services/orders.ts`. O cliente
+  envia o id do produto; nada mais.
+- **Pagamento confirmado só por webhook assinado** — `api/webhooks/stripe`.
+  Idempotente em duas camadas (chave do provedor e tabela `WebhookEvent`).
+- **Ownership em toda escrita sobre registro de terceiro** — `auth/authorize.ts`.
+  Responde 404, não 403, para não confirmar que o id existe.
+- **Arquivos em bucket privado**, liberados por URL assinada de vida curta e
+  só depois de conferir a compra — `services/downloads.ts`.
+- **CSP com nonce por requisição**, sem `unsafe-inline` em `script-src` —
+  `middleware.ts`.
+- **Limite de taxa** em login, cadastro, checkout, download e escrita —
+  `server/ratelimit`. Por e-mail no login (credential stuffing vem de milhares
+  de IPs), por IP no cadastro.
+- **argon2id** com os parâmetros do RFC 9106, e equalização de tempo no
+  caminho "e-mail não existe" para não virar oráculo de enumeração.
+- **Auditoria** de toda ação administrativa e financeira — `server/audit`.
 
 ---
 
-## Web
+## O que ainda não está pronto
 
-A build web (`npm run build:web` → `dist/`) publica a landing page e o app
-completo como PWA. Configuração de deploy em `vercel.json`.
+Honestidade sobre o estado atual:
+
+- **Upload de arquivo pela interface.** A infraestrutura existe e está testada
+  (`storage/index.ts`: URL assinada, allowlist de MIME, teto de tamanho,
+  sanitização de nome), mas a tela que a usa ainda não foi construída — o seed
+  cria os registros de arquivo direto.
+- **E-mail transacional.** As notificações são gravadas e aparecem in-app; não
+  há envio por e-mail.
+- **Mensagens em tempo real.** O modelo e as telas funcionam por requisição;
+  falta o transporte (WebSocket/SSE) para atualizar sem recarregar.
+- **Repasse automático ao vendedor.** O cálculo do líquido está correto e
+  registrado por venda; a transferência ao vendedor (Stripe Connect) não está
+  integrada.
+- **Revisão jurídica** dos termos e da política de privacidade. Os textos
+  descrevem o que o código faz de verdade, mas precisam passar por advogado
+  antes de ir ao ar.
