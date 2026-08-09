@@ -30,3 +30,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vercel
+
+# Cliente Prisma gerado — recriado por `prisma generate` (parte do
+# script de build). Versionar isto sincroniza mal com o schema e infla
+# o repositório com ~11MB de binário/wasm sem necessidade.
+/src/generated/
