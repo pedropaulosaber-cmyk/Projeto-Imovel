@@ -1,44 +1,34 @@
 import Link from 'next/link';
 
-import { LinkButton } from '@/components/ui/button';
-import { Logo } from '@/components/layout/logo';
+import { rotas } from '@/lib/rotas';
 
-/**
- * Página 404.
- *
- * ## Por que ela é dinâmica
- *
- * A CSP desta aplicação usa **nonce por requisição** (ver `middleware.ts`), e
- * nonce por requisição é incompatível com HTML pré-renderizado: o build
- * carimba um valor no `<script>`, o middleware manda outro no header, e o
- * navegador — corretamente — recusa executar tudo. O sintoma é uma 404 sem
- * estilo e sem JavaScript, que é a página que alguém vê justamente quando já
- * está perdido.
- *
- * `force-dynamic` faz esta rota ser renderizada por requisição, com o mesmo
- * nonce do header. O custo é desprezível — a página não consulta nada — e a
- * alternativa seria enfraquecer a CSP do site inteiro por causa de uma tela.
- */
-export const dynamic = 'force-dynamic';
-
-export default function NotFound() {
+export default function NaoEncontrado() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-6 px-5 text-center">
-      <Logo />
-      <p className="text-[13px] font-bold uppercase tracking-[0.16em] text-brand">Erro 404</p>
-      <h1 className="max-w-[18ch] text-[34px] font-extrabold leading-tight">
-        Não encontramos esta página.
-      </h1>
-      <p className="max-w-[46ch] text-[15.5px] leading-relaxed text-ink-body">
-        O endereço pode ter mudado, ou o conteúdo saiu do ar. O catálogo continua no lugar.
-      </p>
-      <div className="flex flex-wrap justify-center gap-3">
-        <LinkButton href="/products">Explorar soluções</LinkButton>
-        <LinkButton href="/" variant="secondary">Voltar ao início</LinkButton>
+    <main className="grid min-h-svh place-items-center px-[18px] py-16 text-center">
+      <div className="max-w-[46ch]">
+        <p className="mb-4 font-mono text-[11px] tracking-[0.16em] text-ouro">ERRO 404</p>
+        <h1 className="mb-4 text-[38px] leading-[0.96] font-bold tracking-[-0.045em] text-balance md:text-[clamp(38px,5vw,64px)]">
+          Esta página não existe.
+        </h1>
+        <p className="mb-8 text-[15px] leading-[1.7] text-creme/70 md:text-[17px]">
+          Pode ser um imóvel que saiu do catálogo ou um link antigo. O estoque atual está todo na
+          listagem.
+        </p>
+        <div className="grid gap-3 sm:flex sm:justify-center">
+          <Link
+            href={rotas.imoveis}
+            className="rounded-lg bg-ouro px-6 py-4 text-[15px] font-semibold text-tinta"
+          >
+            Ver imóveis
+          </Link>
+          <Link
+            href={rotas.home}
+            className="rounded-lg border border-creme/40 px-6 py-4 text-[15px] font-medium"
+          >
+            Voltar para a home
+          </Link>
+        </div>
       </div>
-      <p className="text-[13px] text-muted">
-        Acha que isto é um erro nosso? <Link href="/support">Fale com o suporte</Link>.
-      </p>
-    </div>
+    </main>
   );
 }
