@@ -91,6 +91,7 @@ const catalogo: Empreendimento[] = [
       { tipo: 'foto', url: null, legenda: '[ hall social ]' },
       { tipo: 'foto', url: null, legenda: '[ vista do 22º ]' },
     ],
+    book: null,
     obra: { etapa: 'Fundação', percentual: 12 },
     localizacao: {
       endereco: 'Rua T-27, entre a Avenida T-9 e a Rua T-55',
@@ -155,6 +156,7 @@ const catalogo: Empreendimento[] = [
       { tipo: 'foto', url: null, legenda: '[ living decorado ]' },
       { tipo: 'foto', url: null, legenda: '[ hall privativo ]' },
     ],
+    book: null,
     obra: { etapa: 'Terraplenagem', percentual: 5 },
     localizacao: {
       endereco: 'Avenida T-63, esquina com a Rua 1.130',
@@ -217,6 +219,7 @@ const catalogo: Empreendimento[] = [
       { tipo: 'foto', url: null, legenda: '[ obra — 12º andar ]' },
       { tipo: 'foto', url: null, legenda: '[ decorado 104 m² ]' },
     ],
+    book: null,
     obra: { etapa: 'Estrutura', percentual: 58 },
     localizacao: {
       endereco: 'Rua JA-11, Jardim Atlântico',
@@ -277,6 +280,7 @@ const catalogo: Empreendimento[] = [
       { tipo: 'foto', url: null, legenda: '[ studio 42 m² ]' },
       { tipo: 'foto', url: null, legenda: '[ rooftop ]' },
     ],
+    book: null,
     obra: { etapa: 'Fundação', percentual: 22 },
     localizacao: {
       endereco: 'Avenida Atlântica, quadra 14',
@@ -337,6 +341,7 @@ const catalogo: Empreendimento[] = [
       { tipo: 'foto', url: null, legenda: '[ área comum decorada ]' },
       { tipo: 'foto', url: null, legenda: '[ unidade 240 m² ]' },
     ],
+    book: null,
     obra: null,
     localizacao: {
       endereco: 'Rua 1.128, Setor Pedro Ludovico',
@@ -397,6 +402,7 @@ const catalogo: Empreendimento[] = [
       { tipo: 'foto', url: null, legenda: '[ cobertura 320 m² ]' },
       { tipo: 'foto', url: null, legenda: '[ vista para o parque ]' },
     ],
+    book: null,
     obra: null,
     localizacao: {
       endereco: 'Rua T-55, de frente para a área verde',
@@ -437,6 +443,7 @@ const catalogo: Empreendimento[] = [
     plantas: [],
     ficha: [],
     midias: [],
+    book: null,
     obra: null,
     localizacao: { endereco: '—', referencias: '—' },
     parquesProximos: [],

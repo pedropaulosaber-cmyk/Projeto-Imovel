@@ -277,10 +277,12 @@ export default async function PaginaEmpreendimento({ params }: Params) {
           className="mx-[18px] mt-7 scroll-mt-20 rounded-[14px] bg-creme p-[22px] text-tinta md:sticky md:top-20 md:mx-0 md:mt-0 md:max-w-[400px] md:flex-[1_1_320px] md:rounded-[10px] md:p-[clamp(22px,3vw,32px)]"
         >
           <h2 className="mb-[10px] text-2xl leading-[1.1] font-semibold tracking-[-0.03em] md:text-[clamp(23px,2.2vw,30px)]">
-            Fale com um especialista
+            {e.book ? 'Receba o book completo' : 'Fale com um especialista'}
           </h2>
           <p className="mb-[18px] text-sm leading-[1.6] text-grafite-claro md:mb-[22px]">
-            Tabela, disponibilidade real de unidades e condições de pagamento no seu WhatsApp.
+            {e.book
+              ? `Plantas, perspectivas e ficha técnica — ${e.book.paginas} páginas em PDF, liberado na hora. Tabela e disponibilidade real de unidades vão pelo WhatsApp.`
+              : 'Tabela, disponibilidade real de unidades e condições de pagamento no seu WhatsApp.'}
           </p>
 
           <FormularioLead
@@ -288,6 +290,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
             empreendimentoSlug={e.slug}
             pedirEmail
             tipologias={e.plantas.map((p) => `${p.tipo} — ${p.area}`)}
+            rotuloBotao={e.book ? 'Receber o book' : 'Chamar no WhatsApp'}
           />
 
           {e.corretorResponsavel ? (

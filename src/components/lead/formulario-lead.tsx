@@ -53,6 +53,7 @@ export function FormularioLead({
   const claro = variante === 'claro';
   const [estado, setEstado] = useState<'ocioso' | 'enviando' | 'ok' | 'erro'>('ocioso');
   const [erro, setErro] = useState<string | null>(null);
+  const [book, setBook] = useState<{ url: string; nomeArquivo: string } | null>(null);
   const idBase = useId();
   const refFormulario = useRef<HTMLFormElement>(null);
 
@@ -93,7 +94,10 @@ export function FormularioLead({
         body: JSON.stringify(corpo),
       });
 
-      const json: { erro?: string } = await resposta.json().catch(() => ({}));
+      const json: {
+        erro?: string;
+        book?: { url: string; nomeArquivo: string } | null;
+      } = await resposta.json().catch(() => ({}));
 
       if (!resposta.ok) {
         setErro(json.erro ?? 'Não conseguimos enviar agora. Tente de novo em instantes.');
@@ -105,6 +109,7 @@ export function FormularioLead({
       const fbq = (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq;
       fbq?.('track', 'Lead', {}, { eventID: refEventId.current });
 
+      setBook(json.book ?? null);
       setEstado('ok');
       refFormulario.current?.reset();
     } catch {
@@ -121,21 +126,56 @@ export function FormularioLead({
           claro ? 'bg-white text-tinta' : 'border border-creme/[0.18] text-creme'
         }`}
       >
-        <p className="text-xl font-semibold tracking-[-0.02em]">Recebemos seus dados.</p>
-        <p className={`text-sm leading-relaxed ${claro ? 'text-grafite' : 'text-creme/70'}`}>
-          Um corretor responde no seu WhatsApp em até 15 minutos, no horário comercial. Se
-          preferir adiantar, chame agora.
+        <p className="text-xl font-semibold tracking-[-0.02em]">
+          {book ? 'Pronto — o book é seu.' : 'Recebemos seus dados.'}
         </p>
-        <a
-          href={linkWhatsApp()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`min-h-[54px] rounded-lg p-4 text-center text-[15px] font-semibold ${
-            claro ? 'bg-tinta text-creme' : 'bg-ouro text-tinta'
-          }`}
-        >
-          Abrir o WhatsApp
-        </a>
+        <p className={`text-sm leading-relaxed ${claro ? 'text-grafite' : 'text-creme/70'}`}>
+          {book
+            ? 'Baixe o material completo abaixo. Um corretor responde no seu WhatsApp em até 15 minutos, no horário comercial.'
+            : 'Um corretor responde no seu WhatsApp em até 15 minutos, no horário comercial. Se preferir adiantar, chame agora.'}
+        </p>
+
+        {book ? (
+          <>
+            <a
+              href={book.url}
+              download={book.nomeArquivo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`min-h-[54px] rounded-lg p-4 text-center text-[15px] font-semibold ${
+                claro ? 'bg-tinta text-creme' : 'bg-ouro text-tinta'
+              }`}
+            >
+              Baixar o book em PDF
+            </a>
+            {/* O link é assinado e expira: dizer isso evita o e-mail de
+                "o link parou de funcionar" daqui a uma semana. */}
+            <p className={`text-xs ${claro ? 'text-pedra' : 'text-creme/55'}`}>
+              O link vale por 30 minutos. Depois disso, é só pedir ao corretor.
+            </p>
+            <a
+              href={linkWhatsApp()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-center text-sm underline underline-offset-2 ${
+                claro ? 'text-grafite' : 'text-creme/70'
+              }`}
+            >
+              Falar agora no WhatsApp
+            </a>
+          </>
+        ) : (
+          <a
+            href={linkWhatsApp()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`min-h-[54px] rounded-lg p-4 text-center text-[15px] font-semibold ${
+              claro ? 'bg-tinta text-creme' : 'bg-ouro text-tinta'
+            }`}
+          >
+            Abrir o WhatsApp
+          </a>
+        )}
       </div>
     );
   }

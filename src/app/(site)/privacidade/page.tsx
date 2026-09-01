@@ -42,6 +42,14 @@ const secoes: { titulo: string; paragrafos: string[] }[] = [
     ],
   },
   {
+    titulo: 'O material em troca do dado',
+    paragrafos: [
+      'Em alguns empreendimentos o preenchimento do formulário libera o book de vendas em PDF, com plantas, perspectivas e ficha técnica. Essa é uma troca explícita: você recebe o material e nós passamos a ter os seus dados de contato para falar sobre aquele imóvel.',
+      'O link de download é individual e expira em trinta minutos. Ele não é indexado por buscadores e não funciona sem o formulário preenchido.',
+      'Você pode pedir o mesmo material ao corretor sem preencher nada — é só chamar no WhatsApp. O formulário é conveniência, não é a única porta.',
+    ],
+  },
+  {
     titulo: 'Com quem compartilhamos',
     paragrafos: [
       'Com o corretor responsável pelo empreendimento de seu interesse, e com o nosso sistema de gestão de atendimento (CRM), que registra a conversa.',

@@ -41,6 +41,12 @@ export interface CorretorResponsavel {
   crmId: string | null;
 }
 
+export interface Book {
+  /** Caminho dentro do bucket privado `books` no Supabase Storage. */
+  arquivo: string;
+  paginas: number;
+}
+
 export interface Empreendimento {
   slug: string;
   nome: string;
@@ -78,6 +84,11 @@ export interface Empreendimento {
   midias: Midia[];
 
   obra: { etapa: string; percentual: number } | null;
+  /**
+   * Book de vendas em PDF. Só é entregue depois de um lead válido — ver
+   * `src/lib/lead/book.ts`. `null` quando a incorporadora não forneceu.
+   */
+  book: Book | null;
   localizacao: { endereco: string; referencias: string };
   /** Slugs dos parques a que o empreendimento é vizinho. */
   parquesProximos: string[];

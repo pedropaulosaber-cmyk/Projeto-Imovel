@@ -4,6 +4,7 @@ import { after, type NextRequest, NextResponse } from 'next/server';
 
 import { urlBase } from '@/config/site';
 import { pseudonimizarIp, registrar } from '@/lib/lead/auditoria';
+import { assinarBook } from '@/lib/lead/book';
 import { enviarAoCrm, montarCorpo } from '@/lib/lead/crm';
 import { enviarEventoLead } from '@/lib/lead/meta-capi';
 import { gravarLead, marcarSync } from '@/lib/lead/persistencia';
@@ -73,6 +74,14 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  /*
+    O book é a contrapartida pelo dado, então a URL assinada precisa voltar
+    JUNTO com a resposta — não dá para jogar no `after()`, que roda depois que
+    o navegador já foi embora. É a única chamada externa no caminho da
+    resposta, e ela falha para `null` sem derrubar o envio.
+  */
+  const book = await assinarBook(lead.empreendimentoSlug, leadUuid);
+
   after(async () => {
     await gravarLead({ lead, leadUuid, consentimentoEm, ipConsentimento: ip });
 
@@ -89,7 +98,7 @@ export async function POST(req: NextRequest) {
     await marcarSync(leadUuid, envio.enviado ? 'enviado' : 'falhou', envio.erro);
   });
 
-  return NextResponse.json({ ok: true, leadUuid, eventId });
+  return NextResponse.json({ ok: true, leadUuid, eventId, book });
 }
 
 /** Só POST. Sem isto, um GET devolveria 405 sem dizer o que fazer. */
