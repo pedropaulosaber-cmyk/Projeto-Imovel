@@ -1,52 +1,51 @@
 import type { MetadataRoute } from 'next';
 
-import { publicEnv } from '@/config/env';
-import { prisma } from '@/server/db/prisma';
+import { urlBase } from '@/config/site';
+import { empreendimentosPublicados } from '@/content/empreendimentos';
+import { parques } from '@/content/parques';
+import { categorias, regioes } from '@/content/regioes';
+import { rotas } from '@/lib/rotas';
 
 /**
- * Sitemap.
+ * Só entram URLs indexáveis e estáveis.
  *
- * Só o que é **público e indexável**: produtos publicados e perfis listáveis.
- * Painel, biblioteca, demandas e checkout ficam de fora — não trazem tráfego e
- * expõem estrutura interna a quem varre o sitemap procurando superfície.
- *
- * `lastModified` sai do `updatedAt` real: um sitemap que carimba tudo com a
- * data de hoje ensina o buscador a ignorar o campo.
+ * `/imoveis` com filtro fica de fora: são variações da mesma lista, marcadas
+ * como `noindex` na própria página. E `empreendimentosPublicados()` garante
+ * que nenhum rascunho — imóvel sem registro de incorporação — vaze para cá.
  */
-export const revalidate = 3600;
+export default function sitemap(): MetadataRoute.Sitemap {
+  const base = urlBase();
+  const agora = new Date();
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = publicEnv.NEXT_PUBLIC_APP_URL;
+  const fixas: MetadataRoute.Sitemap = [
+    { url: `${base}${rotas.home}`, lastModified: agora, changeFrequency: 'weekly', priority: 1 },
+    { url: `${base}${rotas.imoveis}`, lastModified: agora, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${base}${rotas.escritorio}`, lastModified: agora, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${base}${rotas.privacidade}`, lastModified: agora, changeFrequency: 'yearly', priority: 0.2 },
+  ];
 
-  const [products, professionals] = await Promise.all([
-    prisma.product.findMany({
-      where: { status: 'PUBLISHED', deletedAt: null },
-      select: { slug: true, updatedAt: true },
-      take: 10_000,
-    }),
-    prisma.professionalProfile.findMany({
-      where: { startingAtCents: { gt: 0 }, user: { status: 'ACTIVE', deletedAt: null } },
-      select: { slug: true, updatedAt: true },
-      take: 10_000,
-    }),
-  ]);
+  const paginasDeParque: MetadataRoute.Sitemap = parques.map((p) => ({
+    url: `${base}${rotas.parque(p.slug)}`,
+    lastModified: agora,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
 
-  return [
-    { url: base, changeFrequency: 'daily', priority: 1 },
-    { url: `${base}/products`, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${base}/professionals`, changeFrequency: 'daily', priority: 0.8 },
-    { url: `${base}/sell`, changeFrequency: 'monthly', priority: 0.7 },
-    ...products.map((product) => ({
-      url: `${base}/products/${product.slug}`,
-      lastModified: product.updatedAt,
+  const listagens: MetadataRoute.Sitemap = regioes.flatMap((r) =>
+    categorias.map((c) => ({
+      url: `${base}${rotas.listagem(r.slug, c.slug)}`,
+      lastModified: agora,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
-    ...professionals.map((professional) => ({
-      url: `${base}/professionals/${professional.slug}`,
-      lastModified: professional.updatedAt,
-      changeFrequency: 'weekly' as const,
-      priority: 0.6,
-    })),
-  ];
+  );
+
+  const imoveis: MetadataRoute.Sitemap = empreendimentosPublicados().map((e) => ({
+    url: `${base}${rotas.empreendimento(e)}`,
+    lastModified: agora,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  }));
+
+  return [...fixas, ...paginasDeParque, ...listagens, ...imoveis];
 }

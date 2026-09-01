@@ -1,21 +1,16 @@
-import { SiteFooter } from '@/components/layout/site-footer';
-import { SiteHeader } from '@/components/layout/site-header';
+import { BarraInferior } from '@/components/layout/barra-inferior';
+import { Rodape } from '@/components/layout/rodape';
 
 /**
- * Casca das páginas públicas e de conta.
- *
- * Grupo de rota `(site)`: agrupa sem aparecer na URL. `/products` continua
- * sendo `/products`, e o cabeçalho e o rodapé são declarados uma vez só, em
- * vez de repetidos em cada página — que é como uma delas acaba sem rodapé.
+ * Casca das páginas públicas. O `padding-bottom` no mobile abre espaço para a
+ * barra fixa de ação — sem ele o último bloco de cada página fica embaixo dela.
  */
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default function LayoutSite({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col">
-      <SiteHeader />
-      <main id="conteudo" className="flex-1">
-        {children}
-      </main>
-      <SiteFooter />
+    <div className="pb-[84px] md:pb-0">
+      {children}
+      <Rodape />
+      <BarraInferior />
     </div>
   );
 }

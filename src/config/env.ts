@@ -3,121 +3,47 @@ import 'server-only';
 import { z } from 'zod';
 
 /**
- * Variáveis de ambiente — validação na inicialização
- * ==================================================
+ * Variáveis de servidor. Nenhuma é obrigatória para o site subir: sem CRM
+ * configurado o lead é gravado no log de auditoria e o formulário responde
+ * normalmente ao visitante — perder o lead porque um segredo não foi
+ * preenchido seria pior que entregar sem integração.
  *
- * Este módulo existe para transformar uma classe inteira de incidente de
- * produção em erro de boot.
- *
- * Sem ele, uma variável ausente não aparece no deploy: aparece três horas
- * depois, quando o primeiro usuário chega no checkout e `undefined` viaja até
- * a chamada da API de pagamento. O processo sobe verde, o monitoramento fica
- * verde, e o defeito só existe no caminho que ninguém testou.
- *
- * Com ele, o processo **não sobe**. Falhar no boot é ruidoso, imediato e
- * acontece antes de qualquer usuário — é a hora barata de descobrir.
- *
- * ## `server-only`
- *
- * O import no topo faz o build quebrar se este arquivo for puxado por um
- * Client Component. Não é zelo excessivo: `STRIPE_SECRET_KEY` num bundle de
- * navegador é uma chave publicada, e a única defesa confiável contra isso é
- * mecânica, não disciplina.
+ * O que **não** pode acontecer é uma variável existir malformada: aí o parse
+ * falha no boot, e não no primeiro lead que chega do Meta Ads.
  */
-
-/** Integração externa desligada por falta de credencial, e não por falha. */
-const optionalSecret = z.string().min(1).optional();
-
-const serverSchema = z.object({
+const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
-  DATABASE_URL: z.string().url('DATABASE_URL precisa ser uma URL de conexão Postgres.'),
+  /** Endpoint do Método CRM que recebe o lead. */
+  CRM_WEBHOOK_URL: z.url().optional(),
+  /** Segredo do HMAC-SHA256 do corpo enviado ao CRM. Rotacionável. */
+  LEAD_WEBHOOK_SECRET: z.string().min(32).optional(),
 
-  /**
-   * Segredo de assinatura da aplicação.
-   *
-   * Usado para derivar o hash dos tokens de sessão. 32 bytes é o piso: abaixo
-   * disso a força bruta offline deixa de ser teórica. Não tem valor padrão de
-   * propósito — um padrão em código é um segredo publicado, e todo mundo que
-   * clonar o repositório teria o mesmo.
-   */
-  AUTH_SECRET: z.string().min(32, 'AUTH_SECRET precisa de ao menos 32 caracteres.'),
+  /** Meta CAPI — mesmo par usado no Método CRM, para atribuição consistente. */
+  META_PIXEL_ID: z.string().min(1).optional(),
+  META_CAPI_TOKEN: z.string().min(1).optional(),
+  META_TEST_EVENT_CODE: z.string().min(1).optional(),
 
-  /** Origem canônica. Serve para links absolutos, SEO e checagem de CSRF. */
-  APP_URL: z.string().url().default('http://localhost:3000'),
+  /** Supabase (projeto próprio deste site). Ver supabase/migrations/. */
+  SUPABASE_URL: z.url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 
-  // ---- Pagamentos (Stripe) ----------------------------------------------
-  // Ausentes, a plataforma funciona inteira menos comprar: o checkout devolve
-  // um erro explícito em vez de fingir uma compra que não aconteceu.
-  STRIPE_SECRET_KEY: optionalSecret,
-  STRIPE_WEBHOOK_SECRET: optionalSecret,
-  /** Comissão da plataforma, em pontos-base. 1500 = 15%, como anunciado. */
-  PLATFORM_FEE_BPS: z.coerce.number().int().min(0).max(10_000).default(1500),
-
-  // ---- Storage (S3-compatível) ------------------------------------------
-  S3_ENDPOINT: z.string().url().optional(),
-  S3_REGION: z.string().default('us-east-1'),
-  S3_BUCKET: z.string().min(1).optional(),
-  S3_ACCESS_KEY_ID: optionalSecret,
-  S3_SECRET_ACCESS_KEY: optionalSecret,
-  /** Validade da URL assinada de download, em segundos. */
-  S3_SIGNED_URL_TTL: z.coerce.number().int().min(30).max(3600).default(300),
-
-  /** `debug` polui; `warn` esconde. `info` é o padrão que se lê de verdade. */
-  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  /** Teto de leads por IP por janela, no middleware. */
+  RATE_LIMIT_LEADS_POR_MINUTO: z.coerce.number().int().positive().default(5),
 });
 
-/**
- * Variáveis públicas.
- *
- * Ficam num objeto separado com prefixo `NEXT_PUBLIC_` porque tudo aqui vai
- * para o navegador. A separação é o que torna a regra "não vaze segredo"
- * verificável de relance, em vez de depender de alguém lembrar.
- */
-const clientSchema = z.object({
-  NEXT_PUBLIC_APP_NAME: z.string().default('AUTOMATIZE'),
-  NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
-});
+const parsed = schema.safeParse(process.env);
 
-function parseOrExit<T extends z.ZodTypeAny>(schema: T, source: unknown, label: string): z.infer<T> {
-  const result = schema.safeParse(source);
-
-  if (!result.success) {
-    const issues = result.error.issues
-      .map((issue) => `  · ${issue.path.join('.') || '(raiz)'}: ${issue.message}`)
-      .join('\n');
-
-    throw new Error(
-      `Configuração inválida em ${label}:\n${issues}\n\n` +
-        'Compare o seu .env com o .env.example na raiz do projeto.',
-    );
-  }
-
-  return result.data;
+if (!parsed.success) {
+  throw new Error(
+    `Variáveis de ambiente inválidas:\n${z.prettifyError(parsed.error)}`,
+  );
 }
 
-export const env = parseOrExit(serverSchema, process.env, 'variáveis de servidor');
+export const env = parsed.data;
 
-export const publicEnv = parseOrExit(
-  clientSchema,
-  {
-    NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  },
-  'variáveis públicas',
+export const crmConfigurado = Boolean(env.CRM_WEBHOOK_URL && env.LEAD_WEBHOOK_SECRET);
+export const capiConfigurada = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN);
+export const supabaseConfigurado = Boolean(
+  env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY,
 );
-
-/**
- * Integrações disponíveis neste ambiente.
- *
- * A aplicação consulta isto em vez de checar `process.env` espalhado. O ganho é
- * a interface poder dizer a verdade ("pagamento indisponível neste ambiente")
- * em vez de deixar o usuário descobrir com um erro no meio do checkout.
- */
-export const integrations = {
-  payments: Boolean(env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET),
-  storage: Boolean(env.S3_BUCKET && env.S3_ACCESS_KEY_ID && env.S3_SECRET_ACCESS_KEY),
-} as const;
-
-export const isProduction = env.NODE_ENV === 'production';
-export const isTest = env.NODE_ENV === 'test';

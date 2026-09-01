@@ -1,0 +1,104 @@
+import 'server-only';
+
+import { env, supabaseConfigurado } from '@/config/env';
+
+import { registrar } from './auditoria';
+import type { Lead } from './schema';
+
+/**
+ * Gravação do lead no Supabase.
+ *
+ * Usa a `service_role` via PostgREST, sempre no servidor — RLS está ligado em
+ * `leads` e não há policy para `anon`, então nenhum cliente alcança a tabela
+ * nem por engano.
+ *
+ * Sem Supabase configurado, o lead segue o fluxo (CRM + CAPI + auditoria) e
+ * esta função não faz nada: derrubar a captação porque o banco ainda não foi
+ * provisionado seria perder o lead que já custou clique.
+ */
+export async function gravarLead(params: {
+  lead: Lead;
+  leadUuid: string;
+  consentimentoEm: string;
+  ipConsentimento: string | null;
+  empreendimentoId: string | null;
+}): Promise<boolean> {
+  if (!supabaseConfigurado) return false;
+
+  try {
+    const resposta = await fetch(`${env.SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        apikey: env.SUPABASE_SERVICE_ROLE_KEY!,
+        Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY!}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal,resolution=ignore-duplicates',
+      },
+      body: JSON.stringify({
+        nome: params.lead.nome,
+        telefone: params.lead.telefone,
+        email: params.lead.email ?? null,
+        empreendimento_id: params.empreendimentoId,
+        origem: params.lead.origem,
+        utm_source: params.lead.utmSource ?? null,
+        utm_campaign: params.lead.utmCampaign ?? null,
+        utm_content: params.lead.utmContent ?? null,
+        consentimento_lgpd_at: params.consentimentoEm,
+        ip_consentimento: params.ipConsentimento,
+        crm_lead_uuid: params.leadUuid,
+      }),
+      signal: AbortSignal.timeout(8_000),
+    });
+
+    if (!resposta.ok) {
+      await registrar({
+        crmLeadUuid: params.leadUuid,
+        evento: 'persistencia_falhou',
+        origem: params.lead.origem,
+        detalhe: { status: resposta.status },
+      });
+      return false;
+    }
+
+    return true;
+  } catch (e) {
+    await registrar({
+      crmLeadUuid: params.leadUuid,
+      evento: 'persistencia_falhou',
+      origem: params.lead.origem,
+      detalhe: { erro: e instanceof Error ? e.name : 'desconhecido' },
+    });
+    return false;
+  }
+}
+
+/** Marca o resultado do repasse ao CRM, para o job de reenvio saber o que sobrou. */
+export async function marcarSync(
+  leadUuid: string,
+  status: 'enviado' | 'falhou',
+  erro?: string,
+): Promise<void> {
+  if (!supabaseConfigurado) return;
+
+  try {
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/leads?crm_lead_uuid=eq.${encodeURIComponent(leadUuid)}`,
+      {
+        method: 'PATCH',
+        headers: {
+          apikey: env.SUPABASE_SERVICE_ROLE_KEY!,
+          Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY!}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          status_sync_crm: status,
+          ultimo_erro_sync: erro ?? null,
+        }),
+        signal: AbortSignal.timeout(5_000),
+      },
+    );
+  } catch {
+    /* Já foi auditado no envio; não vale derrubar nada por causa do PATCH. */
+  }
+}
