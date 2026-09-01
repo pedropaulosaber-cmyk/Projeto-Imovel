@@ -38,7 +38,11 @@ export const metadata: Metadata = {
     siteName: site.nome,
     images: [{ url: '/imagens/escritorio-goiania.jpg', width: 1408, height: 768 }],
   },
-  robots: { index: true, follow: true },
+  /* Mesmo interruptor do robots.ts: catálogo de demonstração não entra no
+     índice do Google. Ver a justificativa em src/app/robots.ts. */
+  robots: site.conteudoDemonstracao
+    ? { index: false, follow: false }
+    : { index: true, follow: true },
   formatDetection: { telephone: false },
 };
 

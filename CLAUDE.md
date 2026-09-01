@@ -152,6 +152,10 @@ por cor.
 - Schema.org: `RealEstateListing` + `Residence` em cada imóvel; `RealEstateAgent` na home.
 - SSG/ISR obrigatório nas páginas indexáveis. Variação de filtro é `noindex, follow`.
 - `sitemap.ts` só lista o que é indexável e publicado; rascunho nunca vaza.
+- **`site.conteudoDemonstracao` desliga a indexação do site inteiro.** Enquanto os imóveis forem
+  os de demonstração, `robots.ts` bloqueia tudo e o metadata vai `noindex` — o CRECI no rodapé é
+  real, e anúncio fictício indexado sob inscrição verdadeira é problema de conselho regional.
+  Virar para `false` junto com o catálogo real libera o SEO de uma vez.
 - Conteúdo único por página — nunca copiar descrição literal da incorporadora (duplicidade +
   direitos autorais).
 
@@ -174,7 +178,8 @@ tratar dado sensível no navegador.
 
 1. **Provisionar o Supabase** e aplicar `supabase/migrations/0001_init.sql`.
 2. **Trocar o catálogo de demonstração** por empreendimentos reais, com registro de incorporação
-   conferido, e virar `site.conteudoDemonstracao` para `false`.
+   conferido, e virar `site.conteudoDemonstracao` para `false` — é esse mesmo interruptor que
+   libera a indexação no Google.
 3. **Trocar marca e contatos** em `src/config/site.ts` (hoje: nome VÉRTICE e telefone/endereço do
    design; o CRECI já é o real).
 4. **Ligar o Método CRM** (`CRM_WEBHOOK_URL` + `LEAD_WEBHOOK_SECRET`) e o Meta (Pixel + CAPI).

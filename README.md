@@ -44,6 +44,7 @@ npm run build && npm run start
 | Rate limit em memória | Contagem por instância. Barra o caso que importa (um script disparando POSTs) sem exigir Redis. Trocar por Vercel KV quando o volume justificar. |
 | Login não autentica | Depende do Supabase Auth. A tela diz isso em vez de fingir — um login que deixa qualquer um entrar é pior que nenhum. |
 | Um empreendimento é rascunho de propósito | `residencial-bosque-t9` não tem registro de incorporação. Ele não pode aparecer em nenhuma listagem, página ou sitemap: é a prova viva de que o filtro de publicação funciona. |
+| O site inteiro é `noindex` enquanto `site.conteudoDemonstracao` for `true` | Os imóveis são fictícios e o CRECI no rodapé é real. Deixar o Google indexar anúncio inventado sob uma inscrição verdadeira é problema de conselho regional, não de SEO. |
 
 ## Estrutura
 
