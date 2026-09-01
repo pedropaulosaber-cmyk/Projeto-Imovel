@@ -80,7 +80,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       <section className="relative flex h-[54svh] items-end md:h-[clamp(340px,72svh,780px)]">
         <Foto
           url={capa?.url ?? null}
-          alt={`${e.nome}, ${nomeDaRegiao(e.regiaoSlug)}`}
+          alt={capa?.alt ?? `${e.nome}, ${nomeDaRegiao(e.regiaoSlug)}`}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="100vw"
           prioridade
@@ -138,7 +138,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
             key={m.legenda}
             className="relative h-[72px] w-[110px] shrink-0 overflow-hidden rounded-md md:h-[84px] md:w-[132px] md:rounded"
           >
-            <Foto url={m.url} alt={m.legenda} legenda={m.legenda} sizes="132px" />
+            <Foto url={m.url} alt={m.alt ?? m.legenda} legenda={m.legenda} sizes="132px" />
           </div>
         ))}
       </div>

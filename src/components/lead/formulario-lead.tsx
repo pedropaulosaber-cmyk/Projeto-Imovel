@@ -61,9 +61,14 @@ export function FormularioLead({
      evento. Gerado no envio — antes disso não existe evento para identificar. */
   const refEventId = useRef<string | null>(null);
 
+  /*
+    `w-full min-w-0` não é enfeite: um <select> se dimensiona pela opção mais
+    larga, e uma tipologia de nome comprido vinda do book estoura o formulário
+    inteiro para fora da tela.
+  */
   const campo = claro
-    ? 'min-h-[50px] rounded-lg border border-[rgba(20,19,15,0.22)] bg-white px-[14px] py-[14px] text-[15px] text-tinta outline-none focus:border-ouro md:rounded'
-    : 'min-h-[52px] rounded-lg border border-creme/[0.18] bg-creme/[0.06] px-4 py-[15px] text-[15px] text-creme outline-none focus:border-ouro md:rounded';
+    ? 'w-full min-w-0 truncate min-h-[50px] rounded-lg border border-[rgba(20,19,15,0.22)] bg-white px-[14px] py-[14px] text-[15px] text-tinta outline-none focus:border-ouro md:rounded'
+    : 'w-full min-w-0 truncate min-h-[52px] rounded-lg border border-creme/[0.18] bg-creme/[0.06] px-4 py-[15px] text-[15px] text-creme outline-none focus:border-ouro md:rounded';
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();

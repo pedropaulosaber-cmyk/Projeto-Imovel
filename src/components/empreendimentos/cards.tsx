@@ -37,7 +37,7 @@ export function CardOportunidade({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[16/11]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
         />
@@ -79,7 +79,7 @@ export function CardListagem({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[16/11]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
@@ -120,7 +120,7 @@ export function CardListagem({ e }: { e: Empreendimento }) {
 
         <div className="flex flex-wrap gap-[14px] rounded-[10px] border border-creme/[0.14] px-[14px] py-3 text-xs text-creme/75 md:gap-[18px] md:px-4 md:py-[13px] md:text-[13px]">
           <span>{e.quartos}</span>
-          <span>{e.banheiros}</span>
+          {e.banheiros ? <span>{e.banheiros}</span> : null}
           <span>{e.metragem}</span>
         </div>
 
@@ -150,7 +150,7 @@ export function CardSimilar({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[4/3]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda="[ foto ]"
           sizes="(max-width: 768px) 230px, 25vw"
         />
@@ -183,7 +183,7 @@ export function CardVizinhoDoParque({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[16/11] md:aspect-[4/3]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, 33vw"
         />

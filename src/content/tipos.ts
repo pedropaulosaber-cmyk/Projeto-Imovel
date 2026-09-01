@@ -19,7 +19,14 @@ export interface Midia {
   tipo: 'foto' | 'planta' | 'video';
   /** `null` enquanto a foto real não chega: o card cai no placeholder hachurado do design. */
   url: string | null;
+  /** Rótulo curto da tira de miniaturas. */
   legenda: string;
+  /**
+   * Texto alternativo descrevendo a cena. Vale mais que o nome do
+   * empreendimento repetido: é o que o leitor de tela lê e o que o Google usa
+   * para entender a foto.
+   */
+  alt?: string;
 }
 
 export interface Planta {
@@ -71,7 +78,8 @@ export interface Empreendimento {
    */
   precoAPartirDe: number | null;
   quartos: string;
-  banheiros: string;
+  /** `null` quando o material da incorporadora não informa. */
+  banheiros: string | null;
   metragem: string;
   metragemMin: number;
   metragemMax: number;
