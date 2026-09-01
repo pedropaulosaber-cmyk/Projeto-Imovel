@@ -31,9 +31,12 @@ export const site = {
   },
 
   /**
-   * Enquanto os empreendimentos forem os de demonstração vindos do design,
-   * o rodapé diz isso em voz alta. Vire `false` quando carregar imóveis reais
-   * com registro de incorporação conferido.
+   * Trava de publicação. Enquanto for `true`, o site inteiro fica `noindex` e
+   * o rodapé avisa que a operação ainda está sendo configurada.
+   *
+   * Os imóveis já são reais e com registro conferido — o que ainda impede
+   * indexar é a marca e os contatos acima, que continuam sendo os do design.
+   * Anúncio no Google com telefone que não atende é pior que anúncio nenhum.
    */
   conteudoDemonstracao: true,
 } as const;

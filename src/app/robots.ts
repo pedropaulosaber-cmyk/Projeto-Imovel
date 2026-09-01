@@ -4,13 +4,15 @@ import { site, urlBase } from '@/config/site';
 
 export default function robots(): MetadataRoute.Robots {
   /*
-    Enquanto o catálogo for de demonstração, o site inteiro fica fora do índice.
-    O motivo não é técnico: os imóveis são fictícios e o CRECI no rodapé é real.
-    Deixar o Google indexar anúncio inventado sob uma inscrição verdadeira é
-    problema de conselho regional, não de SEO.
+    Trava de publicação: enquanto ligada, o site inteiro fica fora do índice.
 
-    Virar `site.conteudoDemonstracao` para `false` — junto com os imóveis reais
-    e o registro de incorporação conferido — libera a indexação.
+    Os imóveis já são reais e com registro de incorporação conferido. O que
+    ainda segura é a marca e o telefone, que continuam sendo os do design —
+    indexar anúncio sob um número que não atende queima o anúncio e o CRECI
+    que assina embaixo.
+
+    Trocar marca e contatos em `src/config/site.ts` e virar o interruptor
+    libera a indexação de uma vez.
   */
   if (site.conteudoDemonstracao) {
     return {
