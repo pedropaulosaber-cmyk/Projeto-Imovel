@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { env, supabaseConfigurado } from '@/config/env';
+import { env, papelDaChaveSupabase, supabaseConfigurado } from '@/config/env';
 
 import { registrar } from './auditoria';
 import type { Lead } from './schema';
@@ -54,11 +54,20 @@ export async function gravarLead(params: {
     });
 
     if (!resposta.ok) {
+      /*
+        O corpo do PostgREST é o que diz se foi chave errada, RLS ou coluna
+        inválida. Sem ele o log vira só um número e a investigação custa um
+        ciclo inteiro de ida e volta.
+      */
       await registrar({
         crmLeadUuid: params.leadUuid,
         evento: 'persistencia_falhou',
         origem: params.lead.origem,
-        detalhe: { status: resposta.status },
+        detalhe: {
+          status: resposta.status,
+          resposta: (await resposta.text().catch(() => '')).slice(0, 400),
+          papelDaChave: papelDaChaveSupabase(),
+        },
       });
       return false;
     }

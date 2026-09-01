@@ -47,3 +47,33 @@ export const capiConfigurada = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN)
 export const supabaseConfigurado = Boolean(
   env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY,
 );
+
+/**
+ * Qual papel a chave do Supabase declara — sem verificar assinatura, porque o
+ * objetivo não é confiar nela, é diagnosticar configuração errada.
+ *
+ * Trocar `service_role` por `anon` é o engano mais comum ao configurar: a
+ * `anon` fica no topo da página de chaves, e com ela o RLS recusa o insert com
+ * um 401 seco que não explica nada. Este helper faz o log dizer.
+ *
+ * Chave legada é JWT — o payload traz `role`. Chave nova é opaca e se
+ * identifica pelo prefixo.
+ */
+export function papelDaChaveSupabase(): string {
+  const chave = env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!chave) return 'ausente';
+  if (chave.startsWith('sb_secret_')) return 'secret';
+  if (chave.startsWith('sb_publishable_')) return 'publishable — é a chave PÚBLICA, precisa ser a secreta';
+
+  const payload = chave.split('.')[1];
+  if (!payload) return 'formato irreconhecível';
+
+  try {
+    const { role } = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as {
+      role?: unknown;
+    };
+    return typeof role === 'string' ? role : 'JWT sem papel';
+  } catch {
+    return 'formato irreconhecível';
+  }
+}
