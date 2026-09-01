@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { precoExibicao } from '@/content/empreendimentos';
 import { nomeDaRegiao, rotuloDaCategoria } from '@/content/regioes';
 import type { Empreendimento } from '@/content/tipos';
 import { rotas } from '@/lib/rotas';
@@ -57,7 +58,7 @@ export function CardOportunidade({ e }: { e: Empreendimento }) {
         </p>
         <div className="flex items-center justify-between gap-3">
           <span className="text-xl font-semibold tracking-[-0.03em] md:text-[21px]">
-            {e.precoExibicao}
+            {precoExibicao(e)}
           </span>
           <Seta />
         </div>
@@ -114,7 +115,7 @@ export function CardListagem({ e }: { e: Empreendimento }) {
           {e.resumo}
         </p>
         <p className="mb-[14px] text-[22px] font-semibold tracking-[-0.03em] md:mb-4 md:text-2xl">
-          {e.precoExibicao}
+          {precoExibicao(e)}
         </p>
 
         <div className="flex flex-wrap gap-[14px] rounded-[10px] border border-creme/[0.14] px-[14px] py-3 text-xs text-creme/75 md:gap-[18px] md:px-4 md:py-[13px] md:text-[13px]">
@@ -163,7 +164,7 @@ export function CardSimilar({ e }: { e: Empreendimento }) {
           {e.nome}
         </h3>
         <p className="text-base font-semibold md:text-[18px] md:font-medium md:text-ouro">
-          {e.precoExibicao}
+          {precoExibicao(e)}
         </p>
       </div>
     </Link>
@@ -205,12 +206,12 @@ export function CardVizinhoDoParque({ e }: { e: Empreendimento }) {
 
         {/* Mobile: preço grande + seta. Desktop: "A partir de" + preço em ouro. */}
         <div className="flex items-center justify-between gap-3 md:hidden">
-          <span className="text-xl font-semibold tracking-[-0.03em]">{e.precoExibicao}</span>
+          <span className="text-xl font-semibold tracking-[-0.03em]">{precoExibicao(e)}</span>
           <Seta />
         </div>
         <div className="hidden items-baseline justify-between gap-3 md:flex">
           <span className="text-xs text-creme/55">A partir de</span>
-          <span className="text-xl font-medium text-ouro">{e.precoExibicao}</span>
+          <span className="text-xl font-medium text-ouro">{precoExibicao(e)}</span>
         </div>
       </div>
     </Link>

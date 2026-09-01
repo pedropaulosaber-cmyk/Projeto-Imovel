@@ -64,8 +64,12 @@ export interface Empreendimento {
   numeroRegistroIncorporacao: string | null;
   statusPublicacao: StatusPublicacao;
 
-  precoAPartirDe: number;
-  precoExibicao: string;
+  /**
+   * `null` enquanto a tabela não chega da incorporadora. Preço é o dado que
+   * mais gera atrito quando está errado — melhor "Sob consulta" do que um
+   * número desatualizado num anúncio.
+   */
+  precoAPartirDe: number | null;
   quartos: string;
   banheiros: string;
   metragem: string;

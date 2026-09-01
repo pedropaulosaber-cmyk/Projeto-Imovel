@@ -93,7 +93,11 @@ export function aplicarFiltros(f: Filtros): Empreendimento[] {
   }
 
   if (f.quartos) lista = lista.filter((e) => casaComQuartos(e, f.quartos!));
-  if (f.ate) lista = lista.filter((e) => e.precoAPartirDe <= f.ate!);
+  /*
+    Sem preço cadastrado não dá para afirmar que o imóvel cabe no teto — então
+    ele fica de fora do filtro por valor, em vez de aparecer por otimismo.
+  */
+  if (f.ate) lista = lista.filter((e) => e.precoAPartirDe !== null && e.precoAPartirDe <= f.ate!);
 
   if (f.busca) {
     const alvo = normalizar(f.busca);
@@ -105,10 +109,11 @@ export function aplicarFiltros(f: Filtros): Empreendimento[] {
   const ordenada = [...lista];
   switch (f.ordem) {
     case 'menor-preco':
-      ordenada.sort((a, b) => a.precoAPartirDe - b.precoAPartirDe);
+      /* Sem preço vai para o fim nas duas ordens — nunca encabeça a lista. */
+      ordenada.sort((a, b) => (a.precoAPartirDe ?? Infinity) - (b.precoAPartirDe ?? Infinity));
       break;
     case 'maior-preco':
-      ordenada.sort((a, b) => b.precoAPartirDe - a.precoAPartirDe);
+      ordenada.sort((a, b) => (b.precoAPartirDe ?? -Infinity) - (a.precoAPartirDe ?? -Infinity));
       break;
     case 'maior-metragem':
       ordenada.sort((a, b) => b.metragemMax - a.metragemMax);

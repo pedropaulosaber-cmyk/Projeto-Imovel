@@ -12,6 +12,7 @@ import {
   empreendimentoPorSlug,
   empreendimentosPublicados,
   empreendimentosSimilares,
+  precoExibicao,
 } from '@/content/empreendimentos';
 import { nomeDaRegiao, regiaoPorSlug, rotuloDaCategoria, slugDaCategoria } from '@/content/regioes';
 import type { Empreendimento } from '@/content/tipos';
@@ -148,8 +149,9 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       <div className="md:flex md:flex-wrap md:items-start md:gap-[clamp(26px,4vw,68px)] md:px-5 md:pt-[clamp(30px,4.4vw,68px)] md:pb-[clamp(46px,6vw,96px)] lg:px-14">
         <main className="min-w-0 md:flex-[999_1_540px]">
           {/* Ficha técnica */}
+          {/* A linha de preço é derivada, para o valor viver num lugar só. */}
           <div className="grid grid-cols-2 md:mb-[clamp(28px,4vw,56px)] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
-            {e.ficha.map((f) => (
+            {[{ label: 'A PARTIR DE', valor: precoExibicao(e) }, ...e.ficha].map((f) => (
               <div key={f.label} className="celula p-[18px] md:px-5 md:py-[22px]">
                 <p className="mb-2 font-mono text-[9px] tracking-[0.14em] text-creme/55 md:mb-[10px] md:text-[10px]">
                   {f.label}
@@ -355,10 +357,11 @@ function schemaDoImovel(e: Empreendimento) {
     ...(e.midias.find((m) => m.tipo === 'foto' && m.url)?.url
       ? { image: `${urlBase()}${e.midias.find((m) => m.tipo === 'foto' && m.url)?.url}` }
       : {}),
+    /* Offer sem preço é válido no Schema.org; offer com preço errado vira
+       rich result mentindo o valor na busca. */
     offers: {
       '@type': 'Offer',
-      price: e.precoAPartirDe,
-      priceCurrency: 'BRL',
+      ...(e.precoAPartirDe === null ? {} : { price: e.precoAPartirDe, priceCurrency: 'BRL' }),
       availability: 'https://schema.org/InStock',
     },
     about: {

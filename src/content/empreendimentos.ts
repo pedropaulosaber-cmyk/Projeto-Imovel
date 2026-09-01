@@ -47,7 +47,6 @@ const catalogo: Empreendimento[] = [
       'R-4 nº 148.392 — 1º Ofício de Registro de Imóveis de Goiânia',
     statusPublicacao: 'publicado',
     precoAPartirDe: 890_000,
-    precoExibicao: 'R$ 890.000',
     quartos: '2–3 quartos',
     banheiros: '2 banheiros',
     metragem: '68–112 m²',
@@ -79,7 +78,6 @@ const catalogo: Empreendimento[] = [
       { area: '112 m²', tipo: '3 suítes', vagas: '2 vagas + depósito' },
     ],
     ficha: [
-      { label: 'A PARTIR DE', valor: 'R$ 890.000' },
       { label: 'METRAGENS', valor: '68–112 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 quartos' },
       { label: 'ENTREGA', valor: 'Dez / 2029' },
@@ -113,7 +111,6 @@ const catalogo: Empreendimento[] = [
       'R-2 nº 151.877 — 2º Ofício de Registro de Imóveis de Goiânia',
     statusPublicacao: 'publicado',
     precoAPartirDe: 1_480_000,
-    precoExibicao: 'R$ 1.480.000',
     quartos: '3–4 suítes',
     banheiros: '4 banheiros',
     metragem: '145–210 m²',
@@ -145,7 +142,6 @@ const catalogo: Empreendimento[] = [
       { area: '210 m²', tipo: '4 suítes + living ampliado', vagas: '3 vagas + depósito' },
     ],
     ficha: [
-      { label: 'A PARTIR DE', valor: 'R$ 1.480.000' },
       { label: 'METRAGENS', valor: '145–210 m²' },
       { label: 'TIPOLOGIAS', valor: '3–4 suítes' },
       { label: 'ENTREGA', valor: 'Jun / 2030' },
@@ -178,7 +174,6 @@ const catalogo: Empreendimento[] = [
       'R-6 nº 139.204 — 3º Ofício de Registro de Imóveis de Goiânia',
     statusPublicacao: 'publicado',
     precoAPartirDe: 650_000,
-    precoExibicao: 'R$ 650.000',
     quartos: '2–4 quartos',
     banheiros: '2 banheiros',
     metragem: '75–140 m²',
@@ -209,7 +204,6 @@ const catalogo: Empreendimento[] = [
       { area: '140 m²', tipo: '4 quartos', vagas: '2 vagas' },
     ],
     ficha: [
-      { label: 'A PARTIR DE', valor: 'R$ 650.000' },
       { label: 'METRAGENS', valor: '75–140 m²' },
       { label: 'TIPOLOGIAS', valor: '2–4 quartos' },
       { label: 'ENTREGA', valor: 'Set / 2027' },
@@ -240,7 +234,6 @@ const catalogo: Empreendimento[] = [
       'R-3 nº 142.660 — 3º Ofício de Registro de Imóveis de Goiânia',
     statusPublicacao: 'publicado',
     precoAPartirDe: 720_000,
-    precoExibicao: 'R$ 720.000',
     quartos: '1–2 quartos',
     banheiros: '1 banheiro',
     metragem: '42–78 m²',
@@ -270,7 +263,6 @@ const catalogo: Empreendimento[] = [
       { area: '78 m²', tipo: '2 quartos + varanda', vagas: '1 vaga' },
     ],
     ficha: [
-      { label: 'A PARTIR DE', valor: 'R$ 720.000' },
       { label: 'METRAGENS', valor: '42–78 m²' },
       { label: 'TIPOLOGIAS', valor: '1–2 quartos' },
       { label: 'ENTREGA', valor: 'Mar / 2028' },
@@ -301,7 +293,6 @@ const catalogo: Empreendimento[] = [
       'R-9 nº 121.045 — 2º Ofício de Registro de Imóveis de Goiânia',
     statusPublicacao: 'publicado',
     precoAPartirDe: 1_250_000,
-    precoExibicao: 'R$ 1.250.000',
     quartos: '3–4 suítes',
     banheiros: '4 banheiros',
     metragem: '180–240 m²',
@@ -331,7 +322,6 @@ const catalogo: Empreendimento[] = [
       { area: '240 m²', tipo: '4 suítes + living ampliado', vagas: '4 vagas' },
     ],
     ficha: [
-      { label: 'A PARTIR DE', valor: 'R$ 1.250.000' },
       { label: 'METRAGENS', valor: '180–240 m²' },
       { label: 'TIPOLOGIAS', valor: '3–4 suítes' },
       { label: 'ENTREGA', valor: 'Pronto' },
@@ -362,7 +352,6 @@ const catalogo: Empreendimento[] = [
       'R-7 nº 118.930 — 1º Ofício de Registro de Imóveis de Goiânia',
     statusPublicacao: 'publicado',
     precoAPartirDe: 2_100_000,
-    precoExibicao: 'R$ 2.100.000',
     quartos: '4 suítes',
     banheiros: '5 banheiros',
     metragem: '280–320 m²',
@@ -392,7 +381,6 @@ const catalogo: Empreendimento[] = [
       { area: '320 m²', tipo: 'Cobertura duplex — 4 suítes + home', vagas: '4 vagas + depósito' },
     ],
     ficha: [
-      { label: 'A PARTIR DE', valor: 'R$ 2.100.000' },
       { label: 'METRAGENS', valor: '280–320 m²' },
       { label: 'TIPOLOGIAS', valor: '4 suítes' },
       { label: 'ENTREGA', valor: 'Pronto' },
@@ -429,7 +417,6 @@ const catalogo: Empreendimento[] = [
     numeroRegistroIncorporacao: null,
     statusPublicacao: 'rascunho',
     precoAPartirDe: 0,
-    precoExibicao: 'Sob consulta',
     quartos: '—',
     banheiros: '—',
     metragem: '—',
@@ -513,6 +500,19 @@ export function empreendimentosSimilares(slug: string, limite = 4): Empreendimen
 /** Quantos imóveis publicados existem por categoria — usado nos contadores. */
 export function contagemPorCategoria(categoria: CategoriaEmpreendimento): number {
   return empreendimentosPublicados().filter((e) => e.categoria === categoria).length;
+}
+
+/**
+ * Como o preço aparece na tela. Sem tabela, "Sob consulta" — que é o que o
+ * corretor responderia de qualquer forma.
+ */
+export function precoExibicao(e: Empreendimento): string {
+  if (e.precoAPartirDe === null) return 'Sob consulta';
+  return e.precoAPartirDe.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    maximumFractionDigits: 0,
+  });
 }
 
 export function totalPublicado(): number {
