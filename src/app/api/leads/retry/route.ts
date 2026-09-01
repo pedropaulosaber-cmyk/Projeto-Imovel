@@ -16,8 +16,10 @@ export const dynamic = 'force-dynamic';
  * daquele intervalo ficaram em `status_sync_crm = 'falhou'` e é este endpoint
  * que os recupera.
  *
- * Agendar na Vercel (`vercel.json`):
- *   { "crons": [{ "path": "/api/leads/retry", "schedule": "*&#47;15 * * * *" }] }
+ * Agendado em `vercel.json`. No plano Hobby a Vercel só aceita cron diário,
+ * então a varredura roda às 09:00 UTC; no Pro, dá para baixar a cadência para
+ * quinze minutos. O backoff do `after()` continua sendo a primeira linha de
+ * defesa — este endpoint só pega o que sobreviveu às quatro tentativas.
  *
  * A Vercel manda `Authorization: Bearer $CRON_SECRET` nas chamadas de cron.
  * Sem `CRON_SECRET` configurado o endpoint recusa tudo — um reenviador aberto

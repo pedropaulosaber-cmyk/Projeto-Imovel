@@ -83,7 +83,7 @@ src/app/
 │   ├── login/page.tsx                         -- ⚠ autenticação ainda não implementada
 │   └── painel/page.tsx                        -- ⚠ prévia com dados de exemplo
 ├── api/leads/route.ts                         -- recebe form, grava, dispara webhook + CAPI
-└── api/leads/retry/route.ts                   -- cron de reenvio (Vercel, a cada 15 min)
+└── api/leads/retry/route.ts                   -- cron de reenvio (Vercel, diário no Hobby)
 
 src/lib/
 ├── lead/{schema,crm,meta-capi,persistencia,auditoria}.ts
@@ -114,7 +114,8 @@ Body:
 ```
 
 - Reenvio com backoff (0 s, 1 s, 4 s, 12 s) fora do caminho da resposta, via `after()`. Status em
-  `leads.status_sync_crm`; o que sobra é recuperado por `/api/leads/retry`.
+  `leads.status_sync_crm`; o que sobra é recuperado por `/api/leads/retry`. O cron é diário porque
+  o plano Hobby da Vercel não aceita mais que isso — no Pro, baixar para 15 min.
 - `LEAD_WEBHOOK_SECRET` diferente por ambiente, nunca exposto no client.
 - Se `corretor_responsavel_id` vier nulo, o Método CRM roteia para o pool de SDR interno.
 - Verificação da assinatura em tempo constante (`assinaturaConfere`), exportada para o lado que
