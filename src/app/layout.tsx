@@ -3,6 +3,7 @@ import { IBM_Plex_Mono, Poppins } from 'next/font/google';
 
 import { MetaPixel } from '@/components/tracking/meta-pixel';
 import { site, urlBase } from '@/config/site';
+import { regioesEmTexto } from '@/content/regioes';
 
 import './globals.css';
 
@@ -28,8 +29,7 @@ export const metadata: Metadata = {
     default: `${site.nome} — Imóveis em Goiânia`,
     template: `%s · ${site.nome}`,
   },
-  description:
-    'Lançamentos, imóveis na planta e remanescentes no Setor Serrinha, Setor Pedro Ludovico e Jardim Atlântico. Registro de incorporação e cronograma abertos.',
+  description: `Lançamentos, imóveis na planta e remanescentes em ${regioesEmTexto()}. Registro de incorporação e cronograma abertos.`,
   applicationName: site.nome,
   authors: [{ name: site.responsavelTecnico }],
   openGraph: {

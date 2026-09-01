@@ -1,7 +1,7 @@
 # VÉRTICE — imóveis em Goiânia
 
 Site de captação de leads para empreendimentos imobiliários em Goiânia-GO. Lançamentos, imóveis na
-planta e remanescentes no Setor Serrinha, Setor Pedro Ludovico e Jardim Atlântico.
+planta e remanescentes no Setor Serrinha, Setor Pedro Ludovico e Parque Amazônia.
 
 O contexto completo do projeto — regras de negócio, contrato com o Método CRM, design system e o
 que ainda falta — está em [`CLAUDE.md`](./CLAUDE.md).

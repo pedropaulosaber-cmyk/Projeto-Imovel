@@ -4,6 +4,7 @@ import { Cabecalho } from '@/components/layout/cabecalho';
 import { Listagem } from '@/components/listagem/listagem';
 import { lerFiltros, temFiltroAtivo } from '@/lib/filtros';
 import { rotas } from '@/lib/rotas';
+import { regioesEmTexto } from '@/content/regioes';
 
 type Params = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -12,8 +13,7 @@ export async function generateMetadata({ searchParams }: Params): Promise<Metada
 
   return {
     title: 'Imóveis em Goiânia',
-    description:
-      'Lançamentos, imóveis na planta e remanescentes no Setor Serrinha, Setor Pedro Ludovico e Jardim Atlântico, com registro de incorporação conferido.',
+    description: `Lançamentos, imóveis na planta e remanescentes em ${regioesEmTexto()}, com registro de incorporação conferido.`,
     alternates: { canonical: rotas.imoveis },
     /*
       Cada combinação de filtro é uma variação da mesma lista. Indexar todas

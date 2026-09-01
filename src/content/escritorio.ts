@@ -1,3 +1,5 @@
+import { site } from '@/config/site';
+
 /** Conteúdo institucional: números, processo, equipe e depoimentos. */
 
 export const numeros = [
@@ -47,16 +49,17 @@ export const processo = [
   {
     n: '04',
     titulo: 'Fechamento',
-    texto:
-      'Conferência de documentação, negociação de tabela e acompanhamento até a assinatura.',
+    texto: 'Conferência de documentação, negociação de tabela e acompanhamento até a assinatura.',
   },
 ];
 
+/**
+ * O design trazia quatro corretores com CRECI inventado. Número de CRECI que
+ * não existe é infração à Resolução COFECI 1.065/2007 mesmo em página de
+ * equipe, então a lista tem só quem é real. Cresceu o time, cresce a lista.
+ */
 export const equipe = [
-  { nome: 'Rodrigo Alves', creci: 'CRECI-GO 12.345-F', regiao: 'Setor Serrinha' },
-  { nome: 'Helena Braga', creci: 'CRECI-GO 12.902-F', regiao: 'Jardim Atlântico' },
-  { nome: 'Marcos Vinícius', creci: 'CRECI-GO 13.114-F', regiao: 'Setor Pedro Ludovico' },
-  { nome: 'Tatiana Rezende', creci: 'CRECI-GO 13.480-F', regiao: 'Todas as regiões' },
+  { nome: site.responsavelTecnico, creci: site.creci, regiao: 'Todas as regiões' },
 ];
 
 export const comoTrabalhamos = {
