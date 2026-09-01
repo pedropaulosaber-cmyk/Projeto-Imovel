@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { CardSimilar } from '@/components/empreendimentos/cards';
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { FormularioLead } from '@/components/lead/formulario-lead';
-import { MapaPlaceholder } from '@/components/secoes/blocos';
+import { Mapa } from '@/components/mapa/mapa';
 import { Foto } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
 import {
@@ -253,7 +253,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
               <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
                 Localização
               </h2>
-              <MapaPlaceholder rotulo={e.nome} />
+              <Mapa rotulo={e.nome} endereco={e.localizacao.endereco} />
               <p className="mt-4 max-w-[62ch] text-sm leading-[1.7] text-creme/72 text-pretty md:mt-5 md:text-base md:leading-[1.72]">
                 {e.localizacao.endereco}. {e.localizacao.referencias}
               </p>

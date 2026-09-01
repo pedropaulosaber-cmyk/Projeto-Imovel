@@ -23,6 +23,8 @@ const csp = [
   "font-src 'self' data:",
   "connect-src 'self' https://graph.facebook.com https://connect.facebook.net",
   "form-action 'self'",
+  // Mapa da página do imóvel. Só é requisitado depois do clique do visitante.
+  "frame-src 'self' https://www.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "object-src 'none'",

@@ -7,59 +7,70 @@ import type { Parque } from './tipos';
  */
 export const parques: Parque[] = [
   {
+    /*
+      Números conferidos contra a cobertura da assinatura da ordem de serviço,
+      em 2 de julho de 2026. O que estava aqui antes veio do design e era
+      ficção — 96 hectares, R$ 74 milhões, entrega em 2028 e a Prefeitura como
+      responsável. Nada disso é verdade: a obra é do Governo de Goiás, o morro
+      tem 108 mil m² e o prazo é de 12 meses a partir de julho de 2026.
+    */
     slug: 'parque-serrinha',
-    nome: 'Parque Serrinha',
-    selo: 'Obras iniciadas em 2026',
-    chamadaCurta: 'Revitalização em andamento',
-    titulo: 'O Parque Serrinha vai mudar de escala.',
+    nome: 'Parque da Serrinha',
+    selo: 'Obra iniciada em julho de 2026',
+    chamadaCurta: 'Requalificação em andamento',
+    titulo: 'O Morro da Serrinha vira parque urbano.',
     resumoHome:
-      'São 96 hectares em requalificação no coração do setor: pista de caminhada de 3,2 km, pólo esportivo, recuperação da nascente e nova praça de alimentação até 2028. Dois dos nossos empreendimentos ficam a uma caminhada dali.',
+      'O Governo de Goiás assinou em julho de 2026 a ordem de serviço do Parque da Serrinha Jornalista Jaime Câmara: R$ 14,5 milhões e 12 meses de obra para transformar os 108 mil m² do morro em parque urbano, com mirante no ponto mais alto da cidade. Vários dos nossos empreendimentos ficam a uma caminhada dali.',
     resumoPagina:
-      'São 96 hectares de área verde em requalificação no coração do Setor Serrinha, entre a torre de transmissão e a saída para a Avenida 85. O projeto entrega pista de caminhada, pólo esportivo, recuperação de nascente e nova praça de alimentação até 2028.',
+      'O Morro da Serrinha tem 108 mil m² e 819 metros de altitude — um dos pontos mais altos de Goiânia. Em 2 de julho de 2026 o Governo de Goiás assinou a ordem de serviço da requalificação, orçada em R$ 14,5 milhões e com prazo de 12 meses, que entrega mirante, trilhas, pista de caminhada, iluminação e áreas de alimentação, além do replantio de 5 mil mudas nativas do Cerrado.',
     resumoPaginaMobile:
-      '96 hectares de área verde em requalificação no coração do Setor Serrinha, com entrega da última etapa em 2028.',
+      '108 mil m² e 819 m de altitude viram parque urbano: R$ 14,5 milhões e 12 meses de obra, com mirante no ponto mais alto da cidade.',
     imagem: '/imagens/parque-serrinha.jpg',
-    imagemAlt: 'Vista aérea do Parque Serrinha',
+    imagemAlt: 'Vista aérea do Morro da Serrinha, em Goiânia',
     numeros: [
-      { valor: '96 ha', label: 'Área total do parque', labelMobile: 'Área total' },
-      { valor: 'R$ 74 mi', label: 'Investimento previsto', labelMobile: 'Investimento' },
-      { valor: '2028', label: 'Entrega da última etapa', labelMobile: 'Última etapa' },
-      { valor: '450 m', label: 'Distância a pé mais curta', labelMobile: 'Distância mais curta' },
+      { valor: '108 mil m²', label: 'Área do Morro da Serrinha', labelMobile: 'Área do morro' },
+      { valor: 'R$ 14,5 mi', label: 'Investimento contratado', labelMobile: 'Investimento' },
+      { valor: '12 meses', label: 'Prazo de obra', labelMobile: 'Prazo de obra' },
+      { valor: '819 m', label: 'Altitude do mirante', labelMobile: 'Altitude' },
     ],
     etapas: [
       {
         n: '01',
-        titulo: 'Pista de caminhada de 3,2 km',
+        titulo: 'Mirante no alto do morro',
         texto:
-          'Piso drenante, iluminação em LED e marcos de quilômetro ao longo de todo o perímetro.',
+          'A 819 metros de altitude, num dos pontos mais altos de Goiânia, com vista aberta para a cidade.',
       },
       {
         n: '02',
-        titulo: 'Novo pólo esportivo',
-        texto: 'Quadras de areia, skate park e academia ao ar livre na entrada da Rua T-27.',
+        titulo: 'Trilhas e pista de caminhada',
+        texto:
+          'Percursos pelo morro com iluminação e acessibilidade, ligando os acessos do parque ao mirante.',
       },
       {
         n: '03',
-        titulo: 'Recuperação da nascente',
-        texto: 'Replantio de espécies do cerrado e contenção de encostas na área de preservação.',
+        titulo: '5 mil mudas nativas do Cerrado',
+        texto:
+          'Replantio para recompor a vegetação do morro, com manutenção e monitoramento contratados até 2030.',
       },
       {
         n: '04',
-        titulo: 'Praça de alimentação e banheiros',
-        texto: 'Seis quiosques, fraldário e posto de apoio com atendimento nos fins de semana.',
+        titulo: 'Iluminação e áreas de alimentação',
+        texto:
+          'Infraestrutura urbana, segurança e espaços de convivência distribuídos pelo parque.',
       },
     ],
     impacto: {
       titulo: 'O que a obra muda para quem mora ao redor',
       paragrafos: [
-        'Parques requalificados costumam puxar o valor do metro quadrado do entorno nos dois anos seguintes à entrega. No Setor Serrinha, os lançamentos já saem com a obra anunciada — quem compra agora entra antes dessa curva.',
-        'Também muda o dia a dia: nova iluminação no perímetro, acesso pela Rua T-27 e transporte reforçado nos fins de semana.',
+        'O Morro da Serrinha é hoje uma área verde fechada no meio de um setor que verticalizou. A requalificação abre 108 mil m² para uso público, com mirante, trilhas e iluminação — o tipo de equipamento que muda a rotina de quem mora a uma caminhada dali.',
+        'A obra é do Governo de Goiás, com ordem de serviço assinada pelo governador Daniel Vilela em 2 de julho de 2026 e prazo contratual de 12 meses. O parque leva o nome de Jaime Câmara, fundador de um dos maiores grupos de comunicação do estado e ex-prefeito de Goiânia.',
+        'Sobre valorização, o site não publica projeção: quem vende número de valorização futura está chutando. O que dá para afirmar é o que está contratado — obra assinada, valor, prazo e escopo.',
       ],
       linhas: [
-        { rotulo: 'Distância a pé mais curta', valor: '450 m' },
-        { rotulo: 'Valorização média projetada', valor: '12% a.a.' },
-        { rotulo: 'Início das obras', valor: 'Março / 2026' },
-        { rotulo: 'Responsável', valor: 'Prefeitura de Goiânia' },
+        { rotulo: 'Investimento contratado', valor: 'R$ 14.486.782,30' },
+        { rotulo: 'Ordem de serviço', valor: '2 de julho de 2026' },
+        { rotulo: 'Prazo de obra', valor: '12 meses' },
+        { rotulo: 'Responsável', valor: 'Governo de Goiás' },
       ],
     },
     eyebrowProximos: 'A CAMINHADA DO PARQUE',
