@@ -55,7 +55,13 @@ export function lerFiltros(params: ParamsBrutos): Filtros {
 /** Um filtro além de `vista` já torna a página uma variação — não indexável. */
 export function temFiltroAtivo(f: Filtros): boolean {
   return Boolean(
-    f.busca || f.categoria || f.regiao || f.quartos || f.ate || f.ordem !== 'recentes' || f.pagina > 1,
+    f.busca ||
+    f.categoria ||
+    f.regiao ||
+    f.quartos ||
+    f.ate ||
+    f.ordem !== 'recentes' ||
+    f.pagina > 1,
   );
 }
 
@@ -116,7 +122,8 @@ export function aplicarFiltros(f: Filtros): Empreendimento[] {
       ordenada.sort((a, b) => (b.precoAPartirDe ?? -Infinity) - (a.precoAPartirDe ?? -Infinity));
       break;
     case 'maior-metragem':
-      ordenada.sort((a, b) => b.metragemMax - a.metragemMax);
+      /* Sem metragem cadastrada, vai para o fim — não encabeça a lista. */
+      ordenada.sort((a, b) => (b.metragemMax ?? -Infinity) - (a.metragemMax ?? -Infinity));
       break;
     default:
       break;

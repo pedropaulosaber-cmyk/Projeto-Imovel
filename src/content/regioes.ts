@@ -3,8 +3,20 @@ import type { CategoriaEmpreendimento, Regiao } from './tipos';
 export const regioes: Regiao[] = [
   { slug: 'setor-serrinha', nome: 'Setor Serrinha', cidade: 'Goiânia', estado: 'GO' },
   { slug: 'setor-pedro-ludovico', nome: 'Setor Pedro Ludovico', cidade: 'Goiânia', estado: 'GO' },
-  { slug: 'jardim-atlantico', nome: 'Jardim Atlântico', cidade: 'Goiânia', estado: 'GO' },
+  { slug: 'parque-amazonia', nome: 'Parque Amazônia', cidade: 'Goiânia', estado: 'GO' },
 ];
+
+/**
+ * "Serrinha, Pedro Ludovico e Parque Amazônia" a partir do catálogo.
+ *
+ * A copy da home e os metadados citavam as regiões à mão e ficaram mentindo
+ * quando o catálogo mudou. Derivar custa uma função e resolve para sempre.
+ */
+export function regioesEmTexto(curto = false): string {
+  const nomes = regioes.map((r) => (curto ? r.nome.replace(/^Setor /, '') : r.nome));
+  if (nomes.length <= 1) return nomes[0] ?? '';
+  return `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`;
+}
 
 export function regiaoPorSlug(slug: string): Regiao | undefined {
   return regioes.find((r) => r.slug === slug);

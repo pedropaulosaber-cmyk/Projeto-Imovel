@@ -81,8 +81,14 @@ export interface Empreendimento {
   /** `null` quando o material da incorporadora não informa. */
   banheiros: string | null;
   metragem: string;
-  metragemMin: number;
-  metragemMax: number;
+  /**
+   * `null` quando o book não publica área privativa — acontece em material de
+   * lançamento que ainda vai receber o quadro de áreas. O card mostra
+   * "Sob consulta" e o imóvel sai da ordenação por metragem, em vez de entrar
+   * com um número chutado.
+   */
+  metragemMin: number | null;
+  metragemMax: number | null;
   entrega: string;
   previsaoEntrega: string | null;
 
