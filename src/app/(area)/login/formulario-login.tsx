@@ -89,10 +89,7 @@ export function FormularioLogin() {
               <input type="checkbox" name="lembrar" className="h-[15px] w-[15px] accent-ouro" />
               Manter conectado
             </label>
-            <Link
-              href={rotas.home}
-              className="border-b border-creme/30 text-[13px] text-creme/70"
-            >
+            <Link href={rotas.home} className="border-b border-creme/30 text-[13px] text-creme/70">
               Esqueci <span className="hidden md:inline">minha </span>a senha
             </Link>
           </div>

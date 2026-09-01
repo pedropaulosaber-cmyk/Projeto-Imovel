@@ -35,18 +35,14 @@ const schema = z.object({
 const parsed = schema.safeParse(process.env);
 
 if (!parsed.success) {
-  throw new Error(
-    `Variáveis de ambiente inválidas:\n${z.prettifyError(parsed.error)}`,
-  );
+  throw new Error(`Variáveis de ambiente inválidas:\n${z.prettifyError(parsed.error)}`);
 }
 
 export const env = parsed.data;
 
 export const crmConfigurado = Boolean(env.CRM_WEBHOOK_URL && env.LEAD_WEBHOOK_SECRET);
 export const capiConfigurada = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN);
-export const supabaseConfigurado = Boolean(
-  env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY,
-);
+export const supabaseConfigurado = Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY);
 
 /**
  * Qual papel a chave do Supabase declara — sem verificar assinatura, porque o
@@ -63,7 +59,8 @@ export function papelDaChaveSupabase(): string {
   const chave = env.SUPABASE_SERVICE_ROLE_KEY;
   if (!chave) return 'ausente';
   if (chave.startsWith('sb_secret_')) return 'secret';
-  if (chave.startsWith('sb_publishable_')) return 'publishable — é a chave PÚBLICA, precisa ser a secreta';
+  if (chave.startsWith('sb_publishable_'))
+    return 'publishable — é a chave PÚBLICA, precisa ser a secreta';
 
   const payload = chave.split('.')[1];
   if (!payload) return 'formato irreconhecível';

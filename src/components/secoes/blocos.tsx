@@ -79,7 +79,11 @@ export function BannerParque({ parque }: { parque: Parque }) {
 }
 
 /** Bloco numerado "01 / 02 / 03 / 04" — usado no processo e nas obras dos parques. */
-export function ListaNumerada({ itens }: { itens: { n: string; titulo: string; texto: string }[] }) {
+export function ListaNumerada({
+  itens,
+}: {
+  itens: { n: string; titulo: string; texto: string }[];
+}) {
   return (
     <>
       {/* Mobile: lista com filete entre as linhas. */}

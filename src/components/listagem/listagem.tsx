@@ -31,14 +31,7 @@ interface Props {
   interativo?: boolean;
 }
 
-export function Listagem({
-  filtros,
-  basePath,
-  titulo,
-  migalhas,
-  fixos,
-  interativo = true,
-}: Props) {
+export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativo = true }: Props) {
   const efetivos: Filtros = { ...filtros, ...fixos };
   const todos = aplicarFiltros(efetivos);
   const visiveis = interativo ? todos.slice(0, filtros.pagina * POR_PAGINA) : todos;
@@ -78,8 +71,8 @@ export function Listagem({
               {titulo}
             </h1>
             <p className="text-sm text-creme/65 md:text-base md:text-creme/68">
-              {visiveis.length} de {todos.length}{' '}
-              {todos.length === 1 ? 'resultado' : 'resultados'} · atualizado hoje
+              {visiveis.length} de {todos.length} {todos.length === 1 ? 'resultado' : 'resultados'}{' '}
+              · atualizado hoje
             </p>
           </div>
 
@@ -152,8 +145,8 @@ function EstadoVazio({ basePath }: { basePath: string }) {
         Nenhum imóvel com esses filtros
       </h2>
       <p className="mx-auto mb-[22px] max-w-[46ch] text-sm leading-[1.6] text-creme/68 md:mb-7 md:text-base">
-        Parte do nosso estoque não é publicada. Diga o que procura e o corretor responde com
-        opções reais de unidades.
+        Parte do nosso estoque não é publicada. Diga o que procura e o corretor responde com opções
+        reais de unidades.
       </p>
       <div className="grid gap-[10px] md:flex md:justify-center">
         <Link

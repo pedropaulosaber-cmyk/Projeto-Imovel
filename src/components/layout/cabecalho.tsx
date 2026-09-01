@@ -50,9 +50,7 @@ export function BarraDesktop({ ativo }: { ativo?: ChaveNav }) {
               href={l.href}
               aria-current={ativo === l.chave ? 'page' : undefined}
               className={
-                ativo === l.chave
-                  ? 'font-medium text-ouro'
-                  : 'transition-opacity hover:opacity-75'
+                ativo === l.chave ? 'font-medium text-ouro' : 'transition-opacity hover:opacity-75'
               }
             >
               {l.rotulo}

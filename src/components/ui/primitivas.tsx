@@ -12,17 +12,10 @@ export function Eyebrow({
   tom?: 'ouro' | 'claro' | 'escuro';
   className?: string;
 }) {
-  const cor =
-    tom === 'ouro'
-      ? 'text-ouro'
-      : tom === 'escuro'
-        ? 'text-areia'
-        : 'text-creme/50';
+  const cor = tom === 'ouro' ? 'text-ouro' : tom === 'escuro' ? 'text-areia' : 'text-creme/50';
 
   return (
-    <p
-      className={`font-mono text-[10px] tracking-[0.16em] sm:text-[11px] ${cor} ${className}`}
-    >
+    <p className={`font-mono text-[10px] tracking-[0.16em] sm:text-[11px] ${cor} ${className}`}>
       {children}
     </p>
   );
