@@ -38,11 +38,7 @@ export interface CorpoWebhook {
   consentimento_lgpd_at: string;
 }
 
-export function montarCorpo(
-  lead: Lead,
-  leadUuid: string,
-  consentimentoEm: string,
-): CorpoWebhook {
+export function montarCorpo(lead: Lead, leadUuid: string, consentimentoEm: string): CorpoWebhook {
   const empreendimento = lead.empreendimentoSlug
     ? empreendimentoPorSlug(lead.empreendimentoSlug)
     : undefined;

@@ -19,6 +19,15 @@ export const site = {
   creci: 'CRECI-GO 47958',
   responsavelTecnico: 'Pedro Paulo Saber',
 
+  /*
+    TODO(marca): a home e a página do escritório ainda repetem conteúdo do
+    design — os números ("dezoito anos", "+500 famílias atendidas", "R$ 1,2 bi
+    em VGV", "11 min de resposta média") e os três depoimentos em
+    `src/content/escritorio.ts`, que citam empreendimentos que não existem.
+    São afirmações de fato sob um CRECI real e depoimento inventado é
+    publicidade enganosa (CDC, art. 37). Conferir, trocar ou remover antes de
+    virar `conteudoDemonstracao` para false.
+  */
   contato: {
     // TODO(marca): trocar pelos dados reais antes de publicar.
     whatsapp: '+55 62 99999-0000',
@@ -31,9 +40,12 @@ export const site = {
   },
 
   /**
-   * Enquanto os empreendimentos forem os de demonstração vindos do design,
-   * o rodapé diz isso em voz alta. Vire `false` quando carregar imóveis reais
-   * com registro de incorporação conferido.
+   * Trava de publicação. Enquanto for `true`, o site inteiro fica `noindex` e
+   * o rodapé avisa que a operação ainda está sendo configurada.
+   *
+   * Os imóveis já são reais e com registro conferido — o que ainda impede
+   * indexar é a marca e os contatos acima, que continuam sendo os do design.
+   * Anúncio no Google com telefone que não atende é pior que anúncio nenhum.
    */
   conteudoDemonstracao: true,
 } as const;

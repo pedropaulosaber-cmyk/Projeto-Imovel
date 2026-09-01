@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next';
 
 import { urlBase } from '@/config/site';
-import { empreendimentosPublicados } from '@/content/empreendimentos';
+import { empreendimentosPublicados, listagensComImovel } from '@/content/empreendimentos';
 import { parques } from '@/content/parques';
-import { categorias, regioes } from '@/content/regioes';
+import { slugDaCategoria } from '@/content/regioes';
 import { rotas } from '@/lib/rotas';
 
 /**
@@ -19,9 +19,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const fixas: MetadataRoute.Sitemap = [
     { url: `${base}${rotas.home}`, lastModified: agora, changeFrequency: 'weekly', priority: 1 },
-    { url: `${base}${rotas.imoveis}`, lastModified: agora, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${base}${rotas.escritorio}`, lastModified: agora, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${base}${rotas.privacidade}`, lastModified: agora, changeFrequency: 'yearly', priority: 0.2 },
+    {
+      url: `${base}${rotas.imoveis}`,
+      lastModified: agora,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${base}${rotas.escritorio}`,
+      lastModified: agora,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${base}${rotas.privacidade}`,
+      lastModified: agora,
+      changeFrequency: 'yearly',
+      priority: 0.2,
+    },
   ];
 
   const paginasDeParque: MetadataRoute.Sitemap = parques.map((p) => ({
@@ -31,14 +46,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const listagens: MetadataRoute.Sitemap = regioes.flatMap((r) =>
-    categorias.map((c) => ({
-      url: `${base}${rotas.listagem(r.slug, c.slug)}`,
-      lastModified: agora,
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    })),
-  );
+  /* Só listagem com estoque: combinação sem imóvel não existe como página. */
+  const listagens: MetadataRoute.Sitemap = listagensComImovel().map((l) => ({
+    url: `${base}${rotas.listagem(l.regiao, slugDaCategoria(l.categoria))}`,
+    lastModified: agora,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
 
   const imoveis: MetadataRoute.Sitemap = empreendimentosPublicados().map((e) => ({
     url: `${base}${rotas.empreendimento(e)}`,

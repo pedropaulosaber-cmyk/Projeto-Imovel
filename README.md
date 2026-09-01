@@ -1,7 +1,7 @@
 # VÉRTICE — imóveis em Goiânia
 
 Site de captação de leads para empreendimentos imobiliários em Goiânia-GO. Lançamentos, imóveis na
-planta e remanescentes no Setor Serrinha, Setor Pedro Ludovico e Jardim Atlântico.
+planta e remanescentes no Setor Serrinha, Setor Pedro Ludovico e Parque Amazônia.
 
 O contexto completo do projeto — regras de negócio, contrato com o Método CRM, design system e o
 que ainda falta — está em [`CLAUDE.md`](./CLAUDE.md).
@@ -38,13 +38,14 @@ npm run build && npm run start
 
 | Decisão | Por quê |
 | --- | --- |
-| Catálogo é um módulo TypeScript, não um banco | O Supabase ainda não foi provisionado. Todo acesso passa pelas funções em `src/content/empreendimentos.ts`, então trocar a fonte não toca em nenhuma página. |
+| Catálogo é um módulo TypeScript, não um banco | O Supabase guarda o lead; o catálogo ainda mora no código. Todo acesso passa pelas funções em `src/content/empreendimentos.ts`, então trocar a fonte não toca em nenhuma página. |
 | `/[regiao]/[categoria]` não lê `searchParams` | Ler tornaria a página dinâmica, e é ela que precisa ranquear. O filtro interativo mora em `/imoveis`. |
 | CSP com `'unsafe-inline'` em `script-src` | Nonce por requisição mataria o SSG. Ver a justificativa no `next.config.ts`. |
 | Rate limit em memória | Contagem por instância. Barra o caso que importa (um script disparando POSTs) sem exigir Redis. Trocar por Vercel KV quando o volume justificar. |
 | Login não autentica | Depende do Supabase Auth. A tela diz isso em vez de fingir — um login que deixa qualquer um entrar é pior que nenhum. |
+| O book do empreendimento não é link público | O PDF vive num bucket privado do Supabase e só sai por URL assinada de 30 min, emitida depois de um lead válido com consentimento. É a contrapartida pelo dado, e material da incorporadora não circula solto. |
 | Um empreendimento é rascunho de propósito | `residencial-bosque-t9` não tem registro de incorporação. Ele não pode aparecer em nenhuma listagem, página ou sitemap: é a prova viva de que o filtro de publicação funciona. |
-| O site inteiro é `noindex` enquanto `site.conteudoDemonstracao` for `true` | Os imóveis são fictícios e o CRECI no rodapé é real. Deixar o Google indexar anúncio inventado sob uma inscrição verdadeira é problema de conselho regional, não de SEO. |
+| O site inteiro é `noindex` enquanto `site.conteudoDemonstracao` for `true` | Os imóveis já são reais e com registro conferido; a marca e o telefone ainda são os do design. Anúncio no Google com telefone que não atende é pior que anúncio nenhum. |
 
 ## Estrutura
 

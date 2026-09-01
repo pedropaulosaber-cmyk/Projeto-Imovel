@@ -79,7 +79,11 @@ export function BannerParque({ parque }: { parque: Parque }) {
 }
 
 /** Bloco numerado "01 / 02 / 03 / 04" — usado no processo e nas obras dos parques. */
-export function ListaNumerada({ itens }: { itens: { n: string; titulo: string; texto: string }[] }) {
+export function ListaNumerada({
+  itens,
+}: {
+  itens: { n: string; titulo: string; texto: string }[];
+}) {
   return (
     <>
       {/* Mobile: lista com filete entre as linhas. */}
@@ -118,34 +122,5 @@ export function ListaNumerada({ itens }: { itens: { n: string; titulo: string; t
         ))}
       </div>
     </>
-  );
-}
-
-/** Mapa estilizado do design — grade, vias e o alfinete dourado. */
-export function MapaPlaceholder({
-  rotulo,
-  proporcao = 'aspect-[4/3] md:aspect-video',
-}: {
-  rotulo: string;
-  proporcao?: string;
-}) {
-  return (
-    <div
-      role="img"
-      aria-label={`Mapa da localização de ${rotulo}`}
-      className={`relative overflow-hidden rounded-[10px] border border-creme/[0.16] bg-[#171714] bg-[linear-gradient(rgba(246,243,236,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(246,243,236,0.06)_1px,transparent_1px)] bg-[length:44px_44px] md:rounded-lg md:bg-[length:48px_48px] ${proporcao}`}
-    >
-      <div className="absolute inset-x-0 top-[44%] h-[14px] bg-white/[0.07] md:top-[43%] md:h-4" />
-      <div className="absolute inset-y-0 left-[58%] hidden w-[14px] bg-white/[0.07] md:block" />
-      <div className="absolute top-[42%] left-1/2 flex -translate-x-1/2 -translate-y-full flex-col items-center gap-[6px] md:top-[41%]">
-        <span className="rounded-full bg-ouro px-3 py-[7px] text-[11px] font-semibold whitespace-nowrap text-tinta md:px-[14px] md:py-2 md:text-xs">
-          {rotulo}
-        </span>
-        <span className="h-[10px] w-[10px] rounded-full bg-ouro md:h-[11px] md:w-[11px]" />
-      </div>
-      <span className="absolute bottom-[10px] left-3 font-mono text-[9px] text-creme/40 md:bottom-3 md:left-[14px] md:text-[10px]">
-        [ MAPA INTERATIVO — GOOGLE MAPS ]
-      </span>
-    </div>
   );
 }

@@ -8,10 +8,14 @@ import { FormularioLead } from '@/components/lead/formulario-lead';
 import { BannerParque, GradeNumeros } from '@/components/secoes/blocos';
 import { Creci, Eyebrow } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
-import { contagemPorCategoria, oportunidadesDaSemana, totalPublicado } from '@/content/empreendimentos';
+import {
+  contagemPorCategoria,
+  oportunidadesDaSemana,
+  totalPublicado,
+} from '@/content/empreendimentos';
 import { depoimentos } from '@/content/escritorio';
 import { parquePorSlug } from '@/content/parques';
-import { categorias, regioes } from '@/content/regioes';
+import { categorias, regioes, regioesEmTexto } from '@/content/regioes';
 import { rotas } from '@/lib/rotas';
 
 /* Landing page: conteúdo estático, revalidado de hora em hora quando o
@@ -65,13 +69,12 @@ export default function Home() {
 
             <p className="mb-5 text-sm leading-[1.6] font-light text-creme/85 md:mb-7 md:max-w-[46ch] md:text-[clamp(14px,1.1vw,16px)] md:text-pretty">
               <span className="md:hidden">
-                Dezoito anos acompanhando obra por obra em Serrinha, Pedro Ludovico e Jardim
-                Atlântico, com registro e cronograma abertos.
+                Obra por obra em {regioesEmTexto(true)}, com registro e cronograma abertos.
               </span>
               <span className="hidden md:inline">
-                Dezoito anos acompanhando obra por obra em Serrinha, Pedro Ludovico e Jardim
-                Atlântico. Não vendemos catálogo: apresentamos os três ou quatro empreendimentos
-                que servem para você, com registro e cronograma abertos.
+                Obra por obra em {regioesEmTexto(true)}. Não vendemos catálogo: apresentamos os
+                empreendimentos que servem para você, com registro de incorporação e cronograma
+                abertos.
               </span>
             </p>
 
@@ -164,7 +167,8 @@ export default function Home() {
                 {c.titulo}
               </span>
               <span className="font-mono text-[11px] text-areia md:order-3 md:flex-none md:text-xs">
-                {contagemPorCategoria(c.valor)} {contagemPorCategoria(c.valor) === 1 ? 'IMÓVEL' : 'IMÓVEIS'}
+                {contagemPorCategoria(c.valor)}{' '}
+                {contagemPorCategoria(c.valor) === 1 ? 'IMÓVEL' : 'IMÓVEIS'}
               </span>
             </div>
             <span className="block text-sm leading-[1.55] text-grafite md:order-2 md:max-w-[42ch] md:flex-[1_1_260px] md:text-[15px] md:leading-[1.6]">

@@ -36,6 +36,12 @@ ecossistema, reaproveitando marca, pipeline de Meta CAPI e infraestrutura de CRM
 - Quando a parceria fecha e `corretor_responsavel_id` é definido, leads novos daquele
   empreendimento roteiam direto para o corretor no CRM.
   → `montarCorpo()` em `src/lib/lead/crm.ts` envia `corretor_responsavel_id: null` quando não há.
+- **O book de vendas é contrapartida, não conteúdo público.** O PDF fica num bucket privado do
+  Supabase e só sai por URL assinada de 30 minutos, emitida no servidor depois de um lead válido
+  com consentimento. Link solto de book circula em grupo de WhatsApp por meses e esvazia a
+  captação — além de distribuir material da incorporadora fora do controle do corretor.
+  → `src/lib/lead/book.ts`, chamado no caminho da resposta de `/api/leads` (não em `after()`,
+  que roda depois que o navegador já foi embora).
 - LGPD: todo lead exige consentimento explícito registrado (timestamp + IP), com política de
   privacidade acessível no formulário.
   → `z.literal(true)` no schema, timestamp carimbado no servidor (nunca no cliente), IP capturado
@@ -47,7 +53,8 @@ ecossistema, reaproveitando marca, pipeline de Meta CAPI e infraestrutura de CRM
   pré-renderizado). Revalidação de 1 h.
 - **Tailwind v4**, tokens em `src/app/globals.css` — uma fonte de verdade para a marca.
 - **Supabase** (projeto próprio, separado do Método CRM) — Postgres + RLS + Edge Functions.
-  Migração pronta em `supabase/migrations/0001_init.sql`; **ainda não provisionado**.
+  Provisionado; `supabase/migrations/0001_init.sql` aplicado. O bucket privado `books` guarda os
+  PDFs de venda, servidos só por URL assinada.
 - **Vercel** para deploy, Edge Middleware para rate limiting.
 - `next/image` para otimização de mídia (Core Web Vitals).
 - Tracking: Meta Pixel (client) + Meta CAPI (server-side), com `event_id` compartilhado para
@@ -152,10 +159,11 @@ por cor.
 - Schema.org: `RealEstateListing` + `Residence` em cada imóvel; `RealEstateAgent` na home.
 - SSG/ISR obrigatório nas páginas indexáveis. Variação de filtro é `noindex, follow`.
 - `sitemap.ts` só lista o que é indexável e publicado; rascunho nunca vaza.
-- **`site.conteudoDemonstracao` desliga a indexação do site inteiro.** Enquanto os imóveis forem
-  os de demonstração, `robots.ts` bloqueia tudo e o metadata vai `noindex` — o CRECI no rodapé é
-  real, e anúncio fictício indexado sob inscrição verdadeira é problema de conselho regional.
-  Virar para `false` junto com o catálogo real libera o SEO de uma vez.
+- **`site.conteudoDemonstracao` desliga a indexação do site inteiro.** Enquanto ligada,
+  `robots.ts` bloqueia tudo e o metadata vai `noindex`. Os imóveis já são reais e com registro
+  conferido; o que ainda segura é a marca e o telefone, que continuam sendo os do design —
+  anúncio no Google com número que não atende queima o anúncio e o CRECI que assina embaixo.
+  Trocar marca e contatos e virar para `false` libera o SEO de uma vez.
 - Conteúdo único por página — nunca copiar descrição literal da incorporadora (duplicidade +
   direitos autorais).
 
@@ -176,16 +184,19 @@ tratar dado sensível no navegador.
 
 ## 10. Estado atual e próximos passos
 
-1. **Provisionar o Supabase** e aplicar `supabase/migrations/0001_init.sql`.
-2. **Trocar o catálogo de demonstração** por empreendimentos reais, com registro de incorporação
-   conferido, e virar `site.conteudoDemonstracao` para `false` — é esse mesmo interruptor que
-   libera a indexação no Google.
+1. **Subir os PDFs** para o bucket privado `books` no Supabase Storage, com o nome que está em
+   `empreendimento.book.arquivo` (`opus-ybate.pdf`, `opus-nido.pdf`, `opus-tellure.pdf`). Sem o
+   arquivo lá, o formulário grava o lead normalmente e só não devolve o download.
+2. **Espelhar o catálogo no Postgres** — hoje o site lê de `src/content/empreendimentos.ts` e o
+   banco só guarda lead. Enquanto as duas fontes não forem uma só, o `empreendimento_id` do lead
+   fica nulo.
 3. **Trocar marca e contatos** em `src/config/site.ts` (hoje: nome VÉRTICE e telefone/endereço do
-   design; o CRECI já é o real).
-4. **Ligar o Método CRM** (`CRM_WEBHOOK_URL` + `LEAD_WEBHOOK_SECRET`) e o Meta (Pixel + CAPI).
-5. **Implementar a autenticação** do corretor.
-6. Fotos reais dos empreendimentos — hoje o placeholder hachurado do design entra sozinho quando
-   `midia.url` é `null`.
+   design; o CRECI já é o real) e virar `site.conteudoDemonstracao` para `false` — é esse mesmo
+   interruptor que libera a indexação no Google.
+4. **Cadastrar o resto dos books** já recebidos (são 22 no total; 3 estão publicados). Os que não
+   trazem número de registro de incorporação ficam em `rascunho` até o número aparecer.
+5. **Ligar o Método CRM** (`CRM_WEBHOOK_URL` + `LEAD_WEBHOOK_SECRET`) e o Meta (Pixel + CAPI).
+6. **Implementar a autenticação** do corretor.
 
 ## 11. Fora de escopo desta fase (não implementar ainda)
 

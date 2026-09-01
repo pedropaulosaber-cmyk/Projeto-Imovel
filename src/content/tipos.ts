@@ -19,7 +19,14 @@ export interface Midia {
   tipo: 'foto' | 'planta' | 'video';
   /** `null` enquanto a foto real não chega: o card cai no placeholder hachurado do design. */
   url: string | null;
+  /** Rótulo curto da tira de miniaturas. */
   legenda: string;
+  /**
+   * Texto alternativo descrevendo a cena. Vale mais que o nome do
+   * empreendimento repetido: é o que o leitor de tela lê e o que o Google usa
+   * para entender a foto.
+   */
+  alt?: string;
 }
 
 export interface Planta {
@@ -62,6 +69,16 @@ export interface Empreendimento {
    * verificada em `empreendimentos.ts` na carga do módulo.
    */
   numeroRegistroIncorporacao: string | null;
+  /**
+   * Obrigatório quando o imóvel é publicado sem `numeroRegistroIncorporacao`.
+   *
+   * Diz, na página e no card, por que o número não está lá: o material não
+   * traz, o registro é provisório, o empreendimento está em aprovação. É o que
+   * separa "ainda não localizamos o número" de "não existe registro" — e a
+   * invariante do catálogo recusa publicar sem registro e sem este aviso, para
+   * que a omissão nunca seja silenciosa.
+   */
+  avisoRegistro: string | null;
   statusPublicacao: StatusPublicacao;
 
   /**
@@ -71,10 +88,17 @@ export interface Empreendimento {
    */
   precoAPartirDe: number | null;
   quartos: string;
-  banheiros: string;
+  /** `null` quando o material da incorporadora não informa. */
+  banheiros: string | null;
   metragem: string;
-  metragemMin: number;
-  metragemMax: number;
+  /**
+   * `null` quando o book não publica área privativa — acontece em material de
+   * lançamento que ainda vai receber o quadro de áreas. O card mostra
+   * "Sob consulta" e o imóvel sai da ordenação por metragem, em vez de entrar
+   * com um número chutado.
+   */
+  metragemMin: number | null;
+  metragemMax: number | null;
   entrega: string;
   previsaoEntrega: string | null;
 

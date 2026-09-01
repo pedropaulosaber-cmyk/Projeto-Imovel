@@ -9,8 +9,8 @@ export default function Erro({ reset }: { error: Error; reset: () => void }) {
           Não conseguimos carregar esta página.
         </h1>
         <p className="mb-8 text-[15px] leading-[1.7] text-creme/70">
-          Tente de novo. Se continuar, fale com a gente pelo WhatsApp — o atendimento não depende
-          do site.
+          Tente de novo. Se continuar, fale com a gente pelo WhatsApp — o atendimento não depende do
+          site.
         </p>
         <button
           type="button"

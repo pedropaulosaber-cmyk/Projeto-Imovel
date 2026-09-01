@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { CardSimilar } from '@/components/empreendimentos/cards';
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { FormularioLead } from '@/components/lead/formulario-lead';
-import { MapaPlaceholder } from '@/components/secoes/blocos';
+import { Mapa } from '@/components/mapa/mapa';
 import { Foto } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
 import {
@@ -80,7 +80,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       <section className="relative flex h-[54svh] items-end md:h-[clamp(340px,72svh,780px)]">
         <Foto
           url={capa?.url ?? null}
-          alt={`${e.nome}, ${nomeDaRegiao(e.regiaoSlug)}`}
+          alt={capa?.alt ?? `${e.nome}, ${nomeDaRegiao(e.regiaoSlug)}`}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="100vw"
           prioridade
@@ -138,7 +138,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
             key={m.legenda}
             className="relative h-[72px] w-[110px] shrink-0 overflow-hidden rounded-md md:h-[84px] md:w-[132px] md:rounded"
           >
-            <Foto url={m.url} alt={m.legenda} legenda={m.legenda} sizes="132px" />
+            <Foto url={m.url} alt={m.alt ?? m.legenda} legenda={m.legenda} sizes="132px" />
           </div>
         ))}
       </div>
@@ -253,7 +253,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
               <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
                 Localização
               </h2>
-              <MapaPlaceholder rotulo={e.nome} />
+              <Mapa rotulo={e.nome} endereco={e.localizacao.endereco} />
               <p className="mt-4 max-w-[62ch] text-sm leading-[1.7] text-creme/72 text-pretty md:mt-5 md:text-base md:leading-[1.72]">
                 {e.localizacao.endereco}. {e.localizacao.referencias}
               </p>
@@ -263,8 +263,25 @@ export default async function PaginaEmpreendimento({ params }: Params) {
                 registro de incorporação e CRECI do responsável, na peça em que
                 o imóvel é divulgado.
               */}
+              {/*
+                Sem número, o aviso ocupa o lugar dele — e num bloco visível,
+                não na linha de rodapé em cinza. Quem vai comprar precisa ler.
+              */}
+              {e.avisoRegistro ? (
+                <p className="mt-4 rounded-lg border border-ouro/45 bg-ouro/[0.07] px-4 py-3 text-[13px] leading-[1.65] text-creme/85 md:mt-5 md:text-sm">
+                  <strong className="font-semibold text-ouro">
+                    Registro de incorporação não localizado.
+                  </strong>{' '}
+                  {e.avisoRegistro} Pela Lei 4.591/64, art. 32, nenhuma unidade pode ser
+                  comercializada antes do registro — o número é conferido antes de qualquer
+                  proposta.
+                </p>
+              ) : null}
+
               <p className="mt-4 font-mono text-[10px] leading-[1.7] text-creme/50 md:mt-[18px] md:text-[11px]">
-                REGISTRO DE INCORPORAÇÃO {e.numeroRegistroIncorporacao?.toUpperCase()}
+                {e.numeroRegistroIncorporacao
+                  ? `REGISTRO DE INCORPORAÇÃO ${e.numeroRegistroIncorporacao.toUpperCase()}`
+                  : 'REGISTRO DE INCORPORAÇÃO EM APURAÇÃO'}
                 {e.corretorResponsavel
                   ? ` · CORRETOR DE IMÓVEIS RESPONSÁVEL: ${e.corretorResponsavel.nome.toUpperCase()}, ${e.corretorResponsavel.creci}`
                   : ` · CORRETOR DE IMÓVEIS: ${site.creci}`}

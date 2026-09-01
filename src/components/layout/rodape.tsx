@@ -36,7 +36,7 @@ export function Rodape() {
       <p className="pt-5 font-mono text-[10px] leading-[1.7] text-creme/45 sm:text-[11px] md:shadow-[0_-1px_0_rgba(246,243,236,0.14)]">
         Corretor de imóveis · {site.creci}
         {site.conteudoDemonstracao
-          ? ' · IMÓVEIS E DADOS DE DEMONSTRAÇÃO ENQUANTO O CATÁLOGO REAL NÃO É CARREGADO'
+          ? ' · SITE EM CONFIGURAÇÃO — MARCA E CONTATOS PROVISÓRIOS'
           : ''}{' '}
         · © {ano}
       </p>

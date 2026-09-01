@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { Listagem } from '@/components/listagem/listagem';
-import { categorias, categoriaPorSlug, regiaoPorSlug, regioes } from '@/content/regioes';
+import { listagensComImovel } from '@/content/empreendimentos';
+import { categoriaPorSlug, regiaoPorSlug, slugDaCategoria } from '@/content/regioes';
 import { lerFiltros } from '@/lib/filtros';
 import { rotas } from '@/lib/rotas';
 
@@ -22,7 +23,10 @@ export const dynamicParams = false;
 type Params = { params: Promise<{ regiao: string; categoria: string }> };
 
 export function generateStaticParams() {
-  return regioes.flatMap((r) => categorias.map((c) => ({ regiao: r.slug, categoria: c.slug })));
+  return listagensComImovel().map((l) => ({
+    regiao: l.regiao,
+    categoria: slugDaCategoria(l.categoria),
+  }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

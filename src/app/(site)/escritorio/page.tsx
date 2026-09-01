@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Cabecalho } from '@/components/layout/cabecalho';
-import { GradeNumeros, ListaNumerada, MapaPlaceholder } from '@/components/secoes/blocos';
+import { Mapa } from '@/components/mapa/mapa';
+import { GradeNumeros, ListaNumerada } from '@/components/secoes/blocos';
 import { Eyebrow } from '@/components/ui/primitivas';
 import { site } from '@/config/site';
 import { comoTrabalhamos, equipe, processo } from '@/content/escritorio';
@@ -155,7 +156,11 @@ export default function PaginaEscritorio() {
         </div>
 
         <div className="mt-6 hidden md:mt-0 md:block md:min-h-[300px] md:flex-[1_1_300px]">
-          <MapaPlaceholder rotulo={`Escritório ${site.nome}`} proporcao="h-full min-h-[300px]" />
+          <Mapa
+            rotulo={`Escritório ${site.nome}`}
+            endereco={site.contato.endereco}
+            proporcao="h-full min-h-[300px]"
+          />
         </div>
       </section>
     </>

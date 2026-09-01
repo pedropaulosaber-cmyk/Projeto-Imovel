@@ -118,10 +118,7 @@ export function BarraFiltros({ filtros, basePath }: { filtros: Filtros; basePath
 
       <ControleDeVista filtros={filtros} basePath={basePath} />
 
-      <Link
-        href={basePath}
-        className="hidden text-[13px] text-creme/60 underline md:block"
-      >
+      <Link href={basePath} className="hidden text-[13px] text-creme/60 underline md:block">
         Limpar
       </Link>
 

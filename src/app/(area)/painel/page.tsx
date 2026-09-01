@@ -61,8 +61,8 @@ export default function PaginaPainel() {
         </div>
 
         <p className="mb-5 rounded-lg border border-ouro/40 bg-ouro/10 p-3 text-xs leading-[1.6] text-creme/85 md:mb-6 md:text-[13px]">
-          Prévia do painel: os números abaixo são de exemplo. Os leads reais aparecem aqui quando
-          a integração com o Método CRM e a autenticação forem ligadas.
+          Prévia do painel: os números abaixo são de exemplo. Os leads reais aparecem aqui quando a
+          integração com o Método CRM e a autenticação forem ligadas.
         </p>
       </div>
 

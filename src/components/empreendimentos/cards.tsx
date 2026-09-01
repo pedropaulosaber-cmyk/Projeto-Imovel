@@ -37,7 +37,7 @@ export function CardOportunidade({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[16/11]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
         />
@@ -79,7 +79,7 @@ export function CardListagem({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[16/11]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
@@ -120,9 +120,16 @@ export function CardListagem({ e }: { e: Empreendimento }) {
 
         <div className="flex flex-wrap gap-[14px] rounded-[10px] border border-creme/[0.14] px-[14px] py-3 text-xs text-creme/75 md:gap-[18px] md:px-4 md:py-[13px] md:text-[13px]">
           <span>{e.quartos}</span>
-          <span>{e.banheiros}</span>
+          {e.banheiros ? <span>{e.banheiros}</span> : null}
           <span>{e.metragem}</span>
         </div>
+
+        {/* O aviso viaja com o card: quem vê a lista já sabe antes de clicar. */}
+        {e.avisoRegistro ? (
+          <p className="font-mono text-[10px] leading-[1.6] tracking-[0.06em] text-ouro/85 md:text-[11px]">
+            REGISTRO DE INCORPORAÇÃO EM APURAÇÃO
+          </p>
+        ) : null}
 
         <div className="mt-4 flex items-center justify-between gap-3 md:mt-[18px]">
           <span className="text-sm font-semibold">Ver detalhes</span>
@@ -150,7 +157,7 @@ export function CardSimilar({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[4/3]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda="[ foto ]"
           sizes="(max-width: 768px) 230px, 25vw"
         />
@@ -183,7 +190,7 @@ export function CardVizinhoDoParque({ e }: { e: Empreendimento }) {
       <div className="relative aspect-[16/11] md:aspect-[4/3]">
         <Foto
           url={capa?.url ?? null}
-          alt={capaAlt(e)}
+          alt={capa?.alt ?? capaAlt(e)}
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, 33vw"
         />
