@@ -57,12 +57,23 @@ create table empreendimentos (
   quartos_max int,
   previsao_entrega date,
   descricao text,
+  /* Obrigatório quando o imóvel é publicado sem número de registro. */
+  aviso_registro text,
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
 
+  /*
+    Lei 4.591/64, art. 32. O corretor pode publicar antes de obter o número —
+    o que o banco recusa é publicar sem número E sem aviso, ou seja, sem dizer
+    na página que o registro ainda não foi localizado.
+  */
   constraint registro_obrigatorio_se_publicado
-    check (status_publicacao <> 'publicado' or numero_registro_incorporacao is not null)
+    check (
+      status_publicacao <> 'publicado'
+      or numero_registro_incorporacao is not null
+      or aviso_registro is not null
+    )
 );
 
 create index empreendimentos_listagem_idx

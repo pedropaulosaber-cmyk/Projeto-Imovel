@@ -124,6 +124,13 @@ export function CardListagem({ e }: { e: Empreendimento }) {
           <span>{e.metragem}</span>
         </div>
 
+        {/* O aviso viaja com o card: quem vê a lista já sabe antes de clicar. */}
+        {e.avisoRegistro ? (
+          <p className="font-mono text-[10px] leading-[1.6] tracking-[0.06em] text-ouro/85 md:text-[11px]">
+            REGISTRO DE INCORPORAÇÃO EM APURAÇÃO
+          </p>
+        ) : null}
+
         <div className="mt-4 flex items-center justify-between gap-3 md:mt-[18px]">
           <span className="text-sm font-semibold">Ver detalhes</span>
           <span className="md:hidden">

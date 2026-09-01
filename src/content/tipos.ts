@@ -69,6 +69,16 @@ export interface Empreendimento {
    * verificada em `empreendimentos.ts` na carga do módulo.
    */
   numeroRegistroIncorporacao: string | null;
+  /**
+   * Obrigatório quando o imóvel é publicado sem `numeroRegistroIncorporacao`.
+   *
+   * Diz, na página e no card, por que o número não está lá: o material não
+   * traz, o registro é provisório, o empreendimento está em aprovação. É o que
+   * separa "ainda não localizamos o número" de "não existe registro" — e a
+   * invariante do catálogo recusa publicar sem registro e sem este aviso, para
+   * que a omissão nunca seja silenciosa.
+   */
+  avisoRegistro: string | null;
   statusPublicacao: StatusPublicacao;
 
   /**
