@@ -21,9 +21,12 @@ export async function gravarLead(params: {
   leadUuid: string;
   consentimentoEm: string;
   ipConsentimento: string | null;
-  empreendimentoId: string | null;
 }): Promise<boolean> {
   if (!supabaseConfigurado) return false;
+
+  const empreendimentoId = params.lead.empreendimentoSlug
+    ? await idDoEmpreendimento(params.lead.empreendimentoSlug)
+    : null;
 
   try {
     const resposta = await fetch(`${env.SUPABASE_URL}/rest/v1/leads`, {
@@ -38,7 +41,7 @@ export async function gravarLead(params: {
         nome: params.lead.nome,
         telefone: params.lead.telefone,
         email: params.lead.email ?? null,
-        empreendimento_id: params.empreendimentoId,
+        empreendimento_id: empreendimentoId,
         origem: params.lead.origem,
         utm_source: params.lead.utmSource ?? null,
         utm_campaign: params.lead.utmCampaign ?? null,
@@ -100,5 +103,37 @@ export async function marcarSync(
     );
   } catch {
     /* Já foi auditado no envio; não vale derrubar nada por causa do PATCH. */
+  }
+}
+
+/**
+ * Resolve o slug do empreendimento no id do banco.
+ *
+ * O formulário manda slug porque é o que a página conhece; a tabela `leads`
+ * referencia `empreendimentos(id)`. Falhar aqui não pode custar o lead: se a
+ * consulta não achar, o lead é gravado sem vínculo e o corretor ainda recebe o
+ * contato — o nome do empreendimento vai junto no payload do CRM de qualquer
+ * jeito.
+ */
+async function idDoEmpreendimento(slug: string): Promise<string | null> {
+  try {
+    const resposta = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/empreendimentos` +
+        `?slug=eq.${encodeURIComponent(slug)}&select=id&limit=1`,
+      {
+        headers: {
+          apikey: env.SUPABASE_SERVICE_ROLE_KEY!,
+          Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY!}`,
+        },
+        signal: AbortSignal.timeout(5_000),
+      },
+    );
+
+    if (!resposta.ok) return null;
+
+    const linhas = (await resposta.json()) as { id: string }[];
+    return linhas[0]?.id ?? null;
+  } catch {
+    return null;
   }
 }

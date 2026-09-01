@@ -74,14 +74,7 @@ export async function POST(req: NextRequest) {
   });
 
   after(async () => {
-    await gravarLead({
-      lead,
-      leadUuid,
-      consentimentoEm,
-      ipConsentimento: ip,
-      /* O id do empreendimento no Supabase entra quando o catálogo migrar. */
-      empreendimentoId: null,
-    });
+    await gravarLead({ lead, leadUuid, consentimentoEm, ipConsentimento: ip });
 
     const [envio] = await Promise.all([
       enviarAoCrm(montarCorpo(lead, leadUuid, consentimentoEm)),
