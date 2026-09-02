@@ -1,3 +1,6 @@
+import { mensagemDoImovel } from '@/lib/whatsapp';
+import { MENSAGENS_WHATSAPP } from './mensagens-whatsapp';
+import { nomeDaRegiao } from './regioes';
 import type { CategoriaEmpreendimento, Empreendimento } from './tipos';
 
 /**
@@ -6411,6 +6414,23 @@ for (const e of catalogo) {
     throw new Error(
       `Empreendimento "${e.slug}" está publicado sem número de registro de incorporação ` +
         'e sem `avisoRegistro`. Lei 4.591/64, art. 32: ou entra o número, ou entra o aviso.',
+    );
+  }
+}
+
+/*
+  A tabela de mensagens de WhatsApp é derivada daqui, mas mora noutro módulo
+  para não ir inteira para o navegador. Recalcular e comparar na carga é o que
+  impede a dupla de sair de sincronia em silêncio — imóvel renomeado com a
+  mensagem antiga é o corretor recebendo o nome errado.
+*/
+for (const e of catalogo) {
+  if (e.statusPublicacao !== 'publicado') continue;
+  const esperada = mensagemDoImovel(e.nome, nomeDaRegiao(e.regiaoSlug));
+  if (MENSAGENS_WHATSAPP[e.slug] !== esperada) {
+    throw new Error(
+      `A mensagem de WhatsApp de "${e.slug}" está fora de sincronia com o catálogo. ` +
+        `Em src/content/mensagens-whatsapp.ts deveria estar: ${esperada}`,
     );
   }
 }
