@@ -51,6 +51,7 @@ export default async function PaginaParque({ params }: Params) {
           fill
           priority
           sizes="100vw"
+          quality={92}
           className="object-cover"
         />
         <div

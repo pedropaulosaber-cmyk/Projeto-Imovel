@@ -48,6 +48,7 @@ export function BannerParque({ parque }: { parque: Parque }) {
         alt={parque.imagemAlt}
         fill
         sizes="100vw"
+        quality={92}
         className="object-cover"
       />
       <div

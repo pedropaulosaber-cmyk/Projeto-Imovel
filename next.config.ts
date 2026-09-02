@@ -56,6 +56,13 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
+    /*
+      O padrão do next/image é qualidade 75. Numa foto de apartamento em tela
+      cheia isso aparece: o céu ganha faixa, a esquadria serrilha e o cliente
+      vê o imóvel pior do que ele é. 92 custa alguns KB a mais e resolve.
+      A lista existe porque o Next 16 recusa `quality` fora dela.
+    */
+    qualities: [75, 92],
     // Fotos de empreendimento virão do storage do Supabase; o host entra por
     // variável para o mesmo build servir staging e produção.
     remotePatterns: process.env.NEXT_PUBLIC_IMAGE_HOSTS

@@ -39,6 +39,7 @@ export default function PaginaEscritorio() {
             fill
             priority
             sizes="100vw"
+            quality={92}
             className="object-cover"
           />
           <span className="absolute right-4 bottom-3 hidden font-mono text-[10px] text-creme/75 md:block">

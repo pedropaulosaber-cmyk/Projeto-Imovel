@@ -156,6 +156,17 @@ export function Galeria({
           </button>
         ))}
       </div>
+
+      {/*
+        As imagens vêm do book da incorporadora e são perspectivas de projeto,
+        não fotos de obra pronta. Dizer isso na própria galeria é o que separa
+        publicidade de propaganda enganosa (CDC, art. 37) — e é a primeira coisa
+        que um comprador experiente procura.
+      */}
+      <p className="filete-topo px-[18px] py-[10px] font-mono text-[10px] tracking-[0.08em] text-creme/45 md:px-5 md:text-[11px] lg:px-14">
+        [ PERSPECTIVAS ILUSTRADAS DO MATERIAL DA INCORPORADORA · MOBILIÁRIO E DECORAÇÃO NÃO INTEGRAM
+        O CONTRATO ]
+      </p>
     </>
   );
 }
