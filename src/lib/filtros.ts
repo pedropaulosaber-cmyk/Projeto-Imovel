@@ -22,8 +22,15 @@ export interface Filtros {
   pagina: number;
 }
 
-/** Quantos cards por página — "Carregar mais" avança de 4 em 4. */
-export const POR_PAGINA = 4;
+/**
+ * Quantos cards por página, e o passo do "Carregar mais".
+ *
+ * Era 4 — uma única fileira no desktop. Com vinte imóveis no catálogo, quem
+ * abria a listagem via "4 de 20 resultados" e concluía que o site tinha quatro
+ * imóveis. Doze preenche três fileiras no desktop e continua sendo rolagem
+ * curta no celular.
+ */
+export const POR_PAGINA = 12;
 
 type ParamsBrutos = Record<string, string | string[] | undefined>;
 

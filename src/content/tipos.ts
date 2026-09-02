@@ -117,7 +117,19 @@ export interface Empreendimento {
    * `src/lib/lead/book.ts`. `null` quando a incorporadora não forneceu.
    */
   book: Book | null;
-  localizacao: { endereco: string; referencias: string };
+  localizacao: {
+    endereco: string;
+    referencias: string;
+    /**
+     * Link curto do Google Maps com o alfinete cravado pelo corretor.
+     *
+     * O embed da página resolve o endereço em texto, e o Google acerta o
+     * quarteirão mas nem sempre o lote. Este link é a marcação conferida a mão
+     * — é para onde vai o botão "abrir no Google Maps", que é como o cliente
+     * traça a rota de verdade.
+     */
+    mapaUrl?: string;
+  };
   /** Slugs dos parques a que o empreendimento é vizinho. */
   parquesProximos: string[];
   destaqueHome: boolean;
