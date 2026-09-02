@@ -9,6 +9,7 @@ import { Diferenciais } from '@/components/empreendimentos/diferenciais';
 import { Galeria } from '@/components/empreendimentos/galeria';
 import { Plantas } from '@/components/empreendimentos/plantas';
 import { Mapa } from '@/components/mapa/mapa';
+import { jsonLdSeguro } from '@/lib/json-ld';
 import { site, urlBase } from '@/config/site';
 import {
   empreendimentoPorSlug,
@@ -74,7 +75,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       <script
         type="application/ld+json"
         /* JSON-LD serializado de dados próprios; nada aqui vem do visitante. */
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaDoImovel(e)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdSeguro(schemaDoImovel(e)) }}
       />
 
       {/* ---------------------------------------------------------------- */}

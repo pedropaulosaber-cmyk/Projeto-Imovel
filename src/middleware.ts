@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { ipDoCliente } from '@/lib/ip';
+
 /**
  * Rate limit do endpoint de lead (CLAUDE.md §9).
  *
@@ -8,6 +10,11 @@ import { type NextRequest, NextResponse } from 'next/server';
  * efetivo é o limite multiplicado pelo número de instâncias quentes. Isso
  * ainda barra o caso que importa — um script disparando centenas de POSTs da
  * mesma origem — sem depender de infraestrutura extra.
+ *
+ * O IP vem de `ipDoCliente`, que lê fonte confiável: chavear pelo
+ * `x-forwarded-for` mais à esquerda deixava um atacante forjar o IP e mandar
+ * quantos POSTs quisesse, cada um com um IP diferente. Sem uma chave honesta,
+ * este limite é decorativo.
  *
  * Quando o volume justificar, trocar o `Map` por Vercel KV / Upstash mantendo
  * esta mesma interface.
@@ -47,10 +54,7 @@ export function middleware(req: NextRequest) {
   if (req.method !== 'POST') return NextResponse.next();
 
   const teto = Number(process.env.RATE_LIMIT_LEADS_POR_MINUTO) || TETO_PADRAO;
-  const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-    req.headers.get('x-real-ip') ??
-    'desconhecido';
+  const ip = ipDoCliente(req.headers) ?? 'desconhecido';
 
   if (excedeu(`lead:${ip}`, teto)) {
     return NextResponse.json(

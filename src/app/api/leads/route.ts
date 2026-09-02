@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { after, type NextRequest, NextResponse } from 'next/server';
 
 import { urlBase } from '@/config/site';
+import { ipDoCliente } from '@/lib/ip';
 import { pseudonimizarIp, registrar } from '@/lib/lead/auditoria';
 import { assinarBook } from '@/lib/lead/book';
 import { enviarAoCrm, montarCorpo } from '@/lib/lead/crm';
@@ -21,7 +22,17 @@ export const dynamic = 'force-dynamic';
  * depois que o navegador já recebeu o "recebemos seus dados". Quem preencheu
  * não tem por que esperar o retry de um serviço de terceiro.
  */
+/* Um lead honesto cabe em menos de 1 KB; 16 KB é folga generosa. Recusar antes
+   do `req.json()` evita bufferizar um corpo multi-MB só para o zod rejeitar
+   depois. */
+const CORPO_MAXIMO = 16_384;
+
 export async function POST(req: NextRequest) {
+  const tamanho = Number(req.headers.get('content-length'));
+  if (Number.isFinite(tamanho) && tamanho > CORPO_MAXIMO) {
+    return NextResponse.json({ erro: 'Corpo grande demais.' }, { status: 413 });
+  }
+
   let bruto: unknown;
   try {
     bruto = await req.json();
@@ -49,10 +60,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-    req.headers.get('x-real-ip') ??
-    null;
+  const ip = ipDoCliente(req.headers);
 
   /*
     LGPD art. 8º, §2º: cabe ao controlador provar que houve consentimento.

@@ -16,6 +16,7 @@ import {
 } from '@/content/empreendimentos';
 import { parquePorSlug } from '@/content/parques';
 import { categorias, regioes, regioesEmTexto } from '@/content/regioes';
+import { jsonLdSeguro } from '@/lib/json-ld';
 import { rotas } from '@/lib/rotas';
 
 /* Landing page: conteúdo estático, revalidado de hora em hora quando o
@@ -38,7 +39,7 @@ export default function Home() {
         type="application/ld+json"
         /* Identidade do escritório: é o que liga as páginas de imóvel a um
            mesmo corretor no Google. */
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaDoEscritorio()) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdSeguro(schemaDoEscritorio()) }}
       />
 
       {/* ------------------------------------------------------------------ */}
