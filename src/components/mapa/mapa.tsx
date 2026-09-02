@@ -27,17 +27,20 @@ export function Mapa({
   rotulo,
   endereco,
   mapaUrl,
+  coordenadas,
   proporcao = 'aspect-[4/3] md:aspect-video',
 }: {
   rotulo: string;
   endereco: string;
   mapaUrl?: string;
+  coordenadas?: { lat: number; lng: number };
   proporcao?: string;
 }) {
   const [aberto, setAberto] = useState(false);
-  const busca = encodeURIComponent(`${endereco}, Goiânia - GO`);
+  /* Coordenada conferida crava o alfinete; sem ela, o Google resolve o texto. */
+  const alvo = coordenadas ? `${coordenadas.lat},${coordenadas.lng}` : `${endereco}, Goiânia - GO`;
+  const busca = encodeURIComponent(alvo);
   const embed = `https://www.google.com/maps?q=${busca}&z=${ZOOM}&hl=pt-BR&output=embed`;
-  /* Com alfinete conferido, o botão leva a ele; sem, cai na busca por endereço. */
   const externo = mapaUrl ?? `https://www.google.com/maps/search/?api=1&query=${busca}`;
 
   if (aberto) {
@@ -56,9 +59,11 @@ export function Mapa({
         </div>
         <figcaption className="mt-[10px] flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-creme/45 md:text-[11px]">
           <span>
-            {mapaUrl
-              ? '[ ALFINETE CONFERIDO PELO CORRETOR ]'
-              : '[ MARCAÇÃO APROXIMADA PELO ENDEREÇO ]'}
+            {coordenadas
+              ? '[ COORDENADA CONFERIDA PELO CORRETOR ]'
+              : mapaUrl
+                ? '[ ALFINETE CONFERIDO NO BOTÃO AO LADO ]'
+                : '[ MARCAÇÃO APROXIMADA PELO ENDEREÇO ]'}
           </span>
           <a
             href={externo}

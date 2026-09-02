@@ -129,6 +129,12 @@ export interface Empreendimento {
      * traça a rota de verdade.
      */
     mapaUrl?: string;
+    /**
+     * Latitude e longitude conferidas. Quando existem, o mapa da página nasce
+     * com o alfinete exatamente no lote, em vez de deixar o Google adivinhar
+     * pelo texto do endereço — que acerta o quarteirão e erra o lote.
+     */
+    coordenadas?: { lat: number; lng: number };
   };
   /** Slugs dos parques a que o empreendimento é vizinho. */
   parquesProximos: string[];

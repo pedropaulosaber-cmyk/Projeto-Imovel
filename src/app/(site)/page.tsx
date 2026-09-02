@@ -10,10 +10,10 @@ import { Creci, Eyebrow } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
 import {
   contagemPorCategoria,
+  empreendimentosPublicados,
   oportunidadesDaSemana,
   totalPublicado,
 } from '@/content/empreendimentos';
-import { depoimentos } from '@/content/escritorio';
 import { parquePorSlug } from '@/content/parques';
 import { categorias, regioes, regioesEmTexto } from '@/content/regioes';
 import { rotas } from '@/lib/rotas';
@@ -25,6 +25,9 @@ export const revalidate = 3600;
 export default function Home() {
   const oportunidades = oportunidadesDaSemana();
   const total = totalPublicado();
+  const publicados = empreendimentosPublicados();
+  const comRegistro = publicados.filter((e) => e.numeroRegistroIncorporacao).length;
+  const comAviso = publicados.length - comRegistro;
   const serrinha = parquePorSlug('parque-serrinha');
   const cascavel = parquePorSlug('parque-cascavel');
 
@@ -188,18 +191,42 @@ export default function Home() {
       {/* Depoimentos                                                         */}
       {/* ------------------------------------------------------------------ */}
       <section className="px-[18px] py-[30px] md:flex md:flex-wrap md:gap-[clamp(28px,5vw,72px)] md:px-5 md:py-[clamp(44px,6vw,96px)] lg:px-14">
+        {/*
+          Aqui havia três depoimentos que vieram do design, com nomes e
+          empreendimentos que não existem. Depoimento inventado é publicidade
+          enganosa (CDC, art. 37) — e não se conserta trocando o nome. Saiu.
+
+          No lugar entra o que dá para conferir na própria página ao lado: como
+          o catálogo trata o registro de incorporação. Os números são lidos do
+          catálogo, então não envelhecem.
+        */}
         <div className="md:flex-[1_1_320px]">
-          <Eyebrow className="mb-4 md:mb-6">03 — QUEM JÁ COMPROU</Eyebrow>
-          {depoimentos.map((d) => (
-            <figure key={d.autor} className="filete-topo m-0 py-[18px] md:py-[22px]">
-              <blockquote className="mb-[10px] text-[18px] leading-[1.45] tracking-[-0.02em] text-pretty md:mb-[14px] md:text-[clamp(19px,1.8vw,25px)] md:leading-[1.42]">
-                {d.texto}
-              </blockquote>
-              <figcaption className="text-xs text-creme/60 md:text-[13px]">
-                {d.autor} — {d.imovel}
-              </figcaption>
-            </figure>
-          ))}
+          <Eyebrow className="mb-4 md:mb-6">03 — COMO ESTE CATÁLOGO É MONTADO</Eyebrow>
+          <h2 className="mb-[14px] text-[28px] leading-[1.05] font-bold tracking-[-0.04em] text-balance md:mb-5 md:text-[clamp(26px,3.4vw,44px)]">
+            O número do registro fica na página. Quando não tem, também.
+          </h2>
+          <div className="filete-topo py-[18px] md:py-[22px]">
+            <p className="text-[15px] leading-[1.6] text-creme/80 md:text-[17px] md:leading-[1.65]">
+              São {total} empreendimentos no catálogo. {comRegistro} trazem o número do registro de
+              incorporação impresso na página, transcrito do documento da incorporadora.
+            </p>
+          </div>
+          <div className="filete-topo py-[18px] md:py-[22px]">
+            <p className="text-[15px] leading-[1.6] text-creme/80 md:text-[17px] md:leading-[1.65]">
+              {comAviso === 1
+                ? 'Um ainda não teve o número localizado no material.'
+                : `${comAviso} ainda não tiveram o número localizado no material.`}{' '}
+              A página de cada um diz isso em voz alta, com o motivo — e lembra que, pela Lei
+              4.591/64, nenhuma unidade se comercializa antes do registro.
+            </p>
+          </div>
+          <div className="filete-topo py-[18px] md:py-[22px]">
+            <p className="text-[15px] leading-[1.6] text-creme/80 md:text-[17px] md:leading-[1.65]">
+              Preço, metragem, tipologia e planta saem do book e da tabela da incorporadora. O que o
+              material não informa aparece como &ldquo;sob consulta&rdquo;, não como um número
+              inventado.
+            </p>
+          </div>
           <div className="filete-topo" aria-hidden />
         </div>
 

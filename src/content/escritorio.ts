@@ -1,33 +1,12 @@
 import { site } from '@/config/site';
 
-/** Conteúdo institucional: números, processo, equipe e depoimentos. */
+/** Conteúdo institucional: números, processo e equipe. */
 
 export const numeros = [
   { valor: '+500', label: 'Famílias atendidas' },
   { valor: '18', label: 'Anos em Goiânia' },
   { valor: 'R$ 1,2 bi', label: 'VGV comercializado' },
   { valor: '11 min', label: 'Resposta média' },
-];
-
-export const depoimentos = [
-  {
-    texto:
-      '“Visitei sete empreendimentos em dois fins de semana. O corretor conhecia cada planta de cabeça.”',
-    autor: 'Marina e Rafael',
-    imovel: 'Jardins do Cerrado',
-  },
-  {
-    texto:
-      '“Consegui a unidade de esquina no lançamento porque fui avisada antes do estande abrir.”',
-    autor: 'Cláudia N.',
-    imovel: 'Alto Serrinha Residence',
-  },
-  {
-    texto:
-      '“Documentação toda conferida antes da assinatura. Foi a parte mais tranquila da compra.”',
-    autor: 'Eduardo M.',
-    imovel: 'Villa Pedro Ludovico Signature',
-  },
 ];
 
 export const processo = [
@@ -68,7 +47,7 @@ export const comoTrabalhamos = {
   destaqueMobile:
     'Não somos um portal de anúncios. Representamos um número limitado de empreendimentos por vez.',
   paragrafos: [
-    'Antes de entrar no catálogo, um empreendimento passa por conferência de registro de incorporação, memorial descritivo, cronograma físico-financeiro e histórico da incorporadora. O que não passa, não é apresentado.',
+    'Antes de entrar no catálogo, um empreendimento passa por conferência de registro de incorporação, memorial descritivo, cronograma físico-financeiro e histórico da incorporadora. Onde o número de registro ainda não foi localizado, a página do imóvel diz isso em voz alta — não some com a informação.',
     'O atendimento é feito pelo corretor da região, do primeiro contato à assinatura. Sem transferência de plantão.',
   ],
 };
