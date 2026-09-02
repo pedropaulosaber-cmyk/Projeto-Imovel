@@ -84,7 +84,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
                 <p className="mb-[5px] text-[18px] font-semibold tracking-[-0.025em] md:text-[19px]">
                   {p.area}
                 </p>
-                <p className="text-xs text-creme/60 md:text-[13px]">
+                <p className="text-xs text-pedra md:text-[13px]">
                   {p.tipo} · {p.vagas}
                 </p>
               </>
@@ -92,9 +92,9 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
 
             if (alvo < 0) {
               return (
-                <div key={chave} className={`${cartao} border-creme/[0.16]`}>
+                <div key={chave} className={`${cartao} border-tinta/[0.14]`}>
                   {miolo}
-                  <p className="mt-2 font-mono text-[9px] tracking-[0.08em] text-creme/35 md:text-[10px]">
+                  <p className="mt-2 font-mono text-[9px] tracking-[0.08em] text-pedra/70 md:text-[10px]">
                     SEM PLANTA NO BOOK
                   </p>
                 </div>
@@ -107,7 +107,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
                 type="button"
                 onClick={() => abrir(alvo)}
                 aria-label={`Ver a planta de ${p.area} — ${p.tipo}`}
-                className={`${cartao} cursor-pointer border-creme/[0.16] transition-colors hover:border-ouro`}
+                className={`${cartao} cursor-pointer border-tinta/[0.14] transition-colors hover:border-ouro`}
               >
                 {miolo}
                 <p className="mt-2 font-mono text-[9px] tracking-[0.08em] text-ouro md:text-[10px]">
@@ -128,7 +128,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
                 type="button"
                 onClick={() => abrir(n)}
                 aria-label={`Ampliar ${m.legenda}`}
-                className="w-[230px] shrink-0 cursor-pointer overflow-hidden rounded-[10px] border border-creme/[0.16] bg-creme transition-colors hover:border-ouro md:w-auto md:shrink md:rounded-lg"
+                className="w-[230px] shrink-0 cursor-pointer overflow-hidden rounded-[10px] border border-tinta/[0.14] bg-creme transition-colors hover:border-ouro md:w-auto md:shrink md:rounded-lg"
               >
                 {m.url ? (
                   <Image
@@ -144,7 +144,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
               </button>
             ))}
           </div>
-          <p className="mt-[10px] font-mono text-[10px] text-creme/45 md:text-[11px]">
+          <p className="mt-[10px] font-mono text-[10px] text-pedra md:text-[11px]">
             [ TOQUE PARA AMPLIAR · METRAGENS E TIPOLOGIAS IMPRESSAS NA PRÓPRIA PLANTA ]
           </p>
         </>

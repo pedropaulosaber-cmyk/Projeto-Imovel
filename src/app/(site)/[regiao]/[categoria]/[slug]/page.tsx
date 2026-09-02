@@ -115,193 +115,197 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       </Galeria>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Corpo: conteúdo + formulário lateral                              */}
+      {/* Corpo em tema claro. O herói acima fica escuro (foto); daqui para */}
+      {/* baixo é fundo branco. `imovel-claro` é o escopo do tema (só aqui).*/}
       {/* ---------------------------------------------------------------- */}
-      <div className="md:flex md:flex-wrap md:items-start md:gap-[clamp(26px,4vw,68px)] md:px-5 md:pt-[clamp(30px,4.4vw,68px)] md:pb-[clamp(46px,6vw,96px)] lg:px-14">
-        <main className="min-w-0 md:flex-[999_1_540px]">
-          {/* Ficha técnica */}
-          {/*
+      <div className="imovel-claro">
+        <div className="md:flex md:flex-wrap md:items-start md:gap-[clamp(26px,4vw,68px)] md:px-5 md:pt-[clamp(30px,4.4vw,68px)] md:pb-[clamp(46px,6vw,96px)] lg:px-14">
+          <main className="min-w-0 md:flex-[999_1_540px]">
+            {/* Ficha técnica */}
+            {/*
             Preço e entrega são derivados. Guardar a data de entrega também
             dentro de `ficha` já rendeu um imóvel com "dez/2026" no campo e
             "A confirmar" na tabela da página: o mesmo dado em dois lugares
             diverge no dia em que só um dos dois é atualizado.
           */}
-          <div className="grid grid-cols-2 md:mb-[clamp(28px,4vw,56px)] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
-            {[
-              { label: 'A PARTIR DE', valor: precoExibicao(e) },
-              ...e.ficha,
-              { label: 'ENTREGA', valor: e.previsaoEntrega ?? 'A confirmar' },
-            ].map((f) => (
-              <div key={f.label} className="celula p-[18px] md:px-5 md:py-[22px]">
-                <p className="mb-2 font-mono text-[9px] tracking-[0.14em] text-creme/55 md:mb-[10px] md:text-[10px]">
-                  {f.label}
-                </p>
-                <p className="text-xl leading-none font-semibold tracking-[-0.03em] md:text-2xl">
-                  {f.valor}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="px-[18px] pt-[26px] md:px-0 md:pt-0">
-            {/* Status da obra */}
-            {e.obra ? (
-              <div className="mb-7 md:mb-[clamp(28px,4vw,56px)]">
-                <div className="mb-[10px] flex items-baseline justify-between md:mb-3">
-                  <span className="font-mono text-[10px] tracking-[0.14em] text-creme/55 md:text-[11px]">
-                    STATUS DA OBRA
-                  </span>
-                  <span className="text-[13px] md:text-sm">
-                    {e.obra.etapa} · {e.obra.percentual}%
-                    <span className="hidden md:inline"> concluído</span>
-                  </span>
+            <div className="grid grid-cols-2 md:mb-[clamp(28px,4vw,56px)] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
+              {[
+                { label: 'A PARTIR DE', valor: precoExibicao(e) },
+                ...e.ficha,
+                { label: 'ENTREGA', valor: e.previsaoEntrega ?? 'A confirmar' },
+              ].map((f) => (
+                <div key={f.label} className="celula p-[18px] md:px-5 md:py-[22px]">
+                  <p className="mb-2 font-mono text-[9px] tracking-[0.14em] text-pedra md:mb-[10px] md:text-[10px]">
+                    {f.label}
+                  </p>
+                  <p className="text-xl leading-none font-semibold tracking-[-0.03em] md:text-2xl">
+                    {f.valor}
+                  </p>
                 </div>
-                <div
-                  role="progressbar"
-                  aria-label={`Andamento da obra: ${e.obra.percentual}%`}
-                  aria-valuenow={e.obra.percentual}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  className="h-1 overflow-hidden rounded-full bg-creme/[0.16]"
-                >
-                  <div className="h-full bg-ouro" style={{ width: `${e.obra.percentual}%` }} />
-                </div>
-              </div>
-            ) : null}
-
-            {/* Descrição */}
-            <section className="mb-7 md:mb-[clamp(30px,4vw,60px)]">
-              <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
-                O empreendimento
-              </h2>
-              {e.descricao.map((p) => (
-                <p
-                  key={p.slice(0, 24)}
-                  className="mb-[14px] max-w-[66ch] text-[15px] leading-[1.72] text-creme/78 text-pretty last:mb-0 md:mb-4 md:text-[17px] md:leading-[1.78]"
-                >
-                  {p}
-                </p>
               ))}
-            </section>
+            </div>
 
-            {/* Diferenciais */}
-            <section className="mb-7 md:mb-[clamp(30px,4vw,60px)]">
-              <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
-                Diferenciais
-              </h2>
-              <Diferenciais itens={e.amenidades} />
-            </section>
+            <div className="px-[18px] pt-[26px] md:px-0 md:pt-0">
+              {/* Status da obra */}
+              {e.obra ? (
+                <div className="mb-7 md:mb-[clamp(28px,4vw,56px)]">
+                  <div className="mb-[10px] flex items-baseline justify-between md:mb-3">
+                    <span className="font-mono text-[10px] tracking-[0.14em] text-pedra md:text-[11px]">
+                      STATUS DA OBRA
+                    </span>
+                    <span className="text-[13px] md:text-sm">
+                      {e.obra.etapa} · {e.obra.percentual}%
+                      <span className="hidden md:inline"> concluído</span>
+                    </span>
+                  </div>
+                  <div
+                    role="progressbar"
+                    aria-label={`Andamento da obra: ${e.obra.percentual}%`}
+                    aria-valuenow={e.obra.percentual}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    className="h-1 overflow-hidden rounded-full bg-tinta/[0.12]"
+                  >
+                    <div className="h-full bg-ouro" style={{ width: `${e.obra.percentual}%` }} />
+                  </div>
+                </div>
+              ) : null}
 
-            <Plantas plantas={e.plantas} imagens={plantasImagens} />
+              {/* Descrição */}
+              <section className="mb-7 md:mb-[clamp(30px,4vw,60px)]">
+                <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
+                  O empreendimento
+                </h2>
+                {e.descricao.map((p) => (
+                  <p
+                    key={p.slice(0, 24)}
+                    className="mb-[14px] max-w-[66ch] text-[15px] leading-[1.72] text-grafite-claro text-pretty last:mb-0 md:mb-4 md:text-[17px] md:leading-[1.78]"
+                  >
+                    {p}
+                  </p>
+                ))}
+              </section>
 
-            {/* Localização */}
-            <section>
-              <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
-                Localização
-              </h2>
-              <Mapa
-                rotulo={e.nome}
-                endereco={e.localizacao.endereco}
-                mapaUrl={e.localizacao.mapaUrl}
-                coordenadas={e.localizacao.coordenadas}
-              />
-              <p className="mt-4 max-w-[62ch] text-sm leading-[1.7] text-creme/72 text-pretty md:mt-5 md:text-base md:leading-[1.72]">
-                {e.localizacao.endereco}. {e.localizacao.referencias}
-              </p>
+              {/* Diferenciais */}
+              <section className="mb-7 md:mb-[clamp(30px,4vw,60px)]">
+                <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
+                  Diferenciais
+                </h2>
+                <Diferenciais itens={e.amenidades} />
+              </section>
 
-              {/*
+              <Plantas plantas={e.plantas} imagens={plantasImagens} />
+
+              {/* Localização */}
+              <section>
+                <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
+                  Localização
+                </h2>
+                <Mapa
+                  rotulo={e.nome}
+                  endereco={e.localizacao.endereco}
+                  mapaUrl={e.localizacao.mapaUrl}
+                  coordenadas={e.localizacao.coordenadas}
+                  claro
+                />
+                <p className="mt-4 max-w-[62ch] text-sm leading-[1.7] text-grafite-claro text-pretty md:mt-5 md:text-base md:leading-[1.72]">
+                  {e.localizacao.endereco}. {e.localizacao.referencias}
+                </p>
+
+                {/*
                 Lei 4.591/64, art. 32 e Resolução COFECI 1.065/2007: número do
                 registro de incorporação e CRECI do responsável, na peça em que
                 o imóvel é divulgado.
               */}
-              {/*
+                {/*
                 Sem número, o aviso ocupa o lugar dele — e num bloco visível,
                 não na linha de rodapé em cinza. Quem vai comprar precisa ler.
               */}
-              {e.avisoRegistro ? (
-                <p className="mt-4 rounded-lg border border-ouro/45 bg-ouro/[0.07] px-4 py-3 text-[13px] leading-[1.65] text-creme/85 md:mt-5 md:text-sm">
-                  <strong className="font-semibold text-ouro">
-                    Registro de incorporação não localizado.
-                  </strong>{' '}
-                  {e.avisoRegistro} Pela Lei 4.591/64, art. 32, nenhuma unidade pode ser
-                  comercializada antes do registro — o número é conferido antes de qualquer
-                  proposta.
+                {e.avisoRegistro ? (
+                  <p className="mt-4 rounded-lg border border-ouro/60 bg-ouro/[0.12] px-4 py-3 text-[13px] leading-[1.65] text-tinta/85 md:mt-5 md:text-sm">
+                    <strong className="font-semibold text-ouro">
+                      Registro de incorporação não localizado.
+                    </strong>{' '}
+                    {e.avisoRegistro} Pela Lei 4.591/64, art. 32, nenhuma unidade pode ser
+                    comercializada antes do registro — o número é conferido antes de qualquer
+                    proposta.
+                  </p>
+                ) : null}
+
+                <p className="mt-4 font-mono text-[10px] leading-[1.7] text-pedra md:mt-[18px] md:text-[11px]">
+                  {e.numeroRegistroIncorporacao
+                    ? `REGISTRO DE INCORPORAÇÃO ${e.numeroRegistroIncorporacao.toUpperCase()}`
+                    : 'REGISTRO DE INCORPORAÇÃO EM APURAÇÃO'}
+                  {e.corretorResponsavel
+                    ? ` · CORRETOR DE IMÓVEIS RESPONSÁVEL: ${e.corretorResponsavel.nome.toUpperCase()}, ${e.corretorResponsavel.creci}`
+                    : ` · CORRETOR DE IMÓVEIS: ${site.creci}`}
                 </p>
-              ) : null}
-
-              <p className="mt-4 font-mono text-[10px] leading-[1.7] text-creme/50 md:mt-[18px] md:text-[11px]">
-                {e.numeroRegistroIncorporacao
-                  ? `REGISTRO DE INCORPORAÇÃO ${e.numeroRegistroIncorporacao.toUpperCase()}`
-                  : 'REGISTRO DE INCORPORAÇÃO EM APURAÇÃO'}
-                {e.corretorResponsavel
-                  ? ` · CORRETOR DE IMÓVEIS RESPONSÁVEL: ${e.corretorResponsavel.nome.toUpperCase()}, ${e.corretorResponsavel.creci}`
-                  : ` · CORRETOR DE IMÓVEIS: ${site.creci}`}
-              </p>
-            </section>
-          </div>
-        </main>
-
-        {/* Formulário lateral --------------------------------------------- */}
-        <aside
-          id="contato"
-          className="mx-[18px] mt-7 scroll-mt-20 rounded-[14px] bg-creme p-[22px] text-tinta md:sticky md:top-20 md:mx-0 md:mt-0 md:max-w-[400px] md:flex-[1_1_320px] md:rounded-[10px] md:p-[clamp(22px,3vw,32px)]"
-        >
-          <h2 className="mb-[10px] text-2xl leading-[1.1] font-semibold tracking-[-0.03em] md:text-[clamp(23px,2.2vw,30px)]">
-            {e.book ? 'Receba o book completo' : 'Fale com um especialista'}
-          </h2>
-          <p className="mb-[18px] text-sm leading-[1.6] text-grafite-claro md:mb-[22px]">
-            {e.book
-              ? `Plantas, perspectivas e ficha técnica — ${e.book.paginas} páginas em PDF, liberado na hora. Tabela e disponibilidade real de unidades vão pelo WhatsApp.`
-              : 'Tabela, disponibilidade real de unidades e condições de pagamento no seu WhatsApp.'}
-          </p>
-
-          <FormularioLead
-            variante="claro"
-            empreendimentoSlug={e.slug}
-            empreendimentoNome={e.nome}
-            pedirEmail
-            tipologias={e.plantas.map((p) => `${p.tipo} — ${p.area}`)}
-            rotuloBotao={e.book ? 'Receber o book' : 'Chamar no WhatsApp'}
-          />
-
-          {e.corretorResponsavel ? (
-            <div className="mt-[22px] flex items-center gap-3 pt-[18px] shadow-[0_-1px_0_rgba(20,19,15,0.14)]">
-              <div className="hachura-clara h-11 w-11 shrink-0 rounded-full" aria-hidden />
-              <div>
-                <p className="mb-[3px] text-sm font-medium">{e.corretorResponsavel.nome}</p>
-                <p className="text-xs text-pedra">
-                  Corretor de imóveis · {e.corretorResponsavel.creci} ·{' '}
-                  {e.corretorResponsavel.regiao}
-                </p>
-              </div>
+              </section>
             </div>
-          ) : null}
-        </aside>
-      </div>
+          </main>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Imóveis parecidos                                                 */}
-      {/* ---------------------------------------------------------------- */}
-      {similares.length ? (
-        <section className="px-[18px] pt-[30px] pb-[34px] md:px-5 md:py-[clamp(36px,5vw,84px)] md:shadow-[0_-1px_0_rgba(246,243,236,0.16)] lg:px-14">
-          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-[18px] md:mb-[clamp(20px,2.6vw,36px)]">
-            <h2 className="text-2xl leading-none font-semibold tracking-[-0.03em] md:text-[clamp(24px,3.4vw,46px)] md:tracking-[-0.035em]">
-              Imóveis parecidos
+          {/* Formulário lateral --------------------------------------------- */}
+          <aside
+            id="contato"
+            className="mx-[18px] mt-7 scroll-mt-20 rounded-[14px] bg-creme p-[22px] text-tinta md:sticky md:top-20 md:mx-0 md:mt-0 md:max-w-[400px] md:flex-[1_1_320px] md:rounded-[10px] md:p-[clamp(22px,3vw,32px)]"
+          >
+            <h2 className="mb-[10px] text-2xl leading-[1.1] font-semibold tracking-[-0.03em] md:text-[clamp(23px,2.2vw,30px)]">
+              {e.book ? 'Receba o book completo' : 'Fale com um especialista'}
             </h2>
-            <Link
-              href={rotas.imoveis}
-              className="hidden border-b border-ouro pb-1 text-sm font-medium md:block"
-            >
-              Ver todos
-            </Link>
-          </div>
-          <div className="-mx-[18px] flex gap-3 overflow-x-auto px-[18px] pb-[6px] md:mx-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:gap-[clamp(14px,2vw,24px)] md:overflow-visible md:px-0 md:pb-0">
-            {similares.map((s) => (
-              <CardSimilar key={s.slug} e={s} />
-            ))}
-          </div>
-        </section>
-      ) : null}
+            <p className="mb-[18px] text-sm leading-[1.6] text-grafite-claro md:mb-[22px]">
+              {e.book
+                ? `Plantas, perspectivas e ficha técnica — ${e.book.paginas} páginas em PDF, liberado na hora. Tabela e disponibilidade real de unidades vão pelo WhatsApp.`
+                : 'Tabela, disponibilidade real de unidades e condições de pagamento no seu WhatsApp.'}
+            </p>
+
+            <FormularioLead
+              variante="claro"
+              empreendimentoSlug={e.slug}
+              empreendimentoNome={e.nome}
+              pedirEmail
+              tipologias={e.plantas.map((p) => `${p.tipo} — ${p.area}`)}
+              rotuloBotao={e.book ? 'Receber o book' : 'Chamar no WhatsApp'}
+            />
+
+            {e.corretorResponsavel ? (
+              <div className="mt-[22px] flex items-center gap-3 pt-[18px] shadow-[0_-1px_0_rgba(20,19,15,0.14)]">
+                <div className="hachura-clara h-11 w-11 shrink-0 rounded-full" aria-hidden />
+                <div>
+                  <p className="mb-[3px] text-sm font-medium">{e.corretorResponsavel.nome}</p>
+                  <p className="text-xs text-pedra">
+                    Corretor de imóveis · {e.corretorResponsavel.creci} ·{' '}
+                    {e.corretorResponsavel.regiao}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+          </aside>
+        </div>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Imóveis parecidos                                                 */}
+        {/* ---------------------------------------------------------------- */}
+        {similares.length ? (
+          <section className="px-[18px] pt-[30px] pb-[34px] md:px-5 md:py-[clamp(36px,5vw,84px)] md:shadow-[0_-1px_0_rgba(20,19,15,0.12)] lg:px-14">
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-[18px] md:mb-[clamp(20px,2.6vw,36px)]">
+              <h2 className="text-2xl leading-none font-semibold tracking-[-0.03em] md:text-[clamp(24px,3.4vw,46px)] md:tracking-[-0.035em]">
+                Imóveis parecidos
+              </h2>
+              <Link
+                href={rotas.imoveis}
+                className="hidden border-b border-ouro pb-1 text-sm font-medium md:block"
+              >
+                Ver todos
+              </Link>
+            </div>
+            <div className="-mx-[18px] flex gap-3 overflow-x-auto px-[18px] pb-[6px] md:mx-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:gap-[clamp(14px,2vw,24px)] md:overflow-visible md:px-0 md:pb-0">
+              {similares.map((s) => (
+                <CardSimilar key={s.slug} e={s} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+      </div>
     </>
   );
 }

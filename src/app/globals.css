@@ -120,6 +120,33 @@
   box-shadow: 0 -1px 0 --alpha(var(--color-tinta) / 16%);
 }
 
+/*
+ * Tema claro da página de imóvel.
+ *
+ * Escopo fechado: vale só dentro de `.imovel-claro`, o contêiner que envolve o
+ * corpo da página do imóvel (abaixo do herói). O resto do site — cabeçalho,
+ * home, listagem, escritório — segue no tema escuro; nada aqui vaza para eles.
+ *
+ * Fundo branco, texto `tinta`, `ouro` como acento; as superfícies elevadas
+ * (ficha, cards, formulário) ficam em `creme` para separar do branco. A
+ * hierarquia de texto usa a rampa que o design system já tem para fundo claro
+ * (`tinta` › `grafite` › `pedra`), então não entra cor nova. As utilities
+ * compartilhadas `celula`/`filete-topo` desenham fio em `creme` para o escuro;
+ * dentro do escopo elas passam a desenhar fio em `tinta`.
+ */
+.imovel-claro {
+  background: #fff;
+  color: var(--color-tinta);
+}
+
+.imovel-claro .celula {
+  box-shadow: 0 0 0 1px --alpha(var(--color-tinta) / 12%);
+}
+
+.imovel-claro .filete-topo {
+  box-shadow: 0 -1px 0 --alpha(var(--color-tinta) / 12%);
+}
+
 @keyframes pulsar-skeleton {
   0%,
   100% {
