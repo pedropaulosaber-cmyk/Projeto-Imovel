@@ -2934,6 +2934,7 @@ const catalogo: Empreendimento[] = [
     localizacao: {
       endereco: 'Orla do Parque Cascavel',
       referencias: 'Quatro torres em terreno de 9.227,23 m² na orla do Parque Cascavel.',
+      coordenadas: { lat: -16.731499, lng: -49.29237 },
     },
     parquesProximos: ['parque-cascavel'],
     destaqueHome: false,

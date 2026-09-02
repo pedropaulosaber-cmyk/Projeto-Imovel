@@ -20,13 +20,15 @@ export const site = {
   responsavelTecnico: 'Pedro Paulo Saber',
 
   /*
-    TODO(marca): a home e a página do escritório ainda repetem conteúdo do
-    design — os números ("dezoito anos", "+500 famílias atendidas", "R$ 1,2 bi
-    em VGV", "11 min de resposta média") e os três depoimentos em
-    `src/content/escritorio.ts`, que citam empreendimentos que não existem.
-    São afirmações de fato sob um CRECI real e depoimento inventado é
-    publicidade enganosa (CDC, art. 37). Conferir, trocar ou remover antes de
+    TODO(marca): a home e a página do escritório ainda repetem os números do
+    design — "dezoito anos", "+500 famílias atendidas", "R$ 1,2 bi em VGV" e
+    "11 min de resposta média", em `numeros` de `src/content/escritorio.ts`.
+    São afirmações de fato sob um CRECI real. Conferir ou trocar antes de
     virar `conteudoDemonstracao` para false.
+
+    Os três depoimentos que ficavam ao lado já saíram: eram inventados, com
+    nomes e empreendimentos que não existem, e depoimento falso é publicidade
+    enganosa (CDC, art. 37).
   */
   contato: {
     // TODO(marca): trocar pelos dados reais antes de publicar.
