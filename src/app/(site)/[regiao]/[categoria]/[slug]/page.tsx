@@ -5,8 +5,9 @@ import { notFound } from 'next/navigation';
 import { CardSimilar } from '@/components/empreendimentos/cards';
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { FormularioLead } from '@/components/lead/formulario-lead';
+import { Galeria } from '@/components/empreendimentos/galeria';
+import { Plantas } from '@/components/empreendimentos/plantas';
 import { Mapa } from '@/components/mapa/mapa';
-import { Foto } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
 import {
   empreendimentoPorSlug,
@@ -60,8 +61,9 @@ export default async function PaginaEmpreendimento({ params }: Params) {
   }
 
   const regiao = regiaoPorSlug(e.regiaoSlug);
-  const capa = e.midias.find((m) => m.tipo === 'foto');
-  const miniaturas = e.midias.filter((m) => m.tipo === 'foto').slice(1);
+  /* A galeria do herói é só de foto; planta tem seção própria mais abaixo. */
+  const fotos = e.midias.filter((m) => m.tipo === 'foto');
+  const plantasImagens = e.midias.filter((m) => m.tipo === 'planta');
   const temTour = e.midias.some((m) => m.tipo === 'video');
   const similares = empreendimentosSimilares(e.slug);
 
@@ -77,71 +79,41 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       {/* ---------------------------------------------------------------- */}
       {/* Herói                                                             */}
       {/* ---------------------------------------------------------------- */}
-      <section className="relative flex h-[54svh] items-end md:h-[clamp(340px,72svh,780px)]">
-        <Foto
-          url={capa?.url ?? null}
-          alt={capa?.alt ?? `${e.nome}, ${nomeDaRegiao(e.regiaoSlug)}`}
-          legenda={`[ foto — ${e.nome} ]`}
-          sizes="100vw"
-          prioridade
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(14,14,12,0.35)_0%,rgba(14,14,12,0)_40%,rgba(14,14,12,0.95)_100%)] md:bg-[linear-gradient(180deg,rgba(14,14,12,0.4)_0%,rgba(14,14,12,0)_42%,rgba(14,14,12,0.9)_100%)]"
-        />
-
-        <div className="relative w-full px-[18px] pb-[22px] md:px-5 md:pb-[clamp(26px,3.4vw,46px)] lg:px-14">
-          <div className="mb-3 flex flex-wrap items-center gap-[10px] md:mb-4 md:gap-3">
-            <span className="rounded-full bg-ouro px-[13px] py-[6px] text-[11px] font-semibold text-tinta md:px-[14px] md:text-xs">
-              {rotuloDaCategoria(e.categoria)}
-            </span>
-            <span className="font-mono text-[10px] tracking-[0.14em] text-creme/75 md:text-[11px]">
-              {regiao?.nome.toUpperCase()}
-              <span className="hidden md:inline">
-                {' '}
-                · {regiao?.cidade.toUpperCase()} — {regiao?.estado}
+      {/* ---------------------------------------------------------------- */}
+      {/* Herói + galeria                                                   */}
+      {/* ---------------------------------------------------------------- */}
+      <Galeria
+        midias={fotos}
+        nome={e.nome}
+        acoes={
+          temTour ? (
+            <>
+              <span className="rounded-full border border-white/30 bg-[rgba(20,19,15,0.65)] px-[14px] py-[9px] text-[11px] font-medium md:px-[18px] md:py-[10px] md:text-xs">
+                Tour 360°
               </span>
+              <span className="rounded-full border border-white/30 bg-[rgba(20,19,15,0.65)] px-[14px] py-[9px] text-[11px] font-medium md:px-[18px] md:py-[10px] md:text-xs">
+                Vídeo
+              </span>
+            </>
+          ) : null
+        }
+      >
+        <div className="mb-3 flex flex-wrap items-center gap-[10px] md:mb-4 md:gap-3">
+          <span className="rounded-full bg-ouro px-[13px] py-[6px] text-[11px] font-semibold text-tinta md:px-[14px] md:text-xs">
+            {rotuloDaCategoria(e.categoria)}
+          </span>
+          <span className="font-mono text-[10px] tracking-[0.14em] text-creme/75 md:text-[11px]">
+            {regiao?.nome.toUpperCase()}
+            <span className="hidden md:inline">
+              {' '}
+              · {regiao?.cidade.toUpperCase()} — {regiao?.estado}
             </span>
-          </div>
-          <h1 className="text-[36px] leading-[0.96] font-bold tracking-[-0.045em] md:text-[clamp(34px,6vw,88px)] md:leading-[0.94]">
-            {e.nome}
-          </h1>
+          </span>
         </div>
-
-        {temTour ? (
-          <div className="absolute top-[14px] right-[18px] flex gap-2 md:top-[18px] md:right-5 lg:right-14">
-            <span className="rounded-full border border-white/30 bg-[rgba(20,19,15,0.65)] px-[14px] py-[9px] text-[11px] font-medium md:px-[18px] md:py-[10px] md:text-xs">
-              Tour 360°
-            </span>
-            <span className="rounded-full border border-white/30 bg-[rgba(20,19,15,0.65)] px-[14px] py-[9px] text-[11px] font-medium md:px-[18px] md:py-[10px] md:text-xs">
-              Vídeo
-            </span>
-          </div>
-        ) : null}
-      </section>
-
-      {/* Tira de miniaturas ------------------------------------------------ */}
-      <div className="filete-topo flex gap-2 overflow-x-auto px-[18px] py-[10px] md:px-5 lg:px-14">
-        <div className="h-[72px] w-[110px] shrink-0 overflow-hidden rounded-md border-2 border-ouro md:h-[84px] md:w-[132px] md:rounded">
-          <div className="relative h-full w-full">
-            <Foto
-              url={capa?.url ?? null}
-              alt=""
-              legenda="[ capa ]"
-              sizes="132px"
-              className="rounded-none"
-            />
-          </div>
-        </div>
-        {miniaturas.map((m) => (
-          <div
-            key={m.legenda}
-            className="relative h-[72px] w-[110px] shrink-0 overflow-hidden rounded-md md:h-[84px] md:w-[132px] md:rounded"
-          >
-            <Foto url={m.url} alt={m.alt ?? m.legenda} legenda={m.legenda} sizes="132px" />
-          </div>
-        ))}
-      </div>
+        <h1 className="text-[36px] leading-[0.96] font-bold tracking-[-0.045em] md:text-[clamp(34px,6vw,88px)] md:leading-[0.94]">
+          {e.nome}
+        </h1>
+      </Galeria>
 
       {/* ---------------------------------------------------------------- */}
       {/* Corpo: conteúdo + formulário lateral                              */}
@@ -221,32 +193,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
               </ul>
             </section>
 
-            {/* Plantas */}
-            <section className="mb-7 md:mb-[clamp(30px,4vw,60px)]">
-              <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
-                Plantas
-              </h2>
-              <div className="-mx-[18px] flex gap-3 overflow-x-auto px-[18px] pb-[6px] md:mx-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] md:gap-4 md:overflow-visible md:px-0 md:pb-0">
-                {e.plantas.map((p) => (
-                  <div
-                    key={p.area}
-                    className="w-[180px] shrink-0 overflow-hidden rounded-[10px] border border-creme/[0.16] md:w-auto md:shrink md:rounded-lg"
-                  >
-                    <div className="hachura grid aspect-square place-items-center p-3 text-center font-mono text-[10px] text-creme/45">
-                      [ planta — {p.tipo} ]
-                    </div>
-                    <div className="p-[14px] md:px-[18px] md:py-4">
-                      <p className="mb-[5px] text-[18px] font-semibold tracking-[-0.025em] md:mb-[6px] md:text-xl">
-                        {p.area}
-                      </p>
-                      <p className="text-xs text-creme/60 md:text-[13px]">
-                        {p.tipo} · {p.vagas}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <Plantas plantas={e.plantas} imagens={plantasImagens} />
 
             {/* Localização */}
             <section>

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FAIXAS_DE_PRECO } from '@/components/busca/busca';
 import { categorias, regioes } from '@/content/regioes';
 import { comParametros, ORDENS, type Filtros, paramsAtuais } from '@/lib/filtros';
+import { Portal } from '@/components/ui/portal';
 
 const pill =
   'rounded-full border border-creme/[0.2] bg-creme/[0.06] px-4 py-[11px] text-[13px] text-creme outline-none focus:border-ouro';
@@ -222,131 +223,133 @@ function FolhaFiltros({ filtros, basePath }: { filtros: Filtros; basePath: strin
       </button>
 
       {aberta ? (
-        <div
-          className="fixed inset-0 z-[95] flex items-end justify-center bg-[rgba(10,10,9,0.7)] md:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Filtros"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setAberta(false);
-          }}
-        >
-          <div className="max-h-[88svh] w-full max-w-[430px] overflow-y-auto rounded-t-[18px] bg-carvao px-[18px] pt-5 pb-[26px] shadow-[0_-12px_40px_rgba(0,0,0,0.6)]">
-            <div className="mx-auto mb-5 h-1 w-[42px] rounded-full bg-creme/25" aria-hidden />
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-[22px] font-semibold tracking-[-0.03em]">Filtros</h2>
-              <Link
-                href={basePath}
-                onClick={() => setAberta(false)}
-                className="text-[13px] text-creme/60 underline"
-              >
-                Limpar tudo
-              </Link>
-            </div>
-
-            <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
-              CATEGORIA
-            </p>
-            <div className="mb-[22px] flex flex-wrap gap-2">
-              {categorias.map((c) => (
+        <Portal>
+          <div
+            className="fixed inset-0 z-[95] flex items-end justify-center bg-[rgba(10,10,9,0.7)] md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filtros"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setAberta(false);
+            }}
+          >
+            <div className="max-h-[88svh] w-full max-w-[430px] overflow-y-auto rounded-t-[18px] bg-carvao px-[18px] pt-5 pb-[26px] shadow-[0_-12px_40px_rgba(0,0,0,0.6)]">
+              <div className="mx-auto mb-5 h-1 w-[42px] rounded-full bg-creme/25" aria-hidden />
+              <div className="mb-5 flex items-center justify-between">
+                <h2 className="text-[22px] font-semibold tracking-[-0.03em]">Filtros</h2>
                 <Link
-                  key={c.slug}
-                  href={`${basePath}${comParametros(base, {
-                    categoria: filtros.categoria === c.slug ? undefined : c.slug,
-                  })}`}
+                  href={basePath}
                   onClick={() => setAberta(false)}
-                  className={`rounded-full px-4 py-[10px] text-[13px] ${
-                    filtros.categoria === c.slug
-                      ? 'bg-ouro font-semibold text-tinta'
-                      : 'border border-creme/[0.26]'
-                  }`}
+                  className="text-[13px] text-creme/60 underline"
                 >
-                  {c.singular}
+                  Limpar tudo
                 </Link>
-              ))}
-            </div>
+              </div>
 
-            <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
-              REGIÃO
-            </p>
-            <div className="mb-[22px] grid gap-[10px] text-[15px]">
-              {regioes.map((r) => (
-                <Link
-                  key={r.slug}
-                  href={`${basePath}${comParametros(base, {
-                    regiao: filtros.regiao === r.slug ? undefined : r.slug,
-                  })}`}
-                  onClick={() => setAberta(false)}
-                  className="flex items-center gap-3"
-                >
-                  <span
-                    aria-hidden
-                    className={`grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[3px] border text-[11px] ${
-                      filtros.regiao === r.slug
-                        ? 'border-ouro bg-ouro text-tinta'
-                        : 'border-creme/40'
+              <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
+                CATEGORIA
+              </p>
+              <div className="mb-[22px] flex flex-wrap gap-2">
+                {categorias.map((c) => (
+                  <Link
+                    key={c.slug}
+                    href={`${basePath}${comParametros(base, {
+                      categoria: filtros.categoria === c.slug ? undefined : c.slug,
+                    })}`}
+                    onClick={() => setAberta(false)}
+                    className={`rounded-full px-4 py-[10px] text-[13px] ${
+                      filtros.categoria === c.slug
+                        ? 'bg-ouro font-semibold text-tinta'
+                        : 'border border-creme/[0.26]'
                     }`}
                   >
-                    {filtros.regiao === r.slug ? '✓' : ''}
-                  </span>
-                  {r.nome}
-                </Link>
-              ))}
-            </div>
+                    {c.singular}
+                  </Link>
+                ))}
+              </div>
 
-            <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
-              QUARTOS
-            </p>
-            <div className="mb-[22px] grid grid-cols-4 gap-2">
-              {['1-2', '3', '4+'].map((q) => (
-                <Link
-                  key={q}
-                  href={`${basePath}${comParametros(base, {
-                    quartos: filtros.quartos === q ? undefined : q,
-                  })}`}
-                  onClick={() => setAberta(false)}
-                  className={`rounded-lg py-[13px] text-center text-sm ${
-                    filtros.quartos === q
-                      ? 'bg-ouro font-semibold text-tinta'
-                      : 'border border-creme/[0.26]'
-                  }`}
-                >
-                  {q === '1-2' ? '1–2' : q}
-                </Link>
-              ))}
-            </div>
+              <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
+                REGIÃO
+              </p>
+              <div className="mb-[22px] grid gap-[10px] text-[15px]">
+                {regioes.map((r) => (
+                  <Link
+                    key={r.slug}
+                    href={`${basePath}${comParametros(base, {
+                      regiao: filtros.regiao === r.slug ? undefined : r.slug,
+                    })}`}
+                    onClick={() => setAberta(false)}
+                    className="flex items-center gap-3"
+                  >
+                    <span
+                      aria-hidden
+                      className={`grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[3px] border text-[11px] ${
+                        filtros.regiao === r.slug
+                          ? 'border-ouro bg-ouro text-tinta'
+                          : 'border-creme/40'
+                      }`}
+                    >
+                      {filtros.regiao === r.slug ? '✓' : ''}
+                    </span>
+                    {r.nome}
+                  </Link>
+                ))}
+              </div>
 
-            <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
-              INVESTIMENTO ATÉ
-            </p>
-            <div className="mb-[22px] grid gap-[10px]">
-              {FAIXAS_DE_PRECO.filter((f) => f.valor).map((f) => (
-                <Link
-                  key={f.valor}
-                  href={`${basePath}${comParametros(base, {
-                    ate: String(filtros.ate) === f.valor ? undefined : f.valor,
-                  })}`}
-                  onClick={() => setAberta(false)}
-                  className={`rounded-lg px-4 py-[14px] text-[15px] ${
-                    String(filtros.ate) === f.valor
-                      ? 'bg-ouro font-semibold text-tinta'
-                      : 'border border-creme/[0.18] bg-creme/[0.06]'
-                  }`}
-                >
-                  {f.rotulo}
-                </Link>
-              ))}
-            </div>
+              <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
+                QUARTOS
+              </p>
+              <div className="mb-[22px] grid grid-cols-4 gap-2">
+                {['1-2', '3', '4+'].map((q) => (
+                  <Link
+                    key={q}
+                    href={`${basePath}${comParametros(base, {
+                      quartos: filtros.quartos === q ? undefined : q,
+                    })}`}
+                    onClick={() => setAberta(false)}
+                    className={`rounded-lg py-[13px] text-center text-sm ${
+                      filtros.quartos === q
+                        ? 'bg-ouro font-semibold text-tinta'
+                        : 'border border-creme/[0.26]'
+                    }`}
+                  >
+                    {q === '1-2' ? '1–2' : q}
+                  </Link>
+                ))}
+              </div>
 
-            <button
-              type="button"
-              onClick={() => setAberta(false)}
-              className="min-h-[56px] w-full rounded-lg bg-ouro p-[18px] text-[15px] font-semibold text-tinta"
-            >
-              Ver resultados
-            </button>
+              <p className="mb-[10px] font-mono text-[10px] tracking-[0.14em] text-creme/55">
+                INVESTIMENTO ATÉ
+              </p>
+              <div className="mb-[22px] grid gap-[10px]">
+                {FAIXAS_DE_PRECO.filter((f) => f.valor).map((f) => (
+                  <Link
+                    key={f.valor}
+                    href={`${basePath}${comParametros(base, {
+                      ate: String(filtros.ate) === f.valor ? undefined : f.valor,
+                    })}`}
+                    onClick={() => setAberta(false)}
+                    className={`rounded-lg px-4 py-[14px] text-[15px] ${
+                      String(filtros.ate) === f.valor
+                        ? 'bg-ouro font-semibold text-tinta'
+                        : 'border border-creme/[0.18] bg-creme/[0.06]'
+                    }`}
+                  >
+                    {f.rotulo}
+                  </Link>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setAberta(false)}
+                className="min-h-[56px] w-full rounded-lg bg-ouro p-[18px] text-[15px] font-semibold text-tinta"
+              >
+                Ver resultados
+              </button>
+            </div>
           </div>
-        </div>
+        </Portal>
       ) : null}
     </>
   );
