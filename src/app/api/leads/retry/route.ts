@@ -1,3 +1,5 @@
+import { createHash, timingSafeEqual } from 'node:crypto';
+
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { env, supabaseConfigurado } from '@/config/env';
@@ -25,12 +27,28 @@ export const dynamic = 'force-dynamic';
  * Sem `CRON_SECRET` configurado o endpoint recusa tudo — um reenviador aberto
  * na internet é um jeito barato de inundar o CRM.
  */
+/**
+ * Compara o header `Authorization` com o segredo esperado em tempo constante.
+ *
+ * `===` em string curto-circuita no primeiro byte diferente e vaza, pelo tempo
+ * de resposta, o quanto o palpite acertou. O SHA-256 dos dois lados dá sempre
+ * 32 bytes, então o `timingSafeEqual` nunca estoura por tamanho e o
+ * comprimento do segredo também não vaza.
+ */
+function autorizacaoConfere(recebido: string | null, segredo: string): boolean {
+  const a = createHash('sha256')
+    .update(recebido ?? '')
+    .digest();
+  const b = createHash('sha256').update(`Bearer ${segredo}`).digest();
+  return timingSafeEqual(a, b);
+}
+
 export async function GET(req: NextRequest) {
   const segredo = process.env.CRON_SECRET;
   if (!segredo) {
     return NextResponse.json({ erro: 'CRON_SECRET não configurado.' }, { status: 503 });
   }
-  if (req.headers.get('authorization') !== `Bearer ${segredo}`) {
+  if (!autorizacaoConfere(req.headers.get('authorization'), segredo)) {
     return NextResponse.json({ erro: 'Não autorizado.' }, { status: 401 });
   }
   if (!supabaseConfigurado) {

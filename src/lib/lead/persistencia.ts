@@ -56,8 +56,11 @@ export async function gravarLead(params: {
     if (!resposta.ok) {
       /*
         O corpo do PostgREST é o que diz se foi chave errada, RLS ou coluna
-        inválida. Sem ele o log vira só um número e a investigação custa um
-        ciclo inteiro de ida e volta.
+        inválida. Guardamos code/message/hint — que diagnosticam — mas nunca o
+        `details`: numa violação de constraint ele traz a "Failing row", ou
+        seja, o nome e o telefone do lead ecoados para dentro do log. Dado
+        pessoal em log de aplicação sem função é o que este projeto pseudonimiza
+        em todo lugar; o caminho de erro não pode ser a exceção.
       */
       await registrar({
         crmLeadUuid: params.leadUuid,
@@ -65,7 +68,7 @@ export async function gravarLead(params: {
         origem: params.lead.origem,
         detalhe: {
           status: resposta.status,
-          resposta: (await resposta.text().catch(() => '')).slice(0, 400),
+          erro: await erroSemPii(resposta),
           papelDaChave: papelDaChaveSupabase(),
         },
       });
@@ -81,6 +84,23 @@ export async function gravarLead(params: {
       detalhe: { erro: e instanceof Error ? e.name : 'desconhecido' },
     });
     return false;
+  }
+}
+
+/**
+ * Extrai do erro do PostgREST só o que diagnostica, sem o `details`.
+ *
+ * O PostgREST responde `{ code, message, details, hint }`. `details` é onde
+ * mora a linha que falhou — com o dado do lead. Ficamos com o resto; se não for
+ * o JSON esperado, um recorte curto que não chega a formar registro.
+ */
+async function erroSemPii(resposta: Response): Promise<unknown> {
+  const texto = await resposta.text().catch(() => '');
+  try {
+    const { code, message, hint } = JSON.parse(texto) as Record<string, unknown>;
+    return { code, message, hint };
+  } catch {
+    return texto.slice(0, 120);
   }
 }
 
