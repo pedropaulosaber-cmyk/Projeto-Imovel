@@ -257,6 +257,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
           <FormularioLead
             variante="claro"
             empreendimentoSlug={e.slug}
+            empreendimentoNome={e.nome}
             pedirEmail
             tipologias={e.plantas.map((p) => `${p.tipo} — ${p.area}`)}
             rotuloBotao={e.book ? 'Receber o book' : 'Chamar no WhatsApp'}

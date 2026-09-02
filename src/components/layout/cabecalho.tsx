@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { linkWhatsApp, site } from '@/config/site';
+import { site } from '@/config/site';
 import { rotas } from '@/lib/rotas';
+import { linkWhatsAppDoCaminho } from '@/lib/whatsapp';
 import { Portal } from '@/components/ui/portal';
 
 import { type ChaveNav, linksDesktop, linksMobile } from './navegacao';
@@ -36,6 +38,8 @@ export function Cabecalho({
 }
 
 export function BarraDesktop({ ativo }: { ativo?: ChaveNav }) {
+  const caminho = usePathname();
+
   return (
     <header className="sticky top-0 z-[60] hidden flex-wrap items-center justify-between gap-4 bg-[rgba(14,14,12,0.94)] px-5 py-[14px] shadow-[0_1px_0_rgba(246,243,236,0.16)] backdrop-blur-[14px] md:flex lg:px-14">
       <Link href={rotas.home} className="text-[16px] font-bold tracking-[0.16em]">
@@ -61,7 +65,7 @@ export function BarraDesktop({ ativo }: { ativo?: ChaveNav }) {
           Corretor
         </Link>
         <a
-          href={linkWhatsApp()}
+          href={linkWhatsAppDoCaminho(caminho)}
           target="_blank"
           rel="noopener noreferrer"
           className="rounded-full bg-ouro px-[22px] py-[11px] font-semibold text-tinta transition-opacity hover:opacity-[0.88]"
@@ -75,6 +79,7 @@ export function BarraDesktop({ ativo }: { ativo?: ChaveNav }) {
 
 function BarraMobile() {
   const [menuAberto, setMenuAberto] = useState(false);
+  const caminho = usePathname();
 
   /* Menu de tela cheia trava o scroll do corpo; sem isso a página corre por
      baixo do overlay no iOS. */
@@ -164,7 +169,7 @@ function BarraMobile() {
                   Corretor de imóveis · {site.creci} · {site.contato.telefoneExibicao}
                 </p>
                 <a
-                  href={linkWhatsApp()}
+                  href={linkWhatsAppDoCaminho(caminho)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-lg bg-ouro p-[17px] text-center text-[15px] font-semibold text-tinta"

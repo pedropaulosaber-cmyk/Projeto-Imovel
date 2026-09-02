@@ -5,6 +5,7 @@ import { useId, useRef, useState } from 'react';
 
 import { linkWhatsApp } from '@/config/site';
 import { rotas } from '@/lib/rotas';
+import { mensagemAposLead } from '@/lib/whatsapp';
 
 type Variante = 'escuro' | 'claro';
 
@@ -12,6 +13,12 @@ interface Props {
   variante?: Variante;
   /** Slug do empreendimento, quando o formulário está na página de um imóvel. */
   empreendimentoSlug?: string;
+  /**
+   * Nome do empreendimento, para a mensagem de WhatsApp que o visitante manda
+   * depois de converter. É o que faz chegar "Tellure" no celular do corretor
+   * em vez de mais um "quero falar sobre um imóvel".
+   */
+  empreendimentoNome?: string;
   /** Tipologias oferecidas no select — só na página de imóvel. */
   tipologias?: string[];
   /** O formulário claro (página de imóvel) também pede e-mail. */
@@ -46,6 +53,7 @@ function contextoDeOrigem() {
 export function FormularioLead({
   variante = 'escuro',
   empreendimentoSlug,
+  empreendimentoNome,
   tipologias,
   pedirEmail = false,
   rotuloBotao = 'Chamar no WhatsApp',
@@ -54,6 +62,8 @@ export function FormularioLead({
   const [estado, setEstado] = useState<'ocioso' | 'enviando' | 'ok' | 'erro'>('ocioso');
   const [erro, setErro] = useState<string | null>(null);
   const [book, setBook] = useState<{ url: string; nomeArquivo: string } | null>(null);
+  /* Guardado no envio porque o formulário é limpo logo depois. */
+  const [quemEnviou, setQuemEnviou] = useState<string | undefined>();
   const idBase = useId();
   const refFormulario = useRef<HTMLFormElement>(null);
 
@@ -115,6 +125,7 @@ export function FormularioLead({
       fbq?.('track', 'Lead', {}, { eventID: refEventId.current });
 
       setBook(json.book ?? null);
+      setQuemEnviou(corpo.nome);
       setEstado('ok');
       refFormulario.current?.reset();
     } catch {
@@ -124,6 +135,14 @@ export function FormularioLead({
   }
 
   if (estado === 'ok') {
+    const whatsapp = linkWhatsApp(
+      mensagemAposLead({
+        nome: quemEnviou,
+        imovel: empreendimentoNome,
+        comBook: Boolean(book),
+      }),
+    );
+
     return (
       <div
         role="status"
@@ -159,7 +178,7 @@ export function FormularioLead({
               O link vale por 30 minutos. Depois disso, é só pedir ao corretor.
             </p>
             <a
-              href={linkWhatsApp()}
+              href={whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className={`text-center text-sm underline underline-offset-2 ${
@@ -171,7 +190,7 @@ export function FormularioLead({
           </>
         ) : (
           <a
-            href={linkWhatsApp()}
+            href={whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className={`min-h-[54px] rounded-lg p-4 text-center text-[15px] font-semibold ${
