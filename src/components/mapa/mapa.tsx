@@ -29,12 +29,21 @@ export function Mapa({
   mapaUrl,
   coordenadas,
   proporcao = 'aspect-[4/3] md:aspect-video',
+  claro = false,
 }: {
   rotulo: string;
   endereco: string;
   mapaUrl?: string;
   coordenadas?: { lat: number; lng: number };
   proporcao?: string;
+  /**
+   * Página de fundo claro (imóvel). O bloco do mapa continua escuro — é um
+   * painel, e mapa costuma ser UI escura —, mas a legenda que fica ABAIXO do
+   * embed, sobre o fundo da página, precisa de cor escura para ser legível no
+   * branco. Só isso muda; o resto do componente é igual à versão escura usada
+   * no escritório.
+   */
+  claro?: boolean;
 }) {
   const [aberto, setAberto] = useState(false);
   /* Coordenada conferida crava o alfinete; sem ela, o Google resolve o texto. */
@@ -57,7 +66,11 @@ export function Mapa({
             className="absolute inset-0 h-full w-full border-0"
           />
         </div>
-        <figcaption className="mt-[10px] flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-creme/45 md:text-[11px]">
+        <figcaption
+          className={`mt-[10px] flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] md:text-[11px] ${
+            claro ? 'text-pedra' : 'text-creme/45'
+          }`}
+        >
           <span>
             {coordenadas
               ? '[ COORDENADA CONFERIDA PELO CORRETOR ]'

@@ -152,7 +152,7 @@ export function CardSimilar({ e }: { e: Empreendimento }) {
   return (
     <Link
       href={rotas.empreendimento(e)}
-      className="block w-[230px] shrink-0 overflow-hidden rounded-xl border border-creme/[0.14] bg-carvao md:w-auto md:shrink md:rounded-lg md:border-creme/[0.16] md:bg-transparent md:transition-colors md:hover:border-ouro"
+      className="block w-[230px] shrink-0 overflow-hidden rounded-xl border border-tinta/[0.12] bg-creme md:w-auto md:shrink md:rounded-lg md:border-tinta/[0.12] md:bg-transparent md:transition-colors md:hover:border-ouro"
     >
       <div className="relative aspect-[4/3]">
         <Foto
@@ -163,7 +163,7 @@ export function CardSimilar({ e }: { e: Empreendimento }) {
         />
       </div>
       <div className="p-4 md:p-[18px]">
-        <p className="mb-[6px] text-[11px] text-ouro md:mb-2 md:font-mono md:text-[10px] md:tracking-[0.14em] md:text-creme/55">
+        <p className="mb-[6px] text-[11px] text-ouro md:mb-2 md:font-mono md:text-[10px] md:tracking-[0.14em] md:text-pedra">
           {nomeDaRegiao(e.regiaoSlug)}
           <span className="hidden md:inline"> · {rotuloDaCategoria(e.categoria)}</span>
         </p>

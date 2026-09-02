@@ -43,7 +43,7 @@ export function Diferenciais({ itens }: { itens: string[] }) {
           <li
             key={a}
             hidden={!tudo && i >= visiveis}
-            className="rounded-full border border-creme/[0.24] px-[15px] py-[10px] text-[13px] md:px-[18px] md:py-[11px] md:text-sm"
+            className="rounded-full border border-tinta/[0.22] px-[15px] py-[10px] text-[13px] md:px-[18px] md:py-[11px] md:text-sm"
           >
             {a}
           </li>
