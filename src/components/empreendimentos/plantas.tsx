@@ -10,9 +10,14 @@ import type { Midia, Planta } from '@/content/tipos';
  * Seção de plantas: a lista de metragens do book e as plantas humanizadas.
  *
  * A imagem entra com `object-contain` sobre fundo claro, e não `cover`: planta
- * cortada não serve para nada, e o desenho foi feito sobre papel branco. Ao
- * clicar, abre em tela cheia com zoom — é onde o cliente vai de fato ler as
- * medidas dos cômodos.
+ * cortada não serve para nada, e o desenho foi feito sobre papel branco.
+ *
+ * Em tela cheia a planta abre **inteira**, encaixada na tela. Antes ela nascia
+ * com 760 px de largura mínima num celular de 390: o que aparecia era a tarja
+ * da incorporadora na borda esquerda, e o desenho ficava fora da tela até
+ * alguém descobrir que dava para arrastar. Quem toca numa metragem quer ver
+ * aquela planta, não caçá-la. O zoom continua a um toque de distância, porque é
+ * com ele que se lê medida de quarto.
  *
  * Clicar na metragem abre a planta daquela tipologia. O pareamento veio da
  * metragem impressa no próprio desenho ("FINAL 1 — 171M² — 3 SUÍTES"), lida
@@ -23,10 +28,19 @@ import type { Midia, Planta } from '@/content/tipos';
 
 export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midia[] }) {
   const [aberta, setAberta] = useState<number | null>(null);
+  const [ampliada, setAmpliada] = useState(false);
+
+  const abrir = useCallback((n: number) => {
+    setAberta(n);
+    setAmpliada(false);
+  }, []);
 
   const total = imagens.length;
   const ir = useCallback(
-    (proximo: number) => setAberta((a) => (a === null ? a : (proximo + total) % total)),
+    (proximo: number) => {
+      setAmpliada(false);
+      setAberta((a) => (a === null ? a : (proximo + total) % total));
+    },
     [total],
   );
 
@@ -36,6 +50,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
     document.body.style.overflow = 'hidden';
     const aoTeclar = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setAberta(null);
+      if (e.key === 'Enter' || e.key === ' ') setAmpliada((v) => !v);
       if (e.key === 'ArrowRight') ir(aberta + 1);
       if (e.key === 'ArrowLeft') ir(aberta - 1);
     };
@@ -90,7 +105,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
               <button
                 key={chave}
                 type="button"
-                onClick={() => setAberta(alvo)}
+                onClick={() => abrir(alvo)}
                 aria-label={`Ver a planta de ${p.area} — ${p.tipo}`}
                 className={`${cartao} cursor-pointer border-creme/[0.16] transition-colors hover:border-ouro`}
               >
@@ -111,7 +126,7 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
               <button
                 key={m.url ?? n}
                 type="button"
-                onClick={() => setAberta(n)}
+                onClick={() => abrir(n)}
                 aria-label={`Ampliar ${m.legenda}`}
                 className="w-[230px] shrink-0 cursor-pointer overflow-hidden rounded-[10px] border border-creme/[0.16] bg-creme transition-colors hover:border-ouro md:w-auto md:shrink md:rounded-lg"
               >
@@ -147,27 +162,49 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
             }}
           >
             <div className="mb-3 flex items-center justify-between gap-3">
-              <span className="font-mono text-[11px] tracking-[0.1em] text-creme/70">
+              <span className="min-w-0 font-mono text-[11px] tracking-[0.1em] text-creme/70">
                 {emFoco.legenda.toUpperCase()} · {(aberta ?? 0) + 1}/{total}
               </span>
-              <button
-                type="button"
-                onClick={() => setAberta(null)}
-                aria-label="Fechar"
-                className="grid h-10 w-10 place-items-center rounded-full border border-creme/25 text-lg text-creme"
-              >
-                ×
-              </button>
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setAmpliada((v) => !v)}
+                  aria-pressed={ampliada}
+                  className="rounded-full border border-creme/25 px-[14px] py-[9px] font-mono text-[10px] tracking-[0.1em] text-creme md:text-[11px]"
+                >
+                  {ampliada ? 'VER INTEIRA' : 'AMPLIAR'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAberta(null)}
+                  aria-label="Fechar"
+                  className="grid h-10 w-10 place-items-center rounded-full border border-creme/25 text-lg text-creme"
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
             {/*
-              A planta precisa de largura para ser legível: num celular de
-              390 px o desenho vira um borrão. Por isso a imagem nasce com no
-              mínimo 760 px e o contêiner rola na horizontal — o zoom natural
-              de quem está lendo medida de quarto.
+              Encaixada por padrão, ampliada a um toque. A planta ampliada nasce
+              com no mínimo 760 px de largura e rola na horizontal: é assim que
+              se lê medida de quarto num celular. Mas abrir já nesse estado
+              mostrava a tarja da incorporadora e escondia o desenho fora da
+              tela — quem toca numa metragem quer ver a planta, não procurá-la.
             */}
-            <div className="flex min-h-0 flex-1 flex-col overflow-auto">
-              <div className="m-auto w-fit shrink-0 overflow-hidden rounded-lg bg-creme">
+            <button
+              type="button"
+              onClick={() => setAmpliada((v) => !v)}
+              aria-label={ampliada ? 'Ver a planta inteira' : 'Ampliar a planta'}
+              className={`min-h-0 flex-1 cursor-zoom-in ${
+                ampliada ? 'flex cursor-zoom-out flex-col overflow-auto' : 'grid place-items-center'
+              }`}
+            >
+              <span
+                className={`block overflow-hidden rounded-lg bg-creme ${
+                  ampliada ? 'm-auto w-fit shrink-0' : 'max-h-full'
+                }`}
+              >
                 <Image
                   src={emFoco.url}
                   alt={emFoco.alt ?? emFoco.legenda}
@@ -175,10 +212,21 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
                   height={845}
                   sizes="100vw"
                   quality={92}
-                  className="h-auto w-[min(1500px,max(760px,100vw))] max-w-none"
+                  className={
+                    ampliada
+                      ? 'h-auto w-[min(1500px,max(760px,100vw))] max-w-none'
+                      : 'max-h-[inherit] w-auto max-w-full object-contain'
+                  }
+                  style={ampliada ? undefined : { height: 'auto', maxHeight: '100%' }}
                 />
-              </div>
-            </div>
+              </span>
+            </button>
+
+            {!ampliada ? (
+              <p className="mt-2 text-center font-mono text-[10px] tracking-[0.08em] text-creme/45">
+                [ TOQUE NA PLANTA PARA AMPLIAR E LER AS MEDIDAS ]
+              </p>
+            ) : null}
 
             {total > 1 ? (
               <div className="mt-3 flex justify-center gap-3">

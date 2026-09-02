@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { CardSimilar } from '@/components/empreendimentos/cards';
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { FormularioLead } from '@/components/lead/formulario-lead';
+import { Diferenciais } from '@/components/empreendimentos/diferenciais';
 import { Galeria } from '@/components/empreendimentos/galeria';
 import { Plantas } from '@/components/empreendimentos/plantas';
 import { Mapa } from '@/components/mapa/mapa';
@@ -178,16 +179,7 @@ export default async function PaginaEmpreendimento({ params }: Params) {
               <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
                 Diferenciais
               </h2>
-              <ul className="flex list-none flex-wrap gap-2 p-0 md:gap-[9px]">
-                {e.amenidades.map((a) => (
-                  <li
-                    key={a}
-                    className="rounded-full border border-creme/[0.24] px-[15px] py-[10px] text-[13px] md:px-[18px] md:py-[11px] md:text-sm"
-                  >
-                    {a}
-                  </li>
-                ))}
-              </ul>
+              <Diferenciais itens={e.amenidades} />
             </section>
 
             <Plantas plantas={e.plantas} imagens={plantasImagens} />
