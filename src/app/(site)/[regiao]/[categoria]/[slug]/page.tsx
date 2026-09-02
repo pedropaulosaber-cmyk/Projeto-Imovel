@@ -119,9 +119,18 @@ export default async function PaginaEmpreendimento({ params }: Params) {
       <div className="md:flex md:flex-wrap md:items-start md:gap-[clamp(26px,4vw,68px)] md:px-5 md:pt-[clamp(30px,4.4vw,68px)] md:pb-[clamp(46px,6vw,96px)] lg:px-14">
         <main className="min-w-0 md:flex-[999_1_540px]">
           {/* Ficha técnica */}
-          {/* A linha de preço é derivada, para o valor viver num lugar só. */}
+          {/*
+            Preço e entrega são derivados. Guardar a data de entrega também
+            dentro de `ficha` já rendeu um imóvel com "dez/2026" no campo e
+            "A confirmar" na tabela da página: o mesmo dado em dois lugares
+            diverge no dia em que só um dos dois é atualizado.
+          */}
           <div className="grid grid-cols-2 md:mb-[clamp(28px,4vw,56px)] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
-            {[{ label: 'A PARTIR DE', valor: precoExibicao(e) }, ...e.ficha].map((f) => (
+            {[
+              { label: 'A PARTIR DE', valor: precoExibicao(e) },
+              ...e.ficha,
+              { label: 'ENTREGA', valor: e.previsaoEntrega ?? 'A confirmar' },
+            ].map((f) => (
               <div key={f.label} className="celula p-[18px] md:px-5 md:py-[22px]">
                 <p className="mb-2 font-mono text-[9px] tracking-[0.14em] text-creme/55 md:mb-[10px] md:text-[10px]">
                   {f.label}
