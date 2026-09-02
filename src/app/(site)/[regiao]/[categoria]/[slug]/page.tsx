@@ -200,7 +200,11 @@ export default async function PaginaEmpreendimento({ params }: Params) {
               <h2 className="mb-[14px] text-2xl font-semibold tracking-[-0.03em] md:mb-5 md:text-[clamp(22px,2.8vw,36px)] md:leading-[1.08]">
                 Localização
               </h2>
-              <Mapa rotulo={e.nome} endereco={e.localizacao.endereco} />
+              <Mapa
+                rotulo={e.nome}
+                endereco={e.localizacao.endereco}
+                mapaUrl={e.localizacao.mapaUrl}
+              />
               <p className="mt-4 max-w-[62ch] text-sm leading-[1.7] text-creme/72 text-pretty md:mt-5 md:text-base md:leading-[1.72]">
                 {e.localizacao.endereco}. {e.localizacao.referencias}
               </p>
