@@ -1021,160 +1021,186 @@ const catalogo: Empreendimento[] = [
     midias: [
       {
         tipo: 'foto',
-        url: '/imagens/cidade-ybiti-home/01-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Perspectiva das duas torres do complexo ao entardecer, com o embasamento envidraçado e a cidade baixa ao fundo',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/cidade-ybiti-home/02-acesso-pela-avenida.jpg',
+        url: '/imagens/cidade-ybiti-home/01-acesso-pela-avenida.jpg',
         legenda: 'Acesso',
         alt: 'Acesso pela avenida com pergolado metálico iluminado, canteiros lineares e a torre erguendo-se atrás',
       },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/cidade-ybiti-home/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Perspectiva das duas torres do complexo ao entardecer, com o embasamento envidraçado e a cidade baixa ao fundo',
+      },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/03-torre.jpg',
         legenda: 'Torre',
         alt: 'Torre vista de baixo contra o céu, com as varandas balcão em fita e o coroamento branco do topo',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/04-piscina-do-rooftop.jpg',
         legenda: 'Piscina do rooftop',
         alt: 'Piscina do rooftop com deck de madeira, espreguiçadeiras e palmeiras, sobre a linha do horizonte da cidade',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/05-deck-da-piscina.jpg',
         legenda: 'Deck da piscina',
         alt: 'Deck da piscina no fim da tarde, com guarda-corpo de vidro e vista aberta para os prédios vizinhos',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/06-terraco.jpg',
         legenda: 'Terraço',
         alt: 'Terraço coberto com mesas redondas, luminárias pendentes e jardim lateral, aberto para a vista',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/07-espaco-gourmet.jpg',
         legenda: 'Espaço gourmet',
         alt: 'Espaço gourmet com bancada de apoio, marcenaria clara e mesa comprida voltada para as esquadrias',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/08-living-decorado.jpg',
         legenda: 'Living decorado',
         alt: 'Living do apartamento decorado integrado à cozinha e à varanda, com mesa de jantar e vista para a cidade',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/09-torre.jpg',
         legenda: 'Torre',
         alt: 'Torre — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/10-fachada.jpg',
         legenda: 'Fachada',
         alt: 'Fachada — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/11-fachada-residencial.jpg',
         legenda: 'Fachada residencial',
         alt: 'Fachada residencial — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/12-hall-residencial.jpg',
         legenda: 'Hall residencial',
         alt: 'Hall residencial — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/13-cafe.jpg',
         legenda: 'Café',
         alt: 'Café — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/14-spa-e-sauna.jpg',
         legenda: 'Spa e sauna',
         alt: 'Spa e sauna — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/15-academia.jpg',
         legenda: 'Academia',
         alt: 'Academia — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/16-residencia-de-1-suite.jpg',
         legenda: 'Residência de 1 suíte',
         alt: 'Residência de 1 suíte — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/17-living-e-cozinha.jpg',
         legenda: 'Living e cozinha',
         alt: 'Living e cozinha — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/18-sala-com-varanda.jpg',
         legenda: 'Sala com varanda',
         alt: 'Sala com varanda — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/cidade-ybiti-home/19-living.jpg',
         legenda: 'Living',
         alt: 'Living — imagem do material de vendas do Cidade Ybiti Home, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-01.jpg',
         legenda: '74,37 m² · 2 quartos, 1 suíte',
         alt: 'Planta humanizada de 74,37 m² — 2 quartos, 1 suíte; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-02.jpg',
         legenda: 'Planta 02',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-03.jpg',
         legenda: '47,19 m² · 1 suíte',
         alt: 'Planta humanizada de 47,19 m² — 1 suíte; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-04.jpg',
         legenda: '43,98 m² · 1 suíte',
         alt: 'Planta humanizada de 43,98 m² — 1 suíte; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-05.jpg',
         legenda: '43,92 m² · 1 suíte',
         alt: 'Planta humanizada de 43,92 m² — 1 suíte; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-06.jpg',
         legenda: 'Planta 06',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-07.jpg',
         legenda: 'Planta 07',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/cidade-ybiti-home/planta-08.jpg',
@@ -1568,152 +1594,177 @@ const catalogo: Empreendimento[] = [
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/01-fachada.jpg',
         legenda: 'Fachada',
-        alt: 'Fachada da torre vista da esquina, com varandas em fita, jardineiras corridas no embasamento e paisagismo na calçada',
+        alt: 'Fachada — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/02-piscina-com-vista.jpg',
+        url: '/imagens/casamerica-parque-cascavel/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Fachada da torre vista da esquina, com varandas em fita, jardineiras corridas no embasamento e paisagismo na calçada',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/casamerica-parque-cascavel/03-piscina-com-vista.jpg',
         legenda: 'Piscina com vista',
         alt: 'Piscina do pavimento de lazer com deck de madeira e guarda-corpo de vidro sobre a vista da cidade',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/03-piscina-do-rooftop.jpg',
+        url: '/imagens/casamerica-parque-cascavel/04-piscina-do-rooftop.jpg',
         legenda: 'Deck da piscina',
         alt: 'Piscina alongada com prainha, boia colorida e espreguiçadeiras, junto ao jardim do pavimento de lazer',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/04-hall-de-entrada.jpg',
+        url: '/imagens/casamerica-parque-cascavel/05-hall-de-entrada.jpg',
         legenda: 'Hall de entrada',
         alt: 'Hall de entrada com poltronas de couro claro, mesa lateral e painel de madeira ripada até o teto',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/05-academia.jpg',
+        url: '/imagens/casamerica-parque-cascavel/06-academia.jpg',
         legenda: 'Academia',
         alt: 'Academia com esteiras, bicicleta ergométrica e bola suíça, iluminada por esquadrias de piso a teto',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/06-salao-de-festas.jpg',
+        url: '/imagens/casamerica-parque-cascavel/07-salao-de-festas.jpg',
         legenda: 'Salão de festas',
         alt: 'Salão de festas com mesas de madeira postas, cadeiras claras e bancada de apoio ao fundo',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/07-living-decorado.jpg',
+        url: '/imagens/casamerica-parque-cascavel/08-living-decorado.jpg',
         legenda: 'Living decorado',
         alt: 'Living do apartamento decorado com sofá cinza, tapete claro e vasos de folhagem junto à varanda',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/08-suite-decorada.jpg',
+        url: '/imagens/casamerica-parque-cascavel/09-suite-decorada.jpg',
         legenda: 'Suíte decorada',
         alt: 'Suíte decorada com cama de casal, painel de madeira na cabeceira e iluminação embutida no forro',
       },
-      {
-        tipo: 'foto',
-        url: '/imagens/casamerica-parque-cascavel/09-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Fachada — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
-      },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/10-mercado.jpg',
         legenda: 'Mercado',
         alt: 'Mercado — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/11-bicicletario.jpg',
         legenda: 'Bicicletário',
         alt: 'Bicicletário — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/12-area-comum.jpg',
         legenda: 'Área comum',
         alt: 'Área comum — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/13-playground.jpg',
         legenda: 'Playground',
         alt: 'Playground — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/14-brinquedoteca.jpg',
         legenda: 'Brinquedoteca',
         alt: 'Brinquedoteca — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/15-quadra.jpg',
         legenda: 'Quadra',
         alt: 'Quadra — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/16-sala-de-jogos.jpg',
         legenda: 'Sala de jogos',
         alt: 'Sala de jogos — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/17-pet-place.jpg',
         legenda: 'Pet place',
         alt: 'Pet place — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/18-salao-de-festas.jpg',
         legenda: 'Salão de festas',
         alt: 'Salão de festas — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/19-varanda-gourmet.jpg',
         legenda: 'Varanda gourmet',
         alt: 'Varanda gourmet — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/20-espaco-gourmet.jpg',
         legenda: 'Espaço gourmet',
         alt: 'Espaço gourmet — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/casamerica-parque-cascavel/21-praca-de-convivencia.jpg',
         legenda: 'Praça de convivência',
         alt: 'Praça de convivência — imagem do material de vendas do Casamérica Parque Cascavel, Parque Amazônia, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/casamerica-parque-cascavel/planta-01.jpg',
         legenda: 'Planta 01',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/casamerica-parque-cascavel/planta-02.jpg',
         legenda: 'Planta 02',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/casamerica-parque-cascavel/planta-03.jpg',
         legenda: 'Sob consulta · 2 quartos',
         alt: 'Planta humanizada de Sob consulta — 2 quartos; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/casamerica-parque-cascavel/planta-04.jpg',
         legenda: 'Planta 04',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/casamerica-parque-cascavel/planta-05.jpg',
@@ -2736,170 +2787,198 @@ const catalogo: Empreendimento[] = [
         tipo: 'foto',
         url: '/imagens/opus-ayra/01-fachada.jpg',
         legenda: 'Fachada',
-        alt: 'Torre vista da avenida, com brises em muxarabi na fachada e prédios vizinhos ao fundo',
+        alt: 'Fachada — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/02-varandas.jpg',
+        url: '/imagens/opus-ayra/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Torre vista da avenida, com brises em muxarabi na fachada e prédios vizinhos ao fundo',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-ayra/03-varandas.jpg',
         legenda: 'Varandas',
         alt: 'Detalhe da fachada com varandas sucessivas, vegetação nos peitoris e brises verticais de madeira',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/03-fachada-a-noite.jpg',
+        url: '/imagens/opus-ayra/04-fachada-a-noite.jpg',
         legenda: 'Fachada à noite',
         alt: 'Fachada iluminada à noite, com as varandas e o pavimento de lazer acesos em luz quente',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/04-piscina.jpg',
+        url: '/imagens/opus-ayra/05-piscina.jpg',
         legenda: 'Piscina',
         alt: 'Piscina com raia alongada entre palmeiras, camas de sol e cortina d’água ao fundo',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/05-lazer.jpg',
+        url: '/imagens/opus-ayra/06-lazer.jpg',
         legenda: 'Lazer',
         alt: 'Vista de cima do pavimento de lazer, com piscina, deck e jardins sobre o embasamento',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/06-hall-social.jpg',
+        url: '/imagens/opus-ayra/07-hall-social.jpg',
         legenda: 'Hall social',
         alt: 'Hall social com forro ripado de madeira, sofá comprido de couro e esquadrias abertas para o jardim',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/07-espaco-gourmet.jpg',
+        url: '/imagens/opus-ayra/08-espaco-gourmet.jpg',
         legenda: 'Espaço gourmet',
         alt: 'Espaço gourmet com bancada de pedra, banquetas altas e marcenaria escura junto às esquadrias',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/08-brinquedoteca.jpg',
+        url: '/imagens/opus-ayra/09-brinquedoteca.jpg',
         legenda: 'Brinquedoteca',
         alt: 'Brinquedoteca em tons de verde-água e amarelo, com mesas infantis, nichos e forro decorado',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/09-fachada.jpg',
+        url: '/imagens/opus-ayra/10-fachada.jpg',
         legenda: 'Fachada',
         alt: 'Fachada — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/10-torre.jpg',
+        url: '/imagens/opus-ayra/11-torre.jpg',
         legenda: 'Torre',
         alt: 'Torre — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/opus-ayra/11-varandas.jpg',
+        url: '/imagens/opus-ayra/12-varandas.jpg',
         legenda: 'Varandas',
         alt: 'Varandas — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-ayra/12-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Fachada — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
-      },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/13-fachada-e-piscina.jpg',
         legenda: 'Fachada e piscina',
         alt: 'Fachada e piscina — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/14-acesso.jpg',
         legenda: 'Acesso',
         alt: 'Acesso — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/15-recepcao.jpg',
         legenda: 'Recepção',
         alt: 'Recepção — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/16-lounge.jpg',
         legenda: 'Lounge',
         alt: 'Lounge — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/17-lazer-aquatico.jpg',
         legenda: 'Lazer aquático',
         alt: 'Lazer aquático — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/18-lazer.jpg',
         legenda: 'Lazer',
         alt: 'Lazer — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/19-hall-de-correspondencia.jpg',
         legenda: 'Hall de correspondência',
         alt: 'Hall de correspondência — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/20-elevadores.jpg',
         legenda: 'Elevadores',
         alt: 'Elevadores — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-ayra/21-varanda.jpg',
         legenda: 'Varanda',
         alt: 'Varanda — imagem do material de vendas do Opus Ayra, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-01.jpg',
         legenda: '129,01 m² · 3 suítes',
         alt: 'Planta humanizada de 129,01 m² — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-02.jpg',
         legenda: 'Planta 02',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-03.jpg',
         legenda: '125,69 m² · 3 suítes',
         alt: 'Planta humanizada de 125,69 m² — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-04.jpg',
         legenda: '180,64 m² · Penthouse — 3 suítes',
         alt: 'Planta humanizada de 180,64 m² — Penthouse — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-05.jpg',
         legenda: '173,19 m² · Penthouse — 3 suítes',
         alt: 'Planta humanizada de 173,19 m² — Penthouse — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-06.jpg',
         legenda: '211,05 m² · Penthouse — 3 suítes',
         alt: 'Planta humanizada de 211,05 m² — Penthouse — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-07.jpg',
         legenda: '189,46 m² · Penthouse — 3 suítes',
         alt: 'Planta humanizada de 189,46 m² — Penthouse — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-ayra/planta-08.jpg',
@@ -4673,122 +4752,142 @@ const catalogo: Empreendimento[] = [
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/01-fachada.jpg',
         legenda: 'Fachada',
-        alt: 'Torre vista da rua arborizada, com varandas em fita e embasamento envidraçado',
+        alt: 'Fachada — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/02-acesso.jpg',
+        url: '/imagens/smart-parque-areiao/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Torre vista da rua arborizada, com varandas em fita e embasamento envidraçado',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/smart-parque-areiao/03-acesso.jpg',
         legenda: 'Acesso',
         alt: 'Embasamento do prédio com jardineiras corridas, brises de madeira e carros na via',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/03-piscina-do-rooftop.jpg',
+        url: '/imagens/smart-parque-areiao/04-piscina-do-rooftop.jpg',
         legenda: 'Piscina do rooftop',
         alt: 'Piscina do rooftop ao pôr do sol, com bancada de apoio e a cidade ao fundo',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/04-coworking.jpg',
+        url: '/imagens/smart-parque-areiao/05-coworking.jpg',
         legenda: 'Coworking',
         alt: 'Coworking com mesas altas, banquetas e painel com a frase No one is you and that is your power',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/05-academia.jpg',
+        url: '/imagens/smart-parque-areiao/06-academia.jpg',
         legenda: 'Academia',
         alt: 'Academia com esteiras, estação de musculação e esquadrias de piso a teto',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/06-salao-de-festas.jpg',
+        url: '/imagens/smart-parque-areiao/07-salao-de-festas.jpg',
         legenda: 'Salão de festas',
         alt: 'Salão de festas com mesa comprida, televisão e marcenaria escura',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/07-market.jpg',
+        url: '/imagens/smart-parque-areiao/08-market.jpg',
         legenda: 'Market',
         alt: 'Mercado interno com prateleiras abastecidas, geladeiras de vidro e balcão de autoatendimento',
       },
+
       {
         tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/08-salao-de-jogos.jpg',
+        url: '/imagens/smart-parque-areiao/09-salao-de-jogos.jpg',
         legenda: 'Salão de jogos',
         alt: 'Salão de jogos com mesa de sinuca, poltronas e vegetação junto às esquadrias',
       },
-      {
-        tipo: 'foto',
-        url: '/imagens/smart-parque-areiao/09-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Fachada — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
-      },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/10-lobby.jpg',
         legenda: 'Lobby',
         alt: 'Lobby — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/11-fitness-e-varanda.jpg',
         legenda: 'Fitness e varanda',
         alt: 'Fitness e varanda — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/12-espaco-gourmet.jpg',
         legenda: 'Espaço gourmet',
         alt: 'Espaço gourmet — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/13-lavanderia.jpg',
         legenda: 'Lavanderia',
         alt: 'Lavanderia — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/14-lockers-inteligentes.jpg',
         legenda: 'Lockers inteligentes',
         alt: 'Lockers inteligentes — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/15-bicicletario.jpg',
         legenda: 'Bicicletário',
         alt: 'Bicicletário — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/16-brinquedoteca.jpg',
         legenda: 'Brinquedoteca',
         alt: 'Brinquedoteca — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/17-playground.jpg',
         legenda: 'Playground',
         alt: 'Playground — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/smart-parque-areiao/18-garagem.jpg',
         legenda: 'Garagem',
         alt: 'Garagem — imagem do material de vendas do Smart Parque Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/smart-parque-areiao/planta-01.jpg',
         legenda: '39 m² · Studio',
         alt: 'Planta humanizada de 39 m² — Studio; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/smart-parque-areiao/planta-02.jpg',
         legenda: 'Planta 02',
         alt: 'Planta humanizada do apartamento; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/smart-parque-areiao/planta-03.jpg',
@@ -5382,130 +5481,151 @@ const catalogo: Empreendimento[] = [
     midias: [
       {
         tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/01-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Torre alta vista de baixo, com varandas em fita e palmeiras no embasamento',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/02-lazer.jpg',
-        legenda: 'Lazer',
-        alt: 'Vista aérea do pavimento de lazer, com piscina, quadra e bangalô de madeira entre jardins',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/03-piscina.jpg',
-        legenda: 'Piscina',
-        alt: 'Piscina alongada com deck de madeira, espreguiçadeiras vermelhas e vegetação nas bordas',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/04-piscina-coberta.jpg',
-        legenda: 'Piscina coberta',
-        alt: 'Piscina coberta com espreguiçadeiras estampadas e esquadrias abertas para a cidade',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/05-academia.jpg',
-        legenda: 'Academia',
-        alt: 'Academia com esteiras, estação de musculação e parede em cobogó branco',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/06-salao-de-festas.jpg',
-        legenda: 'Salão de festas',
-        alt: 'Salão de festas com mesas redondas postas e esquadrias de piso a teto',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/07-living-decorado.jpg',
-        legenda: 'Living decorado',
-        alt: 'Living do apartamento decorado com sofá claro, jantar integrado e cozinha ao fundo',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/08-suite-decorada.jpg',
-        legenda: 'Suíte decorada',
-        alt: 'Suíte decorada com cama de casal, closet aberto e luminária circular no forro',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/residencial-lago-areiao/09-piscina.jpg',
+        url: '/imagens/residencial-lago-areiao/01-piscina.jpg',
         legenda: 'Piscina',
         alt: 'Piscina — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Torre alta vista de baixo, com varandas em fita e palmeiras no embasamento',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/03-lazer.jpg',
+        legenda: 'Lazer',
+        alt: 'Vista aérea do pavimento de lazer, com piscina, quadra e bangalô de madeira entre jardins',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/04-piscina.jpg',
+        legenda: 'Piscina',
+        alt: 'Piscina alongada com deck de madeira, espreguiçadeiras vermelhas e vegetação nas bordas',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/05-piscina-coberta.jpg',
+        legenda: 'Piscina coberta',
+        alt: 'Piscina coberta com espreguiçadeiras estampadas e esquadrias abertas para a cidade',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/06-academia.jpg',
+        legenda: 'Academia',
+        alt: 'Academia com esteiras, estação de musculação e parede em cobogó branco',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/07-salao-de-festas.jpg',
+        legenda: 'Salão de festas',
+        alt: 'Salão de festas com mesas redondas postas e esquadrias de piso a teto',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/08-living-decorado.jpg',
+        legenda: 'Living decorado',
+        alt: 'Living do apartamento decorado com sofá claro, jantar integrado e cozinha ao fundo',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/residencial-lago-areiao/09-suite-decorada.jpg',
+        legenda: 'Suíte decorada',
+        alt: 'Suíte decorada com cama de casal, closet aberto e luminária circular no forro',
+      },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/10-deck-da-piscina.jpg',
         legenda: 'Deck da piscina',
         alt: 'Deck da piscina — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/11-brinquedoteca-e-playground.jpg',
         legenda: 'Brinquedoteca e playground',
         alt: 'Brinquedoteca e playground — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/12-academia.jpg',
         legenda: 'Academia',
         alt: 'Academia — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/13-salao-de-festas.jpg',
         legenda: 'Salão de festas',
         alt: 'Salão de festas — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/14-varanda.jpg',
         legenda: 'Varanda',
         alt: 'Varanda — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/15-living.jpg',
         legenda: 'Living',
         alt: 'Living — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/16-piscina-coberta.jpg',
         legenda: 'Piscina coberta',
         alt: 'Piscina coberta — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/17-mercado.jpg',
         legenda: 'Mercado',
         alt: 'Mercado — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/residencial-lago-areiao/18-estacao-de-carregamento.jpg',
         legenda: 'Estação de carregamento',
         alt: 'Estação de carregamento — imagem do material de vendas do Residencial Lago Areião, Setor Pedro Ludovico, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/residencial-lago-areiao/planta-01.jpg',
         legenda: '108,52 m² · 3 suítes',
         alt: 'Planta humanizada de 108,52 m² — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/residencial-lago-areiao/planta-02.jpg',
         legenda: '140 m² · 3 suítes — elevador privativo',
         alt: 'Planta humanizada de 140 m² — 3 suítes — elevador privativo; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/residencial-lago-areiao/planta-03.jpg',
         legenda: '143 a 190 m² · Penthouse — 3 suítes com piscina',
         alt: 'Planta humanizada de 143 a 190 m² — Penthouse — 3 suítes com piscina; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/residencial-lago-areiao/planta-04.jpg',
@@ -5645,220 +5765,256 @@ const catalogo: Empreendimento[] = [
     midias: [
       {
         tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/01-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Torre vista da rua, com brises verticais e o bairro arborizado ao redor',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/02-piscina.jpg',
-        legenda: 'Piscina',
-        alt: 'Piscina com raia contornando o empreendimento, entre deck de madeira e jardins',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/03-piscina-privativa.jpg',
-        legenda: 'Piscina privativa',
-        alt: 'Piscina privativa do poolhouse, com deck, churrasqueira e cortina de vegetação',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/04-academia.jpg',
-        legenda: 'Academia',
-        alt: 'Academia com esteiras, estação de musculação e forro em painéis de madeira',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/05-salao-multiuso.jpg',
-        legenda: 'Salão multiuso',
-        alt: 'Salão multiuso com mesas redondas, poltronas baixas e esquadrias abertas para o jardim',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/06-espaco-gourmet.jpg',
-        legenda: 'Espaço gourmet',
-        alt: 'Espaço gourmet com bancada de pedra escura, mesa comprida e vegetação na varanda',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/07-quadra-de-beach-tennis.jpg',
-        legenda: 'Quadra de beach tennis',
-        alt: 'Quadra de beach tennis com areia clara, rede e muro grafitado ao fundo',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/08-lavanderia.jpg',
-        legenda: 'Lavanderia',
-        alt: 'Lavanderia coletiva com máquinas alinhadas, bancada de pedra e prateleiras de apoio',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/opus-gyro-o2/09-torre.jpg',
+        url: '/imagens/opus-gyro-o2/01-torre.jpg',
         legenda: 'Torre',
         alt: 'Torre — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Torre vista da rua, com brises verticais e o bairro arborizado ao redor',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/03-piscina.jpg',
+        legenda: 'Piscina',
+        alt: 'Piscina com raia contornando o empreendimento, entre deck de madeira e jardins',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/04-piscina-privativa.jpg',
+        legenda: 'Piscina privativa',
+        alt: 'Piscina privativa do poolhouse, com deck, churrasqueira e cortina de vegetação',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/05-academia.jpg',
+        legenda: 'Academia',
+        alt: 'Academia com esteiras, estação de musculação e forro em painéis de madeira',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/06-salao-multiuso.jpg',
+        legenda: 'Salão multiuso',
+        alt: 'Salão multiuso com mesas redondas, poltronas baixas e esquadrias abertas para o jardim',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/07-espaco-gourmet.jpg',
+        legenda: 'Espaço gourmet',
+        alt: 'Espaço gourmet com bancada de pedra escura, mesa comprida e vegetação na varanda',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/08-quadra-de-beach-tennis.jpg',
+        legenda: 'Quadra de beach tennis',
+        alt: 'Quadra de beach tennis com areia clara, rede e muro grafitado ao fundo',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/opus-gyro-o2/09-lavanderia.jpg',
+        legenda: 'Lavanderia',
+        alt: 'Lavanderia coletiva com máquinas alinhadas, bancada de pedra e prateleiras de apoio',
+      },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/10-piscina.jpg',
         legenda: 'Piscina',
         alt: 'Piscina — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/11-academia.jpg',
         legenda: 'Academia',
         alt: 'Academia — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/12-salao-multiuso.jpg',
         legenda: 'Salão multiuso',
         alt: 'Salão multiuso — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/13-espaco-gourmet.jpg',
         legenda: 'Espaço gourmet',
         alt: 'Espaço gourmet — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/14-piscina-privativa.jpg',
         legenda: 'Piscina privativa',
         alt: 'Piscina privativa — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/15-quadra-de-beach-tennis.jpg',
         legenda: 'Quadra de beach tennis',
         alt: 'Quadra de beach tennis — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/16-lavanderia.jpg',
         legenda: 'Lavanderia',
         alt: 'Lavanderia — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/17-closet-decorado.jpg',
         legenda: 'Closet decorado',
         alt: 'Closet decorado — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/opus-gyro-o2/18-sala-decorada.jpg',
         legenda: 'Sala decorada',
         alt: 'Sala decorada — imagem do material de vendas do Opus Gyro O2, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-01.jpg',
         legenda: '47,31 m² · 1 suíte — Final 01B',
         alt: 'Planta humanizada de 47,31 m² — 1 suíte — Final 01B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-02.jpg',
         legenda: '42,31 m² · 1 suíte — Final 02B',
         alt: 'Planta humanizada de 42,31 m² — 1 suíte — Final 02B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-03.jpg',
         legenda: '45,27 m² · 1 suíte — Final 03B',
         alt: 'Planta humanizada de 45,27 m² — 1 suíte — Final 03B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-04.jpg',
         legenda: '52,44 m² · 1 suíte — Final 04B',
         alt: 'Planta humanizada de 52,44 m² — 1 suíte — Final 04B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-05.jpg',
         legenda: '43,57 m² · 1 suíte — Final 05B',
         alt: 'Planta humanizada de 43,57 m² — 1 suíte — Final 05B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-06.jpg',
         legenda: '43,89 m² · 1 suíte — Final 06B',
         alt: 'Planta humanizada de 43,89 m² — 1 suíte — Final 06B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-07.jpg',
         legenda: '43,93 m² · 1 suíte — Final 07B',
         alt: 'Planta humanizada de 43,93 m² — 1 suíte — Final 07B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-08.jpg',
         legenda: '49,93 m² · 1 suíte — Final 09B',
         alt: 'Planta humanizada de 49,93 m² — 1 suíte — Final 09B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-09.jpg',
         legenda: '70,95 m² · 2 quartos, 1 suíte — Final 01A',
         alt: 'Planta humanizada de 70,95 m² — 2 quartos, 1 suíte — Final 01A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-10.jpg',
         legenda: '70,17 m² · 2 quartos, 1 suíte — Final 04A',
         alt: 'Planta humanizada de 70,17 m² — 2 quartos, 1 suíte — Final 04A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-11.jpg',
         legenda: '85,57 m² · 2 quartos, 1 suíte — Final 05A',
         alt: 'Planta humanizada de 85,57 m² — 2 quartos, 1 suíte — Final 05A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-12.jpg',
         legenda: '78,27 m² · 2 quartos, 1 suíte — Final 05A',
         alt: 'Planta humanizada de 78,27 m² — 2 quartos, 1 suíte — Final 05A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-13.jpg',
         legenda: '63,59 m² · 2 quartos, 1 suíte — Final 08B',
         alt: 'Planta humanizada de 63,59 m² — 2 quartos, 1 suíte — Final 08B; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-14.jpg',
         legenda: '100,78 m² · 3 suítes — Final 06A',
         alt: 'Planta humanizada de 100,78 m² — 3 suítes — Final 06A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-15.jpg',
         legenda: '100,78 m² · 3 suítes — Final 07A',
         alt: 'Planta humanizada de 100,78 m² — 3 suítes — Final 07A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-16.jpg',
         legenda: '99,46 m² · Poolhouse — 2 suítes — Final 02A',
         alt: 'Planta humanizada de 99,46 m² — Poolhouse — 2 suítes — Final 02A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-17.jpg',
         legenda: '99,46 m² · Poolhouse — 2 suítes — Final 03A',
         alt: 'Planta humanizada de 99,46 m² — Poolhouse — 2 suítes — Final 03A; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-18.jpg',
         legenda: '200,47 m² · Penthouse 01 — 3 suítes',
         alt: 'Planta humanizada de 200,47 m² — Penthouse 01 — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/opus-gyro-o2/planta-19.jpg',
@@ -5965,244 +6121,284 @@ const catalogo: Empreendimento[] = [
     midias: [
       {
         tipo: 'foto',
-        url: '/imagens/blume/01-fachada.jpg',
-        legenda: 'Fachada',
-        alt: 'Torre vista da avenida, com varandas em fita e a cidade ao fundo',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/02-acesso.jpg',
-        legenda: 'Acesso',
-        alt: 'Acesso do prédio com jardim vertical, brises de madeira e árvores floridas na calçada',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/03-piscina.jpg',
-        legenda: 'Piscina',
-        alt: 'Piscina alongada com espreguiçadeiras no deck e vegetação nas bordas',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/04-quadra.jpg',
-        legenda: 'Quadra',
-        alt: 'Quadra recreativa em verde-água, com traves, cones e muro pintado',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/05-academia.jpg',
-        legenda: 'Academia',
-        alt: 'Academia com estação de musculação, halteres e esquadrias de piso a teto',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/06-salao-de-festas.jpg',
-        legenda: 'Salão de festas',
-        alt: 'Salão de festas com mesas de madeira, cadeiras pretas e jardim vertical ao fundo',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/07-espaco-gourmet.jpg',
-        legenda: 'Espaço gourmet',
-        alt: 'Espaço gourmet com mesa comprida, banquetas verdes e vista da cidade pelas esquadrias',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/08-living-decorado.jpg',
-        legenda: 'Living decorado',
-        alt: 'Living do apartamento decorado integrado à cozinha, com jantar e jardim vertical',
-      },
-      {
-        tipo: 'foto',
-        url: '/imagens/blume/09-fachada-a-noite.jpg',
+        url: '/imagens/blume/01-fachada-a-noite.jpg',
         legenda: 'Fachada à noite',
         alt: 'Fachada à noite — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/02-fachada.jpg',
+        legenda: 'Fachada',
+        alt: 'Torre vista da avenida, com varandas em fita e a cidade ao fundo',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/03-acesso.jpg',
+        legenda: 'Acesso',
+        alt: 'Acesso do prédio com jardim vertical, brises de madeira e árvores floridas na calçada',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/04-piscina.jpg',
+        legenda: 'Piscina',
+        alt: 'Piscina alongada com espreguiçadeiras no deck e vegetação nas bordas',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/05-quadra.jpg',
+        legenda: 'Quadra',
+        alt: 'Quadra recreativa em verde-água, com traves, cones e muro pintado',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/06-academia.jpg',
+        legenda: 'Academia',
+        alt: 'Academia com estação de musculação, halteres e esquadrias de piso a teto',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/07-salao-de-festas.jpg',
+        legenda: 'Salão de festas',
+        alt: 'Salão de festas com mesas de madeira, cadeiras pretas e jardim vertical ao fundo',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/08-espaco-gourmet.jpg',
+        legenda: 'Espaço gourmet',
+        alt: 'Espaço gourmet com mesa comprida, banquetas verdes e vista da cidade pelas esquadrias',
+      },
+
+      {
+        tipo: 'foto',
+        url: '/imagens/blume/09-living-decorado.jpg',
+        legenda: 'Living decorado',
+        alt: 'Living do apartamento decorado integrado à cozinha, com jantar e jardim vertical',
+      },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/10-acesso.jpg',
         legenda: 'Acesso',
         alt: 'Acesso — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/11-hall.jpg',
         legenda: 'Hall',
         alt: 'Hall — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/12-rooftop.jpg',
         legenda: 'Rooftop',
         alt: 'Rooftop — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/13-piscina.jpg',
         legenda: 'Piscina',
         alt: 'Piscina — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/14-deck-da-piscina.jpg',
         legenda: 'Deck da piscina',
         alt: 'Deck da piscina — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/15-espreguicadeiras.jpg',
         legenda: 'Espreguiçadeiras',
         alt: 'Espreguiçadeiras — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/16-lounge.jpg',
         legenda: 'Lounge',
         alt: 'Lounge — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/17-pet-place.jpg',
         legenda: 'Pet place',
         alt: 'Pet place — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/18-quadra.jpg',
         legenda: 'Quadra',
         alt: 'Quadra — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/19-academia.jpg',
         legenda: 'Academia',
         alt: 'Academia — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/20-espaco-kids.jpg',
         legenda: 'Espaço kids',
         alt: 'Espaço kids — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/21-terraco.jpg',
         legenda: 'Terraço',
         alt: 'Terraço — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/22-lounge.jpg',
         legenda: 'Lounge',
         alt: 'Lounge — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/23-sala-de-estar.jpg',
         legenda: 'Sala de estar',
         alt: 'Sala de estar — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/24-sala-de-reuniao.jpg',
         legenda: 'Sala de reunião',
         alt: 'Sala de reunião — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/25-sala-de-reuniao.jpg',
         legenda: 'Sala de reunião',
         alt: 'Sala de reunião — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/26-bicicletario-e-market.jpg',
         legenda: 'Bicicletário e market',
         alt: 'Bicicletário e market — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/27-sala-e-cozinha.jpg',
         legenda: 'Sala e cozinha',
         alt: 'Sala e cozinha — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/28-living-75-m2.jpg',
         legenda: 'Living — 75 m²',
         alt: 'Living — 75 m² — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/29-suite-75-m2.jpg',
         legenda: 'Suíte — 75 m²',
         alt: 'Suíte — 75 m² — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/30-sala-e-cozinha-89-m2.jpg',
         legenda: 'Sala e cozinha — 89 m²',
         alt: 'Sala e cozinha — 89 m² — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/31-suite-89-m2.jpg',
         legenda: 'Suíte — 89 m²',
         alt: 'Suíte — 89 m² — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/32-suite.jpg',
         legenda: 'Suíte',
         alt: 'Suíte — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/33-living-e-cozinha.jpg',
         legenda: 'Living e cozinha',
         alt: 'Living e cozinha — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/34-suite.jpg',
         legenda: 'Suíte',
         alt: 'Suíte — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/35-varanda-gourmet-112-m2.jpg',
         legenda: 'Varanda gourmet — 112 m²',
         alt: 'Varanda gourmet — 112 m² — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'foto',
         url: '/imagens/blume/36-suite-112-m2.jpg',
         legenda: 'Suíte — 112 m²',
         alt: 'Suíte — 112 m² — imagem do material de vendas do Blume, Setor Serrinha, Goiânia',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/blume/planta-01.jpg',
         legenda: '75 m² · 2 suítes',
         alt: 'Planta humanizada de 75 m² — 2 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/blume/planta-02.jpg',
         legenda: '76 m² · 2 suítes',
         alt: 'Planta humanizada de 76 m² — 2 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/blume/planta-03.jpg',
         legenda: '89 m² · 3 suítes',
         alt: 'Planta humanizada de 89 m² — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/blume/planta-04.jpg',
         legenda: '112 m² · 3 suítes',
         alt: 'Planta humanizada de 112 m² — 3 suítes; a metragem e a tipologia estão impressas na própria imagem.',
       },
+
       {
         tipo: 'planta',
         url: '/imagens/blume/planta-05.jpg',
