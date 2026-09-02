@@ -50,6 +50,7 @@ export function Foto({
         alt={alt}
         fill
         sizes={sizes}
+        quality={92}
         priority={prioridade}
         className={`object-cover ${className}`}
       />

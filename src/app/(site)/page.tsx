@@ -51,6 +51,7 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
+          quality={92}
           className="object-cover"
         />
         <div
@@ -131,9 +132,18 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-[repeat(auto-fill,minmax(270px,1fr))] md:gap-[clamp(14px,2vw,24px)]">
+          {/*
+            Flex centralizado, e não `grid-cols-[repeat(auto-fill,…)]`: o
+            auto-fill cria as colunas vazias que sobram e joga os cards para a
+            esquerda, deixando um buraco à direita quando são três e não
+            quatro. Com flex, a fileira se centraliza sozinha para qualquer
+            quantidade, e o card mantém a largura do design em vez de esticar.
+          */}
+          <div className="flex flex-col gap-4 md:flex-row md:flex-wrap md:justify-center md:gap-[clamp(14px,2vw,24px)]">
             {oportunidades.map((e) => (
-              <CardOportunidade key={e.slug} e={e} />
+              <div key={e.slug} className="md:w-[clamp(270px,23vw,340px)]">
+                <CardOportunidade e={e} />
+              </div>
             ))}
           </div>
         </section>
@@ -237,6 +247,7 @@ export default function Home() {
             alt={`Escritório ${site.nome} no ${site.contato.endereco}`}
             fill
             sizes="(max-width: 768px) 0px, 40vw"
+            quality={92}
             className="object-cover"
           />
           <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(14,14,12,0)_0%,rgba(14,14,12,0.88)_100%)] p-6">

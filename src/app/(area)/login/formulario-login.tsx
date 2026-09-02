@@ -29,6 +29,7 @@ export function FormularioLogin() {
         aria-hidden
         fill
         sizes="100vw"
+        quality={92}
         className="object-cover opacity-[0.32] md:opacity-40"
       />
       <div

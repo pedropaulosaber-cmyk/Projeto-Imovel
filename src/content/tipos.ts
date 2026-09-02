@@ -33,6 +33,16 @@ export interface Planta {
   area: string;
   tipo: string;
   vagas: string;
+  /**
+   * Planta humanizada correspondente, dentro de `midias`.
+   *
+   * `null` quando o book não traz o desenho daquela tipologia — acontece com
+   * penthouse e garden que aparecem só no quadro de áreas. O campo é
+   * obrigatório de propósito: casar a linha errada com o desenho errado num
+   * anúncio de imóvel é erro caro, então ou existe um pareamento conferido na
+   * página do book, ou está escrito que não existe.
+   */
+  imagem: string | null;
 }
 
 export interface ItemFicha {
