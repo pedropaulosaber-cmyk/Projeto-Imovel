@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { linkWhatsApp, site } from '@/config/site';
 import { rotas } from '@/lib/rotas';
+import { Portal } from '@/components/ui/portal';
 
 import { type ChaveNav, linksDesktop, linksMobile } from './navegacao';
 
@@ -124,54 +125,56 @@ function BarraMobile() {
       </header>
 
       {menuAberto ? (
-        <div
-          className="fixed inset-0 z-[90] flex justify-center bg-[rgba(10,10,9,0.97)] backdrop-blur-[6px] md:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu"
-        >
-          <div className="flex w-full max-w-[430px] flex-col p-[18px]">
-            <div className="mb-[34px] flex items-center justify-between">
-              <span className="text-[15px] font-bold tracking-[0.16em]">{site.nome}</span>
-              <button
-                type="button"
-                onClick={() => setMenuAberto(false)}
-                className="rounded-[10px] border border-creme/[0.22] px-[14px] py-[10px] text-sm text-creme"
-              >
-                Fechar
-              </button>
-            </div>
-
-            <nav className="grid">
-              {linksMobile.map((l, i) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
+        <Portal>
+          <div
+            className="fixed inset-0 z-[90] flex justify-center bg-[rgba(10,10,9,0.97)] backdrop-blur-[6px] md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+          >
+            <div className="flex w-full max-w-[430px] flex-col p-[18px]">
+              <div className="mb-[34px] flex items-center justify-between">
+                <span className="text-[15px] font-bold tracking-[0.16em]">{site.nome}</span>
+                <button
+                  type="button"
                   onClick={() => setMenuAberto(false)}
-                  className={`py-[18px] text-[26px] font-semibold tracking-[-0.03em] ${
-                    l.discreto ? 'text-creme/60' : ''
-                  } ${i < linksMobile.length - 1 ? 'shadow-[0_1px_0_rgba(246,243,236,0.12)]' : ''}`}
+                  className="rounded-[10px] border border-creme/[0.22] px-[14px] py-[10px] text-sm text-creme"
                 >
-                  {l.rotulo}
-                </Link>
-              ))}
-            </nav>
+                  Fechar
+                </button>
+              </div>
 
-            <div className="mt-auto pt-[26px]">
-              <p className="mb-[14px] font-mono text-[10px] tracking-[0.14em] text-creme/50">
-                Corretor de imóveis · {site.creci} · {site.contato.telefoneExibicao}
-              </p>
-              <a
-                href={linkWhatsApp()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-lg bg-ouro p-[17px] text-center text-[15px] font-semibold text-tinta"
-              >
-                Falar no WhatsApp
-              </a>
+              <nav className="grid">
+                {linksMobile.map((l, i) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setMenuAberto(false)}
+                    className={`py-[18px] text-[26px] font-semibold tracking-[-0.03em] ${
+                      l.discreto ? 'text-creme/60' : ''
+                    } ${i < linksMobile.length - 1 ? 'shadow-[0_1px_0_rgba(246,243,236,0.12)]' : ''}`}
+                  >
+                    {l.rotulo}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="mt-auto pt-[26px]">
+                <p className="mb-[14px] font-mono text-[10px] tracking-[0.14em] text-creme/50">
+                  Corretor de imóveis · {site.creci} · {site.contato.telefoneExibicao}
+                </p>
+                <a
+                  href={linkWhatsApp()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-lg bg-ouro p-[17px] text-center text-[15px] font-semibold text-tinta"
+                >
+                  Falar no WhatsApp
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+        </Portal>
       ) : null}
     </>
   );

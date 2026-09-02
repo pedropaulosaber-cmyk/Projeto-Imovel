@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { categorias, regioes } from '@/content/regioes';
 import { rotas } from '@/lib/rotas';
+import { Portal } from '@/components/ui/portal';
 
 export const FAIXAS_DE_PRECO = [
   { valor: '', rotulo: 'Sem limite' },
@@ -147,71 +148,73 @@ export function BuscaHeroMobile() {
       </button>
 
       {aberta ? (
-        <div
-          className="fixed inset-0 z-[95] flex items-end justify-center bg-[rgba(10,10,9,0.7)] md:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Buscar imóveis"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setAberta(false);
-          }}
-        >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setAberta(false);
-              router.push(paraListagem(new FormData(e.currentTarget)));
+        <Portal>
+          <div
+            className="fixed inset-0 z-[95] flex items-end justify-center bg-[rgba(10,10,9,0.7)] md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Buscar imóveis"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setAberta(false);
             }}
-            className="w-full max-w-[430px] rounded-t-[18px] bg-carvao px-[18px] pt-5 pb-[26px] shadow-[0_-12px_40px_rgba(0,0,0,0.6)]"
           >
-            <div className="mx-auto mb-5 h-1 w-[42px] rounded-full bg-creme/25" aria-hidden />
-            <h2 className="mb-[18px] text-[22px] font-semibold tracking-[-0.03em]">
-              Buscar imóveis
-            </h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setAberta(false);
+                router.push(paraListagem(new FormData(e.currentTarget)));
+              }}
+              className="w-full max-w-[430px] rounded-t-[18px] bg-carvao px-[18px] pt-5 pb-[26px] shadow-[0_-12px_40px_rgba(0,0,0,0.6)]"
+            >
+              <div className="mx-auto mb-5 h-1 w-[42px] rounded-full bg-creme/25" aria-hidden />
+              <h2 className="mb-[18px] text-[22px] font-semibold tracking-[-0.03em]">
+                Buscar imóveis
+              </h2>
 
-            <div className="grid gap-[10px]">
-              <CampoSheet nome="regiao" rotulo="REGIÃO">
-                <option value="">Todas</option>
-                {regioes.map((r) => (
-                  <option key={r.slug} value={r.slug} className="text-tinta">
-                    {r.nome}
-                  </option>
-                ))}
-              </CampoSheet>
+              <div className="grid gap-[10px]">
+                <CampoSheet nome="regiao" rotulo="REGIÃO">
+                  <option value="">Todas</option>
+                  {regioes.map((r) => (
+                    <option key={r.slug} value={r.slug} className="text-tinta">
+                      {r.nome}
+                    </option>
+                  ))}
+                </CampoSheet>
 
-              <CampoSheet nome="categoria" rotulo="CATEGORIA">
-                <option value="">Todas</option>
-                {categorias.map((c) => (
-                  <option key={c.slug} value={c.slug} className="text-tinta">
-                    {c.singular}
-                  </option>
-                ))}
-              </CampoSheet>
+                <CampoSheet nome="categoria" rotulo="CATEGORIA">
+                  <option value="">Todas</option>
+                  {categorias.map((c) => (
+                    <option key={c.slug} value={c.slug} className="text-tinta">
+                      {c.singular}
+                    </option>
+                  ))}
+                </CampoSheet>
 
-              <CampoSheet nome="ate" rotulo="INVESTIMENTO ATÉ">
-                {FAIXAS_DE_PRECO.map((f) => (
-                  <option key={f.rotulo} value={f.valor} className="text-tinta">
-                    {f.rotulo}
-                  </option>
-                ))}
-              </CampoSheet>
+                <CampoSheet nome="ate" rotulo="INVESTIMENTO ATÉ">
+                  {FAIXAS_DE_PRECO.map((f) => (
+                    <option key={f.rotulo} value={f.valor} className="text-tinta">
+                      {f.rotulo}
+                    </option>
+                  ))}
+                </CampoSheet>
 
-              <button
-                type="submit"
-                className="min-h-[56px] rounded-lg bg-ouro p-[18px] text-[15px] font-semibold text-tinta"
-              >
-                Ver resultados
-              </button>
-              <button
-                type="button"
-                onClick={() => setAberta(false)}
-                className="p-[6px] text-sm text-creme/60"
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </div>
+                <button
+                  type="submit"
+                  className="min-h-[56px] rounded-lg bg-ouro p-[18px] text-[15px] font-semibold text-tinta"
+                >
+                  Ver resultados
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAberta(false)}
+                  className="p-[6px] text-sm text-creme/60"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </Portal>
       ) : null}
     </>
   );
