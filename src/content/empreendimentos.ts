@@ -128,7 +128,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '171–420 m²' },
       { label: 'TIPOLOGIAS', valor: '3–4 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -358,8 +357,8 @@ const catalogo: Empreendimento[] = [
     metragem: '100–199 m²',
     metragemMin: 100,
     metragemMax: 199,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para dezembro de 2026',
+    previsaoEntrega: 'dez/2026',
     resumo:
       '178 unidades de 100 a 199 m² a 150 m da Avenida 85, com 2.100 m² de área de lazer e quatro penthouses de piscina privativa no último pavimento.',
     descricao: [
@@ -449,7 +448,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '100–199 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -659,7 +657,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'opus-tellure',
     nome: 'Opus Tellure',
-    categoria: 'lancamento',
+    categoria: 'remanescente',
     regiaoSlug: 'setor-serrinha',
     incorporadora: 'Opus Incorporadora',
     statusParceria: 'pendente',
@@ -674,8 +672,8 @@ const catalogo: Empreendimento[] = [
     metragem: '150–281 m²',
     metragemMin: 150,
     metragemMax: 281,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Torre A entregue em jun/2025 e Torre B em mar/2026',
+    previsaoEntrega: 'Entregue',
     resumo:
       'Residências de 150 a 200 m² e coberturas de até 281 m² com piscina privativa, a 100 m do futuro Parque Serrinha.',
     descricao: [
@@ -744,7 +742,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '150–281 m²' },
       { label: 'TIPOLOGIAS', valor: '2–4 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -926,7 +923,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'cidade-ybiti-home',
     nome: 'Cidade Ybiti Home',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-serrinha',
     incorporadora: 'Opus Incorporadora',
     statusParceria: 'pendente',
@@ -941,8 +938,8 @@ const catalogo: Empreendimento[] = [
     metragem: '44–117 m²',
     metragemMin: 43.9,
     metragemMax: 117.25,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para agosto de 2028',
+    previsaoEntrega: 'ago/2028',
     resumo:
       'Compactos de alto padrão de 44 a 117 m² no Setor Serrinha, com lazer inteiro no rooftop e o futuro Parque da Serrinha na porta.',
     descricao: [
@@ -1016,7 +1013,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '44–117 m²' },
       { label: 'TIPOLOGIAS', valor: '1–2 quartos' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -1292,7 +1288,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '69–150 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'dez/2028' },
     ],
     midias: [
       {
@@ -1523,8 +1518,8 @@ const catalogo: Empreendimento[] = [
     metragem: 'Sob consulta',
     metragemMin: null,
     metragemMax: null,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para junho de 2029',
+    previsaoEntrega: 'jun/2029',
     resumo:
       'Apartamentos de 2 quartos com varanda a 300 metros do Parque Cascavel, com 1.583 m² de lazer a um elevador de distância.',
     descricao: [
@@ -1587,7 +1582,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: 'Sob consulta' },
       { label: 'TIPOLOGIAS', valor: '2 quartos' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -1800,8 +1794,8 @@ const catalogo: Empreendimento[] = [
     metragem: '66–109 m²',
     metragemMin: 66,
     metragemMax: 109,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para maio de 2030',
+    previsaoEntrega: 'mai/2030',
     resumo:
       'Quatro plantas de 66 a 109 m², de dois quartos a três suítes, a 250 metros do Parque Areião.',
     descricao: [
@@ -1869,7 +1863,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '66–109 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -2109,7 +2102,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'entreverdes-residencial',
     nome: 'EntreVerdes Residencial',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-pedro-ludovico',
     incorporadora: 'W.V. Maldi Engenharia e Incorporação Ltda (WV Maldi Incorporações)',
     statusParceria: 'pendente',
@@ -2124,8 +2117,8 @@ const catalogo: Empreendimento[] = [
     metragem: '50–248 m²',
     metragemMin: 50,
     metragemMax: 248,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para abril de 2028',
+    previsaoEntrega: 'abr/2028',
     resumo:
       '223 unidades de 50 a 248 m² a três minutos a pé do Parque Areião, com complexo aquático climatizado e academia no rooftop.',
     descricao: [
@@ -2193,7 +2186,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '50–248 m²' },
       { label: 'TIPOLOGIAS', valor: '1–4 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -2439,7 +2431,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'bliss',
     nome: 'Bliss',
-    categoria: 'lancamento',
+    categoria: 'remanescente',
     regiaoSlug: 'setor-serrinha',
     incorporadora:
       'Partini Soluções Imobiliárias e Cabral Empreendimentos (Grupo MAC), com a GO Urbanismo',
@@ -2454,8 +2446,8 @@ const catalogo: Empreendimento[] = [
     metragem: '62–185 m²',
     metragemMin: 62,
     metragemMax: 185,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Pronto para morar — entregue em novembro de 2024',
+    previsaoEntrega: 'Entregue',
     resumo:
       'Duas torres na Av. T-5, na divisa com o Setor Bueno, com plantas de 62 a 185 m² e rooftop próprio em cada torre.',
     descricao: [
@@ -2514,7 +2506,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '62–185 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -2670,7 +2661,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'opus-ayra',
     nome: 'Opus Ayra',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-serrinha',
     incorporadora: 'Opus Incorporadora (Opus 56 SPE Ltda)',
     statusParceria: 'pendente',
@@ -2685,8 +2676,8 @@ const catalogo: Empreendimento[] = [
     metragem: '72–227 m²',
     metragemMin: 71.81,
     metragemMax: 227.37,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para fevereiro de 2030',
+    previsaoEntrega: 'fev/2030',
     resumo:
       '173 unidades de 2 quartos a penthouses de 227 m², na Reserva Ybiti, acompanhando o Parque Linear Jaime Câmara.',
     descricao: [
@@ -2780,7 +2771,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '72–227 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -3057,7 +3047,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '63–248 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'set/2025' },
     ],
     midias: [
       {
@@ -3299,7 +3288,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '68–193 m²' },
       { label: 'TIPOLOGIAS', valor: '2 quartos a 3 suítes' },
-      { label: 'ENTREGA', valor: 'ago/2028' },
     ],
     midias: [
       {
@@ -3479,7 +3467,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'alameda-areiao',
     nome: 'Alameda Areião',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-pedro-ludovico',
     incorporadora: 'Terral Incorporadora',
     statusParceria: 'pendente',
@@ -3570,7 +3558,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '69–119 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'ago/2027' },
     ],
     midias: [
       {
@@ -3881,7 +3868,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '60–119 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 quartos' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -4186,7 +4172,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '70–179 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'Pronto' },
     ],
     midias: [
       {
@@ -4359,7 +4344,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'fr-jardim-areiao',
     nome: 'FR. Jardim Areião',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-pedro-ludovico',
     incorporadora: 'FR. Incorporadora (Ludovico Empreendimentos Imobiliários SPE Ltda)',
     statusParceria: 'pendente',
@@ -4374,8 +4359,8 @@ const catalogo: Empreendimento[] = [
     metragem: '69–110 m²',
     metragemMin: 69,
     metragemMax: 109.5,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para março de 2028',
+    previsaoEntrega: 'mar/2028',
     resumo:
       'O FR. Jardim Areião é um edifício residencial de torre única na Rua 1.033, quadra 74, lotes 14/18, no Setor Pedro Ludovico, em Goiânia. O terreno tem 2.382,693 m² e.',
     descricao: [
@@ -4435,7 +4420,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '69–110 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -4689,8 +4673,8 @@ const catalogo: Empreendimento[] = [
     metragem: '37–70 m²',
     metragemMin: 37.42,
     metragemMax: 70,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para novembro de 2026',
+    previsaoEntrega: 'nov/2026',
     resumo:
       'O Smart Parque Areião é um residencial de torre única no Setor Pedro Ludovico, em Goiânia, erguido em um terreno de 2.208,68 m² que faz frente para três ruas — a.',
     descricao: [
@@ -4745,7 +4729,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '37–70 m²' },
       { label: 'TIPOLOGIAS', valor: '1–2 quartos' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -4959,7 +4942,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '83–110 m²' },
       { label: 'TIPOLOGIAS', valor: '3–4 quartos' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -5168,7 +5150,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'loc-serrinha',
     nome: 'LOC Serrinha',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-serrinha',
     incorporadora: 'EBM Desenvolvimento Imobiliário (Brasil Incorporação 233 SPE Ltda)',
     statusParceria: 'pendente',
@@ -5183,8 +5165,8 @@ const catalogo: Empreendimento[] = [
     metragem: '54–82 m²',
     metragemMin: 53.63,
     metragemMax: 82.03,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para novembro de 2028',
+    previsaoEntrega: 'nov/2028',
     resumo:
       'O LOC Serrinha é uma torre residencial única da EBM erguida em terreno de 2.730 m² na esquina da Avenida Transbrasiliana com a Rua Santarém, no Setor Serrinha,.',
     descricao: [
@@ -5230,7 +5212,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '54–82 m²' },
       { label: 'TIPOLOGIAS', valor: '2 quartos' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
@@ -5476,7 +5457,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '75–190 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'Pronto' },
     ],
     midias: [
       {
@@ -5646,7 +5626,7 @@ const catalogo: Empreendimento[] = [
   {
     slug: 'opus-gyro-o2',
     nome: 'Opus Gyro O2',
-    categoria: 'lancamento',
+    categoria: 'na_planta',
     regiaoSlug: 'setor-serrinha',
     incorporadora: 'Opus Incorporadora (SPE Incorporação Opus 59 Ltda)',
     statusParceria: 'pendente',
@@ -5760,7 +5740,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '42–280 m²' },
       { label: 'TIPOLOGIAS', valor: '1–2 suítes' },
-      { label: 'ENTREGA', valor: 'out/2026' },
     ],
     midias: [
       {
@@ -6116,7 +6095,6 @@ const catalogo: Empreendimento[] = [
     ficha: [
       { label: 'METRAGENS', valor: '75–112 m²' },
       { label: 'TIPOLOGIAS', valor: '2–3 suítes' },
-      { label: 'ENTREGA', valor: 'A confirmar' },
     ],
     midias: [
       {
