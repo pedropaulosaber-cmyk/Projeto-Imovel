@@ -21,6 +21,9 @@ import type { Midia } from '@/content/tipos';
 /* Arrasto menor que isso é toque, não gesto de navegação. */
 const ARRASTO_MINIMO = 44;
 
+/* Depois de trocar de foto, o texto e o escurecido voltam após esta pausa. */
+const TEMPO_VISIVEL_APOS_NAVEGAR = 1500;
+
 export function Galeria({
   midias,
   nome,
@@ -33,8 +36,11 @@ export function Galeria({
   acoes?: React.ReactNode;
 }) {
   const [i, setI] = useState(0);
+  const [textoOculto, setTextoOculto] = useState(false);
   const tira = useRef<HTMLDivElement>(null);
   const toqueX = useRef<number | null>(null);
+  const timerTexto = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const jaMontou = useRef(false);
 
   const total = midias.length;
   const ir = useCallback(
@@ -62,6 +68,25 @@ export function Galeria({
       block: 'nearest',
       inline: 'center',
     });
+  }, [i]);
+
+  /*
+   * Ao trocar de foto, some com o texto sobreposto e com o escurecido por um
+   * instante, para o visitante ver a imagem inteira; ambos voltam sozinhos
+   * quando ele para de navegar. Não roda na primeira renderização — o título
+   * precisa aparecer de cara e continuar indexável.
+   */
+  useEffect(() => {
+    if (!jaMontou.current) {
+      jaMontou.current = true;
+      return;
+    }
+    setTextoOculto(true);
+    if (timerTexto.current) clearTimeout(timerTexto.current);
+    timerTexto.current = setTimeout(() => setTextoOculto(false), TEMPO_VISIVEL_APOS_NAVEGAR);
+    return () => {
+      if (timerTexto.current) clearTimeout(timerTexto.current);
+    };
   }, [i]);
 
   const atual = midias[i];
@@ -92,7 +117,9 @@ export function Galeria({
         />
         <div
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(14,14,12,0.35)_0%,rgba(14,14,12,0)_40%,rgba(14,14,12,0.95)_100%)] md:bg-[linear-gradient(180deg,rgba(14,14,12,0.4)_0%,rgba(14,14,12,0)_42%,rgba(14,14,12,0.9)_100%)]"
+          className={`absolute inset-0 bg-[linear-gradient(180deg,rgba(14,14,12,0.35)_0%,rgba(14,14,12,0)_40%,rgba(14,14,12,0.95)_100%)] transition-opacity duration-500 md:bg-[linear-gradient(180deg,rgba(14,14,12,0.4)_0%,rgba(14,14,12,0)_42%,rgba(14,14,12,0.9)_100%)] ${
+            textoOculto ? 'opacity-0' : 'opacity-100'
+          }`}
         />
 
         {total > 1 ? (
@@ -116,7 +143,11 @@ export function Galeria({
           </>
         ) : null}
 
-        <div className="relative w-full px-[18px] pb-[22px] md:px-5 md:pb-[clamp(26px,3.4vw,46px)] lg:px-14">
+        <div
+          className={`relative w-full px-[18px] pb-[22px] transition-opacity duration-500 md:px-5 md:pb-[clamp(26px,3.4vw,46px)] lg:px-14 ${
+            textoOculto ? 'pointer-events-none opacity-0' : 'opacity-100'
+          }`}
+        >
           {children}
         </div>
 
