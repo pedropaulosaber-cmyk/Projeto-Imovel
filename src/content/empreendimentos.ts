@@ -3783,7 +3783,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Entrega a confirmar',
     previsaoEntrega: null,
     resumo:
-      'O Soft Pedro Ludovico é um residencial de torre única erguido pela Dinâmica Engenharia na Rua 1034, quadra 79, no Setor Pedro Ludovico, em Goiânia. São 28.',
+      '184 apartamentos de 2 e 3 quartos, de 60 a 119 m², em torre única de 28 pavimentos no Setor Pedro Ludovico, a quatro minutos do Parque Areião — o primeiro residencial da região com rooftop.',
     descricao: [
       'O Soft Pedro Ludovico é um residencial de torre única erguido pela Dinâmica Engenharia na Rua 1034, quadra 79, no Setor Pedro Ludovico, em Goiânia. São 28 pavimentos sobre um terreno de 1.937,16 m², com 23.830,52 m² de área construída e 184 apartamentos: quatro unidades no primeiro pavimento que dividem o andar com o lazer, 22 pavimentos tipo de oito apartamentos cada e mais quatro unidades no 24º andar, vizinhas ao espaço gourmet. É o primeiro endereço da linha Soft da construtora na capital.',
       'As plantas partem de 60,40 m² privativos e chegam a 118,87 m² na maior unidade do 24º pavimento. As metragens menores — 60,40, 62,73, 65,79, 65,98 e 81,02 m² — são de dois quartos com uma suíte. As de 76,90 e 84,00 m² trazem três suítes, sendo uma plena e duas americanas, e a maior tipologia do pavimento tipo, com 97,81 m², reúne três suítes plenas e lavabo. Os quatro apartamentos do primeiro pavimento somam áreas descobertas de 16,96 a 31,81 m², o que leva a privativa a até 102,44 m². O padrão de entrega inclui bancada de cozinha em granito Branco Dallas, mármore Bege Bahia nos banheiros, venezianas de enrolar em todos os quartos, closet em "L" na suíte casal, tomadas USB na sala e na suíte, e infraestrutura para ar-condicionado em quartos e sala.',
@@ -4092,7 +4092,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Pronto para morar',
     previsaoEntrega: 'Pronto',
     resumo:
-      'O Residencial Viverde Areião fica no encontro das ruas 1024 e 1029, no Setor Pedro Ludovico, em Goiânia, a cerca de 300 metros do Parque Areião. É o nono.',
+      'Apartamentos de 2 e 3 suítes, de 70 a 179 m², prontos para morar a cerca de 300 metros do Parque Areião, no Setor Pedro Ludovico — nono empreendimento da CMO Construtora na região.',
     descricao: [
       'O Residencial Viverde Areião fica no encontro das ruas 1024 e 1029, no Setor Pedro Ludovico, em Goiânia, a cerca de 300 metros do Parque Areião. É o nono empreendimento da CMO Construtora na região, onde a construtora atua desde 1991. O endereço combina rua residencial tranquila com saída rápida para a Av. 1ª Radial, a Av. Areião, a Alameda Couto Magalhães, a Av. T-63 e a Av. 85, e tem comércio, farmácias, escolas e restaurantes no entorno imediato.',
       'O mix de plantas vai de apartamentos de 70 e 74 m² com 2 suítes e lavabo a unidades de 91 m² com 3 suítes (duas delas americanas) e de 119 m² com 3 suítes independentes e sala ampliada, todas com duas vagas de garagem. No topo, quatro penthouses de 124, 126, 140 e 179 m², com 2 ou 3 suítes, spa privativo, varanda descoberta com ducha, churrasqueira a carvão, três vagas e escaninho. O acabamento entregue inclui porcelanato acetinado 84x84 cm nas áreas secas, granito branco Siena na cozinha, mármore bege Bahia nos banheiros, portas e portais de madeira, ponto para churrasqueira a gás e ponto de ar condicionado em todos os quartos e na sala.',
@@ -4903,16 +4903,17 @@ const catalogo: Empreendimento[] = [
     avisoRegistro:
       'O book é quase todo em imagem e não traz o número de registro de incorporação em nenhuma página, nem na ficha técnica. Número solicitado à incorporadora.',
     statusPublicacao: 'publicado',
-    precoAPartirDe: null,
+    /* Piso da Tabela de Vendas de setembro/2026 (Torre 5, 83,42 m², unidades 102/201/202). */
+    precoAPartirDe: 826317,
     quartos: '3–4 quartos',
     banheiros: null,
     metragem: '83–110 m²',
     metragemMin: 83,
     metragemMax: 110,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para março de 2030',
+    previsaoEntrega: 'mar/2030',
     resumo:
-      'O Paradizzo é um condomínio vertical de quatro torres, implantado em um terreno de 9.227,23 m² na orla do Parque Cascavel, em Goiânia. O projeto explora a condição.',
+      'Condomínio-resort de quatro torres na orla do Parque Cascavel, em Goiânia, com apartamentos de 3 e 4 quartos, de 83 e 110 m², e mais de 9.000 m² de lazer voltado para o parque.',
     descricao: [
       'O Paradizzo é um condomínio vertical de quatro torres, implantado em um terreno de 9.227,23 m² na orla do Parque Cascavel, em Goiânia. O projeto explora a condição rara do lote — segundo o material da incorporação, a última área disponível de frente para o parque —, orientando as torres e as varandas para a área verde, de modo que a vista preservada seja o principal ativo do empreendimento e não algo que dependa do entorno construído.',
       'São duas tipologias em oferta. A menor tem 83 m² privativos, com três quartos, sendo um deles suíte. A maior tem 110 m², com quatro quartos, duas suítes e lavabo — planta de família formada, com espaço social separado. Ambas contam com varanda, elemento tratado com destaque no book, com ambientes decorados apresentados nas páginas 48 e 51.',
@@ -5172,7 +5173,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Entrega prevista para novembro de 2028',
     previsaoEntrega: 'nov/2028',
     resumo:
-      'O LOC Serrinha é uma torre residencial única da EBM erguida em terreno de 2.730 m² na esquina da Avenida Transbrasiliana com a Rua Santarém, no Setor Serrinha,.',
+      '252 apartamentos de 2 quartos, de 54 a 82 m², em torre única de 25 pavimentos na Avenida Transbrasiliana, no Setor Serrinha — região sul de Goiânia, com loja no térreo.',
     descricao: [
       'O LOC Serrinha é uma torre residencial única da EBM erguida em terreno de 2.730 m² na esquina da Avenida Transbrasiliana com a Rua Santarém, no Setor Serrinha, região sul de Goiânia. São 252 apartamentos distribuídos em 25 pavimentos — subsolo, térreo, dois pavimentos de garagem (o segundo dividido com a área de lazer) e 21 pavimentos tipo, atendidos por quatro elevadores, sendo três sociais e um de carga. O uso é misto: residencial na torre, com loja prevista no térreo.',
       'As plantas são todas de dois quartos, com uma suíte, e giram em torno de 53,63 m² a 54,03 m² de área privativa nos pavimentos tipo, sempre acompanhadas de escaninho ou armário privativo no pavimento da vaga. O terceiro pavimento abre exceção: quatro unidades com terraço descoberto chegam a 63,93 m², 71,09 m², 77,63 m² e 78,21 m². O partido interno é o do apartamento compacto contemporâneo — estar/jantar integrado à cozinha com área de serviço, um office que absorve o segundo dormitório ou o trabalho em casa, dois banhos e sacada. O acabamento entra com porcelanato 80x80 polido nas áreas sociais e nos quartos, bancada de granito na cozinha, infraestrutura de ar-condicionado em todos os dormitórios e na sala, persiana de enrolar, fechadura digital por senha e tomada USB-C em cada quarto.',
@@ -5399,7 +5400,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Pronto para morar',
     previsaoEntrega: 'Pronto',
     resumo:
-      'O Residencial Lago Areião é uma torre residencial da CMO Construtora erguida na Av. Areião, no Setor Pedro Ludovico, em Goiânia. O terreno ocupa a quadra entre a.',
+      'Apartamentos de 2 e 3 suítes, de 75 a 190 m², prontos para morar de frente para o Parque Areião, na Av. Areião — orientados para manter a vista do lago e da mata sempre aberta.',
     descricao: [
       'O Residencial Lago Areião é uma torre residencial da CMO Construtora erguida na Av. Areião, no Setor Pedro Ludovico, em Goiânia. O terreno ocupa a quadra entre a avenida e a Rua Senador Domingos Vellasco, de frente para o Parque Areião — e é essa a razão de ser do projeto: as unidades foram orientadas para que a vista do lago e da mata do parque fique permanentemente aberta, sem prédio na frente. A poucos minutos estão a 1ª Radial, a Alameda Ricardo Paranhos, o Estádio da Serrinha e os setores Marista e Bueno, com escolas, mercados e comércio de rua já consolidados no entorno.',
       'São quatro tipologias, distribuídas em seis unidades por pavimento tipo. As menores, de 75 m² com 2 suítes e uma vaga, ocupam os finais 03 e 06. Os finais 04 e 05 trazem 108 m² e duas vagas. Os finais 01 e 02, de 140 m², são voltados para a Av. Areião e recebem elevador privativo com controle de acesso e duas vagas individuais. No topo, os penthouses de 143 a 190 m² somam piscina privativa, elevador privativo e três ou quatro vagas individuais. Todas as plantas têm suíte com espaço para closet, lavabo, varanda com ponto para churrasqueira a gás e ponto de ar-condicionado na sala e na suíte master.',
@@ -5648,7 +5649,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Entrega prevista para outubro de 2026',
     previsaoEntrega: 'out/2026',
     resumo:
-      'O Opus Gyro O2 é uma torre residencial de 271 unidades erguida em um terreno de 2.401,34 m² na esquina das ruas Samuel Morse e Tomaz Edson, quadra 171, lote 04, no.',
+      '271 apartamentos de 1 e 2 suítes, de 42 a 280 m², em torre única de 32 pavimentos na Reserva Ybiti, Setor Serrinha — frente para a Av. T-4, a 150 m da Av. 85 e ao lado do futuro Parque Serrinha.',
     descricao: [
       'O Opus Gyro O2 é uma torre residencial de 271 unidades erguida em um terreno de 2.401,34 m² na esquina das ruas Samuel Morse e Tomaz Edson, quadra 171, lote 04, no Setor Serrinha, em Goiânia. O lote faz frente para a Av. T-4 e fica a 150 metros da Avenida 85, na borda da área que dará lugar ao futuro Parque Serrinha — a mesma faixa verde que a incorporadora batiza de Reserva Ybiti e que dá sobrenome ao empreendimento. O prédio se desenvolve em 32 pavimentos: dois subsolos, térreo, um pavimento de garagem, um pavimento inteiro de lazer no segundo nível e vinte e oito andares residenciais, com casa de máquinas e reservatório no topo.',
       'O mix de plantas é largo e cobre desde o investidor de estúdio até a família que quer três suítes. Os finais B entregam apartamentos de 1 suíte entre 42,31 m² e 52,44 m², todos com varanda, cozinha integrada e lavabo. Os finais A trazem as plantas de 2 quartos com 1 suíte, de 63,59 m² a 85,57 m², e as de 3 suítes de 100,78 m² com varanda e suíte master. Acima disso há duas categorias especiais: os poolhouses (finais 02A e 03A, 99,46 m², dois dormitórios em suíte e piscina privativa na varanda) e dez penthouses de 3 suítes, de 172,31 m² a 280,21 m², a maioria com terraço descoberto e piscina. Os terraços aparecem escalonados na fachada, com jardineiras entre as unidades. Todas as suítes e a sala de estar/jantar já saem com ponto de ar-condicionado; as paredes internas dos apartamentos são em drywall e a alvenaria fica entre unidades e no limite com a circulação.',
@@ -6036,7 +6037,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Entrega a confirmar',
     previsaoEntrega: null,
     resumo:
-      'Torre residencial única no Setor Serrinha, em Goiânia, erguida na esquina da Rua Camilo Flamarion com a Rua 11 de Dezembro, sobre um terreno de pouco mais de 2.100.',
+      '178 apartamentos de 2 e 3 suítes, de 75 a 112 m², em torre única de 36 pavimentos no Setor Serrinha, em Goiânia, com um pavimento inteiro dedicado ao lazer.',
     descricao: [
       'Torre residencial única no Setor Serrinha, em Goiânia, erguida na esquina da Rua Camilo Flamarion com a Rua 11 de Dezembro, sobre um terreno de pouco mais de 2.100 m². São 178 unidades habitacionais distribuídas em 36 pavimentos — dois subsolos, térreo, dois pavimentos de garagem, um pavimento inteiro dedicado ao lazer no 3º andar, 29 pavimentos tipo do 4º ao 32º e um último andar que combina apartamentos e áreas comuns. A realização é da Town Desenvolvimento Imobiliário em conjunto com a Tapajós Engenharia, que também responde pela construção; o projeto arquitetônico é de Alexandre Leite Arquitetos Associados, com paisagismo de Gui Mesquita e interiores de Sabbatini Interiores.',
       'O pavimento tipo tem seis apartamentos, organizados em três famílias de planta. Os finais 02 e 05, de 75 m² e 76 m², são plantas flexíveis: o comprador escolhe entre duas suítes plenas com lavabo ou três quartos, sendo uma suíte, um dormitório e um home office. Os finais 01 e 06 somam 89 m² com três suítes plenas, lavabo e sala integrada à cozinha. Os finais 03 e 04, os maiores da torre com 112 m², trazem três suítes, lavabo e uma varanda gourmet aberta de mais de 10 m², com churrasqueira a carvão embutida na alvenaria e sistema de exaustão próprio, além de duas vagas de garagem. Em todas as plantas o padrão de acabamento inclui porcelanato polido 80x80 nas áreas sociais e quartos, bancadas de granito na cozinha e de mármore nos banheiros, esquadrias de alumínio com persiana de enrolar integrada e previsão de ar-condicionado em todos os dormitórios e na sala. A suíte casal chega a 14,71 m², com closet de mais de 5,5 metros lineares.',
