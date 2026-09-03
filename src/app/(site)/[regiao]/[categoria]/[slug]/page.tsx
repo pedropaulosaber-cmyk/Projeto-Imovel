@@ -20,6 +20,13 @@ import {
 import { nomeDaRegiao, regiaoPorSlug, rotuloDaCategoria, slugDaCategoria } from '@/content/regioes';
 import type { Empreendimento } from '@/content/tipos';
 import { rotas } from '@/lib/rotas';
+import {
+  descricaoDoImovel,
+  imagemSocialDoImovel,
+  imagensAbsolutasDoImovel,
+  palavrasChaveDoImovel,
+  trilhaJsonLd,
+} from '@/lib/seo';
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -39,14 +46,28 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const e = empreendimentoPorSlug(slug);
   if (!e) return {};
 
+  const cidade = regiaoPorSlug(e.regiaoSlug)?.cidade ?? 'Goiânia';
+  const titulo = `${e.nome} — ${rotuloDaCategoria(e.categoria)} no ${nomeDaRegiao(e.regiaoSlug)}, ${cidade}`;
+  const descricao = descricaoDoImovel(e);
+  const imagem = imagemSocialDoImovel(e);
+
   return {
-    title: `${e.nome} — ${rotuloDaCategoria(e.categoria)} no ${nomeDaRegiao(e.regiaoSlug)}`,
-    description: e.resumo,
+    title: titulo,
+    description: descricao,
+    keywords: palavrasChaveDoImovel(e),
     alternates: { canonical: rotas.empreendimento(e) },
     openGraph: {
       title: e.nome,
-      description: e.resumo,
+      description: descricao,
       type: 'website',
+      url: rotas.empreendimento(e),
+      ...(imagem ? { images: [{ url: imagem, alt: titulo }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: e.nome,
+      description: descricao,
+      ...(imagem ? { images: [imagem] } : {}),
     },
   };
 }
@@ -76,6 +97,23 @@ export default async function PaginaEmpreendimento({ params }: Params) {
         type="application/ld+json"
         /* JSON-LD serializado de dados próprios; nada aqui vem do visitante. */
         dangerouslySetInnerHTML={{ __html: jsonLdSeguro(schemaDoImovel(e)) }}
+      />
+      <script
+        type="application/ld+json"
+        /* Trilha Início › listagem da praça/momento › imóvel: rich result de
+           migalha no Google, sem depender de migalha visível nesta tela. */
+        dangerouslySetInnerHTML={{
+          __html: jsonLdSeguro(
+            trilhaJsonLd([
+              { nome: 'Início', caminho: rotas.home },
+              {
+                nome: `${rotuloDaCategoria(e.categoria)} no ${nomeDaRegiao(e.regiaoSlug)}`,
+                caminho: rotas.listagem(e.regiaoSlug, slugDaCategoria(e.categoria)),
+              },
+              { nome: e.nome, caminho: rotas.empreendimento(e) },
+            ]),
+          ),
+        }}
       />
 
       {/* ---------------------------------------------------------------- */}
@@ -327,9 +365,8 @@ function schemaDoImovel(e: Empreendimento) {
     name: e.nome,
     description: e.resumo,
     datePosted: new Date().toISOString().slice(0, 10),
-    ...(e.midias.find((m) => m.tipo === 'foto' && m.url)?.url
-      ? { image: `${urlBase()}${e.midias.find((m) => m.tipo === 'foto' && m.url)?.url}` }
-      : {}),
+    /* Várias fotos: o Google prefere um array a uma imagem só no rich result. */
+    ...(imagensAbsolutasDoImovel(e).length ? { image: imagensAbsolutasDoImovel(e) } : {}),
     /* Offer sem preço é válido no Schema.org; offer com preço errado vira
        rich result mentindo o valor na busca. */
     offers: {

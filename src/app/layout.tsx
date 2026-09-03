@@ -4,6 +4,7 @@ import { IBM_Plex_Mono, Poppins } from 'next/font/google';
 import { MetaPixel } from '@/components/tracking/meta-pixel';
 import { site, urlBase } from '@/config/site';
 import { regioesEmTexto } from '@/content/regioes';
+import { palavrasChaveBase } from '@/lib/seo';
 
 import './globals.css';
 
@@ -23,20 +24,38 @@ const plexMono = IBM_Plex_Mono({
   display: 'swap',
 });
 
+const tituloRaiz = {
+  default: `${site.nome} — Imóveis em Goiânia`,
+  template: `%s · ${site.nome}`,
+};
+
+const descricaoRaiz = `Imóveis à venda em Goiânia: lançamentos, apartamentos na planta e remanescentes em ${regioesEmTexto()}. Registro de incorporação e cronograma abertos.`;
+
+const imagemSocial = {
+  url: '/imagens/escritorio-goiania.jpg',
+  width: 1408,
+  height: 768,
+  alt: `${site.nome} — imóveis em ${regioesEmTexto()}, ${site.contato.cidade}`,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(urlBase()),
-  title: {
-    default: `${site.nome} — Imóveis em Goiânia`,
-    template: `%s · ${site.nome}`,
-  },
-  description: `Lançamentos, imóveis na planta e remanescentes em ${regioesEmTexto()}. Registro de incorporação e cronograma abertos.`,
+  title: tituloRaiz,
+  description: descricaoRaiz,
+  keywords: palavrasChaveBase(),
   applicationName: site.nome,
   authors: [{ name: site.responsavelTecnico }],
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
     siteName: site.nome,
-    images: [{ url: '/imagens/escritorio-goiania.jpg', width: 1408, height: 768 }],
+    images: [imagemSocial],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: tituloRaiz,
+    description: descricaoRaiz,
+    images: [imagemSocial.url],
   },
   /* Mesmo interruptor do robots.ts: catálogo de demonstração não entra no
      índice do Google. Ver a justificativa em src/app/robots.ts. */

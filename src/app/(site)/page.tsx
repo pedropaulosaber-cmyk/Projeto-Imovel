@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -18,10 +19,18 @@ import { parquePorSlug } from '@/content/parques';
 import { categorias, regioes, regioesEmTexto } from '@/content/regioes';
 import { jsonLdSeguro } from '@/lib/json-ld';
 import { rotas } from '@/lib/rotas';
+import { palavrasChaveBase } from '@/lib/seo';
 
 /* Landing page: conteúdo estático, revalidado de hora em hora quando o
    catálogo passar a vir do Supabase. */
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  /* Título e descrição vêm do layout raiz; aqui fixamos o canônico da home e as
+     palavras-chave amplas da marca. */
+  alternates: { canonical: rotas.home },
+  keywords: palavrasChaveBase(),
+};
 
 export default function Home() {
   const oportunidades = oportunidadesDaSemana();
@@ -297,6 +306,7 @@ function schemaDoEscritorio() {
     '@type': 'RealEstateAgent',
     '@id': `${urlBase()}/#escritorio`,
     name: site.nome,
+    description: site.descricao,
     url: urlBase(),
     image: `${urlBase()}/imagens/escritorio-goiania.jpg`,
     identifier: site.creci,

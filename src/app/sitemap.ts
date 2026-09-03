@@ -54,12 +54,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const imoveis: MetadataRoute.Sitemap = empreendimentosPublicados().map((e) => ({
-    url: `${base}${rotas.empreendimento(e)}`,
-    lastModified: agora,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  }));
+  const imoveis: MetadataRoute.Sitemap = empreendimentosPublicados().map((e) => {
+    /* Extensão de imagem do sitemap: leva a foto de capa de cada imóvel para o
+       Google Imagens junto com a URL da página. */
+    const foto = e.midias.find((m) => m.tipo === 'foto' && m.url)?.url;
+    return {
+      url: `${base}${rotas.empreendimento(e)}`,
+      lastModified: agora,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+      ...(foto ? { images: [`${base}${foto}`] } : {}),
+    };
+  });
 
   return [...fixas, ...paginasDeParque, ...listagens, ...imoveis];
 }

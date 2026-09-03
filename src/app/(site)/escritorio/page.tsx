@@ -12,11 +12,32 @@ import { rotas } from '@/lib/rotas';
 
 export const revalidate = 3600;
 
+const descricaoEscritorio =
+  'Dezoito anos vendendo os mesmos três setores de Goiânia. Curadoria de empreendimentos com registro de incorporação, memorial e cronograma conferidos antes de entrar no catálogo.';
+
 export const metadata: Metadata = {
   title: 'O escritório',
-  description:
-    'Dezoito anos vendendo os mesmos três setores de Goiânia. Curadoria de empreendimentos com registro de incorporação, memorial e cronograma conferidos antes de entrar no catálogo.',
+  description: descricaoEscritorio,
+  keywords: [
+    `${site.nome} Goiânia`,
+    'imobiliária em Goiânia',
+    'corretor de imóveis em Goiânia',
+    site.creci,
+    'lançamentos e imóveis na planta em Goiânia',
+  ],
   alternates: { canonical: rotas.escritorio },
+  openGraph: {
+    title: `O escritório · ${site.nome}`,
+    description: descricaoEscritorio,
+    type: 'website',
+    url: rotas.escritorio,
+    images: [
+      {
+        url: '/imagens/escritorio-goiania.jpg',
+        alt: `Escritório ${site.nome}, ${site.contato.cidade} — ${site.contato.estado}`,
+      },
+    ],
+  },
 };
 
 export default function PaginaEscritorio() {

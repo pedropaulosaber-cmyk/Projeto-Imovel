@@ -32,14 +32,15 @@ const catalogo: Empreendimento[] = [
       'R-4 na matrícula nº 350.780 do Cartório de Registro de Imóveis da 1ª Circunscrição de Goiânia — GO',
     avisoRegistro: null,
     statusPublicacao: 'publicado',
-    precoAPartirDe: null,
+    /* Piso da tabela de vendas de 04/08/2026 (unidade 0202, final 2, 170,96 m²). */
+    precoAPartirDe: 1779704,
     quartos: '3–4 suítes',
     banheiros: null,
     metragem: '171–420 m²',
     metragemMin: 170.96,
     metragemMax: 419.52,
-    entrega: 'Entrega a confirmar',
-    previsaoEntrega: null,
+    entrega: 'Entrega prevista para dezembro de 2027',
+    previsaoEntrega: 'dez/2027',
     resumo:
       'Torre única de 35 pavimentos ao lado do futuro Parque Serrinha, com plantas de 3 e 4 suítes e sete pavimentos de penthouses com piscina e sauna privativas.',
     descricao: [
@@ -4365,7 +4366,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Entrega prevista para março de 2028',
     previsaoEntrega: 'mar/2028',
     resumo:
-      'O FR. Jardim Areião é um edifício residencial de torre única na Rua 1.033, quadra 74, lotes 14/18, no Setor Pedro Ludovico, em Goiânia. O terreno tem 2.382,693 m² e.',
+      '232 apartamentos de 2 e 3 suítes, de 69 a 110 m², em torre única no Setor Pedro Ludovico — a quatro minutos do Parque Areião —, com academia de 140 m² e piscina de raia de 14,5 m.',
     descricao: [
       'O FR. Jardim Areião é um edifício residencial de torre única na Rua 1.033, quadra 74, lotes 14/18, no Setor Pedro Ludovico, em Goiânia. O terreno tem 2.382,693 m² e recebe 34 pavimentos ao todo: dois subsolos, térreo, 1º pavimento de garagem, 2º pavimento com o lazer somado a mais garagem, e do 3º ao 31º os andares tipo, com oito apartamentos por andar. São 232 unidades privativas. A incorporação é da FR. Incorporadora, por meio da SPE Ludovico Empreendimentos Imobiliários, e o projeto arquitetônico é assinado por Alexandre Leite Arquitetos Associados, com decorado do Studio Andre Lenza e interiores de Thiago Maurelio / Dezembro Arquitetos.',
       'A planta tipo trabalha com quatro finais espelhados nas alas A e B, o que dá cinco configurações de apartamento ao comprador. O menor, de 69 m², tem dois quartos sendo uma suíte, varanda, banheiro social e banho master. O de 75,36 m² troca a varanda por balcão e entrega duas suítes mais lavabo, com veneziana nas janelas dos quartos. Acima deles vêm as plantas de três suítes: 96,11 m² com varanda e 109,50 m² em duas versões, uma com varanda e outra com balcão, ambas com lavabo, closet e banho master na suíte principal. Todas têm sala e cozinha integradas, área de serviço e laje técnica, e o acesso se dá pelo hall comum, com dois elevadores sociais e um elevador de emergência.',
@@ -4679,7 +4680,7 @@ const catalogo: Empreendimento[] = [
     entrega: 'Entrega prevista para novembro de 2026',
     previsaoEntrega: 'nov/2026',
     resumo:
-      'O Smart Parque Areião é um residencial de torre única no Setor Pedro Ludovico, em Goiânia, erguido em um terreno de 2.208,68 m² que faz frente para três ruas — a.',
+      '222 apartamentos de 37 a 70 m² — studios e unidades de 2 suítes — em torre única no Setor Pedro Ludovico, com coworking, lavanderia compartilhada, piscina aquecida e lazer em três níveis.',
     descricao: [
       'O Smart Parque Areião é um residencial de torre única no Setor Pedro Ludovico, em Goiânia, erguido em um terreno de 2.208,68 m² que faz frente para três ruas — a Rua 1007, a Rua 1001 e a Rua Senador Domingos Velasco. São 25 pavimentos no total, entre subsolo, térreo, dois níveis de garagem, um pavimento inteiro de lazer no terceiro andar e vinte pavimentos tipo, somando 222 unidades autônomas atendidas por três elevadores (dois sociais e um de serviço). A incorporação é da EBM, por meio da SPE Brasil Incorporação 161, com alvará de construção nº 30596 emitido em abril de 2023.',
       'São duas plantas em oferta. O studio, de 39 m² de área privativa, ocupa os finais 01, 04, 05, 06, 07, 10 e 11 e foi desenhado para quem mora sozinho, para o casal em início de vida ou para quem compra pensando em locação — a planta é compacta, mas já sai com fechadura digital, porcelanato 80x80, bancada de granito na cozinha, tomada USB, ponto de TV e infraestrutura de ar-condicionado com o equipamento em laje técnica. O apartamento de 2 suítes, de 70 m², está nos finais 02, 03, 08 e 09, entrega churrasqueira ecológica de baixa emissão de fumaça na varanda, ventilação natural nos banheiros, pontos de TV e câmera nos ambientes principais e ponto no hall para reforçar o Wi-Fi. Nas duas suítes há ainda a linha Personality Option, que permite escolher piso, climatização e o balcão de extensão da cozinha antes da entrega.',
