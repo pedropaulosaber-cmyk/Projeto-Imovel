@@ -9,7 +9,9 @@ import { GradeNumeros, ListaNumerada } from '@/components/secoes/blocos';
 import { Eyebrow } from '@/components/ui/primitivas';
 import { empreendimentosPorParque } from '@/content/empreendimentos';
 import { parquePorSlug, parques } from '@/content/parques';
+import { jsonLdSeguro } from '@/lib/json-ld';
 import { rotas } from '@/lib/rotas';
+import { trilhaJsonLd } from '@/lib/seo';
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -28,7 +30,21 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${parque.nome} — o que muda com a obra`,
     description: parque.resumoPagina,
+    keywords: [
+      parque.nome,
+      `${parque.nome} Goiânia`,
+      `imóveis perto do ${parque.nome}`,
+      `apartamentos perto do ${parque.nome}`,
+      'revitalização Goiânia',
+    ],
     alternates: { canonical: rotas.parque(parque.slug) },
+    openGraph: {
+      title: `${parque.nome} — o que muda com a obra`,
+      description: parque.resumoPagina,
+      type: 'website',
+      url: rotas.parque(parque.slug),
+      images: [{ url: parque.imagem, alt: parque.imagemAlt }],
+    },
   };
 }
 
@@ -42,6 +58,17 @@ export default async function PaginaParque({ params }: Params) {
   return (
     <>
       <Cabecalho ativo="parques" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdSeguro(
+            trilhaJsonLd([
+              { nome: 'Início', caminho: rotas.home },
+              { nome: parque.nome, caminho: rotas.parque(parque.slug) },
+            ]),
+          ),
+        }}
+      />
 
       {/* Herói ----------------------------------------------------------- */}
       <section className="relative flex min-h-[62svh] items-end md:h-[clamp(340px,70svh,720px)]">

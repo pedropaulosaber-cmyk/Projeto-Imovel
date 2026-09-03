@@ -3,10 +3,13 @@ import { notFound } from 'next/navigation';
 
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { Listagem } from '@/components/listagem/listagem';
-import { listagensComImovel } from '@/content/empreendimentos';
+import { urlBase } from '@/config/site';
+import { empreendimentosPorRegiaoECategoria, listagensComImovel } from '@/content/empreendimentos';
 import { categoriaPorSlug, regiaoPorSlug, slugDaCategoria } from '@/content/regioes';
 import { lerFiltros } from '@/lib/filtros';
+import { jsonLdSeguro } from '@/lib/json-ld';
 import { rotas } from '@/lib/rotas';
+import { imagemSocialDoImovel, trilhaJsonLd } from '@/lib/seo';
 
 /**
  * Esta é a rota que precisa ranquear, então ela é pré-renderizada e não lê
@@ -36,11 +39,27 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!regiao || !categoria) return {};
 
   const titulo = `${categoria.titulo} no ${regiao.nome}`;
+  const imagem = empreendimentosPorRegiaoECategoria(regiao.slug, categoria.valor)
+    .map(imagemSocialDoImovel)
+    .find(Boolean);
 
   return {
     title: `${titulo} — ${regiao.cidade}`,
-    description: `${categoria.texto} Empreendimentos no ${regiao.nome}, ${regiao.cidade} — ${regiao.estado}, com registro de incorporação conferido.`,
+    description: `${categoria.texto} Apartamentos no ${regiao.nome}, ${regiao.cidade} — ${regiao.estado}, com registro de incorporação conferido.`,
+    keywords: [
+      `apartamento à venda ${regiao.nome}`,
+      `${categoria.titulo} ${regiao.nome}`,
+      `${categoria.titulo} ${regiao.cidade}`,
+      `apartamento ${categoria.singular.toLowerCase()} ${regiao.cidade}`,
+      `imóveis ${regiao.nome}`,
+    ],
     alternates: { canonical: rotas.listagem(regiao.slug, categoria.slug) },
+    openGraph: {
+      title: `${titulo} — ${regiao.cidade}`,
+      type: 'website',
+      url: rotas.listagem(regiao.slug, categoria.slug),
+      ...(imagem ? { images: [{ url: imagem, alt: titulo }] } : {}),
+    },
   };
 }
 
@@ -50,9 +69,46 @@ export default async function PaginaListagemPorRegiao({ params }: Params) {
   const categoria = categoriaPorSlug(categoriaSlug);
   if (!regiao || !categoria) notFound();
 
+  const imoveis = empreendimentosPorRegiaoECategoria(regiao.slug, categoria.valor);
+  const titulo = `${categoria.titulo} no ${regiao.nome}`;
+
   return (
     <>
       <Cabecalho ativo="imoveis" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdSeguro(
+            trilhaJsonLd([
+              { nome: 'Início', caminho: rotas.home },
+              { nome: 'Imóveis', caminho: rotas.imoveis },
+              { nome: titulo, caminho: rotas.listagem(regiao.slug, categoria.slug) },
+            ]),
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        /* A coleção e a lista ordenada de imóveis desta praça × momento. */
+        dangerouslySetInnerHTML={{
+          __html: jsonLdSeguro({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: `${titulo}, ${regiao.cidade}`,
+            url: `${urlBase()}${rotas.listagem(regiao.slug, categoria.slug)}`,
+            mainEntity: {
+              '@type': 'ItemList',
+              numberOfItems: imoveis.length,
+              itemListElement: imoveis.map((e, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                url: `${urlBase()}${rotas.empreendimento(e)}`,
+                name: e.nome,
+              })),
+            },
+          }),
+        }}
+      />
       <Listagem
         filtros={lerFiltros({})}
         interativo={false}
