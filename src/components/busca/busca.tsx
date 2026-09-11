@@ -35,8 +35,9 @@ const estiloCampoEscuro =
   'min-h-[52px] w-full rounded-lg border border-creme/[0.18] bg-creme/[0.06] px-4 py-[14px] text-[15px] text-creme outline-none focus:border-ouro';
 
 /**
- * Caixa de busca do herói, no desktop: três seletores encostados numa grade
- * de 1px e um botão dourado de largura total, exatamente como no design.
+ * Caixa de busca do herói, no desktop: uma pílula translúcida com desfoque, no
+ * mesmo desenho da barra de navegação flutuante — três seletores lado a lado,
+ * separados por um fio fino, e o botão dourado arredondado à direita.
  */
 export function BuscaHeroDesktop() {
   const router = useRouter();
@@ -47,38 +48,36 @@ export function BuscaHeroDesktop() {
         e.preventDefault();
         router.push(paraListagem(new FormData(e.currentTarget)));
       }}
-      className="hidden max-w-[580px] overflow-hidden rounded-md border border-creme/[0.18] bg-[rgba(20,19,15,0.62)] backdrop-blur-[12px] md:block"
+      className="hidden w-fit max-w-full items-center rounded-full border border-creme/[0.22] bg-creme/[0.13] py-[10px] pr-[10px] pl-2 backdrop-blur-[16px] md:flex"
     >
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))]">
-        <SeletorHero nome="regiao" rotulo="REGIÃO">
-          <option value="">Todas</option>
-          {regioes.map((r) => (
-            <option key={r.slug} value={r.slug} className="text-tinta">
-              {r.nome}
-            </option>
-          ))}
-        </SeletorHero>
+      <SeletorHero nome="regiao" rotulo="REGIÃO" primeiro>
+        <option value="">Todas</option>
+        {regioes.map((r) => (
+          <option key={r.slug} value={r.slug} className="text-tinta">
+            {r.nome}
+          </option>
+        ))}
+      </SeletorHero>
 
-        <SeletorHero nome="quartos" rotulo="QUARTOS">
-          {FAIXAS_DE_QUARTOS.map((f) => (
-            <option key={f.rotulo} value={f.valor} className="text-tinta">
-              {f.rotulo}
-            </option>
-          ))}
-        </SeletorHero>
+      <SeletorHero nome="quartos" rotulo="QUARTOS">
+        {FAIXAS_DE_QUARTOS.map((f) => (
+          <option key={f.rotulo} value={f.valor} className="text-tinta">
+            {f.rotulo}
+          </option>
+        ))}
+      </SeletorHero>
 
-        <SeletorHero nome="ate" rotulo="ATÉ">
-          {FAIXAS_DE_PRECO.map((f) => (
-            <option key={f.rotulo} value={f.valor} className="text-tinta">
-              {f.rotulo}
-            </option>
-          ))}
-        </SeletorHero>
-      </div>
+      <SeletorHero nome="ate" rotulo="ATÉ">
+        {FAIXAS_DE_PRECO.map((f) => (
+          <option key={f.rotulo} value={f.valor} className="text-tinta">
+            {f.rotulo}
+          </option>
+        ))}
+      </SeletorHero>
 
       <button
         type="submit"
-        className="block min-h-[54px] w-full bg-ouro p-[17px] text-center text-[15px] font-semibold text-tinta transition-opacity hover:opacity-[0.88]"
+        className="ml-[10px] shrink-0 rounded-full bg-ouro px-[22px] py-[11px] text-sm font-semibold text-tinta transition-opacity hover:opacity-[0.88]"
       >
         Buscar imóveis
       </button>
@@ -90,20 +89,20 @@ function SeletorHero({
   nome,
   rotulo,
   children,
+  primeiro = false,
 }: {
   nome: string;
   rotulo: string;
   children: React.ReactNode;
+  primeiro?: boolean;
 }) {
   return (
-    <label className="block px-[18px] py-[14px] shadow-[0_0_0_1px_rgba(246,243,236,0.14)]">
-      <span className="mb-[6px] block font-mono text-[10px] tracking-[0.14em] text-creme/60">
-        {rotulo}
-      </span>
+    <label className={`flex flex-col px-[16px] ${primeiro ? '' : 'border-l border-creme/[0.18]'}`}>
+      <span className="mb-[2px] font-mono text-[9px] tracking-[0.14em] text-creme/60">{rotulo}</span>
       <select
         name={nome}
         aria-label={rotulo}
-        className="w-full border-0 bg-transparent text-[15px] font-medium text-creme outline-none"
+        className="cursor-pointer border-0 bg-transparent text-sm font-medium text-creme outline-none"
       >
         {children}
       </select>
@@ -139,7 +138,7 @@ export function BuscaHeroMobile() {
       <button
         type="button"
         onClick={() => setAberta(true)}
-        className="flex min-h-[56px] w-full items-center justify-between gap-3 rounded-[10px] border border-creme/[0.2] bg-[rgba(20,19,15,0.7)] px-[18px] py-4 text-sm text-creme backdrop-blur-[12px] md:hidden"
+        className="flex min-h-[56px] w-full items-center justify-between gap-3 rounded-full border border-creme/[0.22] bg-creme/[0.13] px-[18px] py-4 text-sm text-creme backdrop-blur-[16px] md:hidden"
       >
         <span className="text-creme/70">Região, categoria, valor…</span>
         <span className="rounded-full bg-ouro px-[14px] py-[7px] text-xs font-semibold text-tinta">
