@@ -6,7 +6,7 @@ import { BuscaHeroDesktop, BuscaHeroMobile } from '@/components/busca/busca';
 import { CardOportunidade } from '@/components/empreendimentos/cards';
 import { Cabecalho, PilulaHome } from '@/components/layout/cabecalho';
 import { FormularioLead } from '@/components/lead/formulario-lead';
-import { BannerParque, GradeNumeros } from '@/components/secoes/blocos';
+import { BannerParque } from '@/components/secoes/blocos';
 import { Creci, Eyebrow } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
 import {
@@ -157,13 +157,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* -------------------------------------------------------------- */}
-        {/* Números                                                          */}
-        {/* -------------------------------------------------------------- */}
-        <div className="order-2 my-[26px] md:order-1 md:my-0">
-          <GradeNumeros />
-        </div>
       </div>
 
       {/* ------------------------------------------------------------------ */}
@@ -254,17 +247,15 @@ export default function Home() {
         <div className="relative hidden min-h-[360px] overflow-hidden rounded-lg md:block md:flex-[1_1_300px]">
           <Image
             src="/imagens/escritorio-goiania.jpg"
-            alt={`Escritório ${site.nome} no ${site.contato.endereco}`}
+            alt={`${site.nome} — imóveis em ${site.contato.cidade}`}
             fill
             sizes="(max-width: 768px) 0px, 40vw"
             quality={92}
             className="object-cover"
           />
           <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(14,14,12,0)_0%,rgba(14,14,12,0.88)_100%)] p-6">
-            <p className="mb-[6px] text-xl font-medium tracking-[-0.02em]">
-              {site.contato.endereco}
-            </p>
-            <p className="text-sm text-creme/70">{site.contato.horario}</p>
+            <p className="mb-[6px] text-xl font-medium tracking-[-0.02em]">{site.nome}</p>
+            <p className="text-sm text-creme/70">Imóveis em {site.contato.cidade}</p>
           </div>
         </div>
       </section>
@@ -313,7 +304,6 @@ function schemaDoEscritorio() {
     telephone: site.contato.whatsapp,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: site.contato.endereco,
       addressLocality: site.contato.cidade,
       addressRegion: site.contato.estado,
       addressCountry: 'BR',

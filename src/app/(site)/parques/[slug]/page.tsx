@@ -120,79 +120,86 @@ export default async function PaginaParque({ params }: Params) {
         </section>
       )}
 
-      <GradeNumeros itens={parque.numeros} usarLabelMobile />
+      {/* Corpo em tema claro — só aqui; o herói acima fica escuro (foto). */}
+      <div className="imovel-claro">
+        <GradeNumeros itens={parque.numeros} usarLabelMobile claro />
 
-      {/* O que está sendo feito ------------------------------------------ */}
-      <section className="px-[18px] pt-7 md:px-5 md:py-[clamp(36px,6vw,96px)] lg:px-14">
-        <Eyebrow className="mb-4 md:mb-[clamp(18px,2.4vw,32px)]">O QUE ESTÁ SENDO FEITO</Eyebrow>
-        <ListaNumerada itens={parque.etapas} />
-      </section>
+        {/* O que está sendo feito ---------------------------------------- */}
+        <section className="px-[18px] pt-7 md:px-5 md:py-[clamp(36px,6vw,96px)] lg:px-14">
+          <Eyebrow tom="escuro" className="mb-4 md:mb-[clamp(18px,2.4vw,32px)]">
+            O QUE ESTÁ SENDO FEITO
+          </Eyebrow>
+          <ListaNumerada itens={parque.etapas} claro />
+        </section>
 
-      {/* O que muda para quem mora ao redor ------------------------------ */}
-      <section className="mt-7 bg-creme px-[18px] py-7 text-tinta md:mt-0 md:px-5 md:py-[clamp(36px,6vw,92px)] lg:px-14">
-        <div className="md:flex md:flex-wrap md:gap-[clamp(24px,4vw,64px)]">
-          <div className="md:flex-[1_1_300px]">
-            <h2 className="mb-[14px] text-[26px] leading-[1.1] font-semibold tracking-[-0.035em] md:mb-[18px] md:max-w-[18ch] md:text-[clamp(26px,3.6vw,48px)] md:leading-[1.06]">
-              {parque.impacto.titulo}
-            </h2>
-            {parque.impacto.paragrafos.map((p, i) => (
-              <p
-                key={p.slice(0, 24)}
-                className={`max-w-[50ch] text-[15px] leading-[1.68] text-grafite text-pretty md:text-base md:leading-[1.7] ${
-                  i === 0 ? 'mb-5 md:mb-4' : ''
-                } ${i > 0 ? 'hidden md:block' : ''}`}
-              >
-                {p}
-              </p>
-            ))}
-          </div>
-
-          <dl className="grid content-start text-sm md:flex-[1_1_280px] md:text-base">
-            {parque.impacto.linhas.map((l, i) => (
-              <div
-                key={l.rotulo}
-                className={`filete-topo-escuro flex justify-between gap-3 py-[14px] md:py-4 ${
-                  i === 0 ? 'hidden md:flex' : ''
-                } ${i === parque.impacto.linhas.length - 1 ? 'shadow-[0_-1px_0_rgba(20,19,15,0.16),0_1px_0_rgba(20,19,15,0.16)]' : ''}`}
-              >
-                <dt className="text-pedra">{l.rotulo}</dt>
-                <dd className="m-0 font-medium">{l.valor}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-
-      {/* Empreendimentos no entorno -------------------------------------- */}
-      {vizinhos.length ? (
-        <section className="px-[18px] pt-[30px] pb-[34px] md:px-5 md:py-[clamp(36px,6vw,96px)] lg:px-14">
-          <div className="mb-[18px] md:mb-[clamp(20px,3vw,38px)] md:flex md:flex-wrap md:items-end md:justify-between md:gap-5">
-            <div>
-              <Eyebrow className="mb-3 md:mb-[14px]">{parque.eyebrowProximos}</Eyebrow>
-              <h2 className="text-[28px] leading-none font-semibold tracking-[-0.035em] md:text-[clamp(26px,3.8vw,50px)]">
-                {parque.tituloProximos}
+        {/* O que muda para quem mora ao redor ------------------------------ */}
+        <section className="mt-7 bg-creme px-[18px] py-7 text-tinta md:mt-0 md:px-5 md:py-[clamp(36px,6vw,92px)] lg:px-14">
+          <div className="md:flex md:flex-wrap md:gap-[clamp(24px,4vw,64px)]">
+            <div className="md:flex-[1_1_300px]">
+              <h2 className="mb-[14px] text-[26px] leading-[1.1] font-semibold tracking-[-0.035em] md:mb-[18px] md:max-w-[18ch] md:text-[clamp(26px,3.6vw,48px)] md:leading-[1.06]">
+                {parque.impacto.titulo}
               </h2>
+              {parque.impacto.paragrafos.map((p, i) => (
+                <p
+                  key={p.slice(0, 24)}
+                  className={`max-w-[50ch] text-[15px] leading-[1.68] text-grafite text-pretty md:text-base md:leading-[1.7] ${
+                    i === 0 ? 'mb-5 md:mb-4' : ''
+                  } ${i > 0 ? 'hidden md:block' : ''}`}
+                >
+                  {p}
+                </p>
+              ))}
             </div>
-            <Link
-              href={rotas.imoveis}
-              className="hidden border-b border-ouro pb-1 text-sm font-medium md:block"
-            >
-              Ver todos os imóveis
-            </Link>
-          </div>
 
-          <div className="grid gap-4 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-[clamp(14px,2vw,24px)]">
-            {vizinhos.map((e) => (
-              <CardVizinhoDoParque key={e.slug} e={e} />
-            ))}
+            <dl className="grid content-start text-sm md:flex-[1_1_280px] md:text-base">
+              {parque.impacto.linhas.map((l, i) => (
+                <div
+                  key={l.rotulo}
+                  className={`filete-topo-escuro flex justify-between gap-3 py-[14px] md:py-4 ${
+                    i === 0 ? 'hidden md:flex' : ''
+                  } ${i === parque.impacto.linhas.length - 1 ? 'shadow-[0_-1px_0_rgba(20,19,15,0.16),0_1px_0_rgba(20,19,15,0.16)]' : ''}`}
+                >
+                  <dt className="text-pedra">{l.rotulo}</dt>
+                  <dd className="m-0 font-medium">{l.valor}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
-      ) : null}
 
-      <p className="px-[18px] pb-6 font-mono text-[10px] leading-[1.7] text-creme/45 md:px-5 md:text-[11px] lg:px-14">
-        DADOS DO PROJETO DE REVITALIZAÇÃO SÃO ILUSTRATIVOS E SEGUEM O CRONOGRAMA DIVULGADO PELA
-        PREFEITURA DE GOIÂNIA.
-      </p>
+        {/* Empreendimentos no entorno -------------------------------------- */}
+        {vizinhos.length ? (
+          <section className="px-[18px] pt-[30px] pb-[34px] md:px-5 md:py-[clamp(36px,6vw,96px)] lg:px-14">
+            <div className="mb-[18px] md:mb-[clamp(20px,3vw,38px)] md:flex md:flex-wrap md:items-end md:justify-between md:gap-5">
+              <div>
+                <Eyebrow tom="escuro" className="mb-3 md:mb-[14px]">
+                  {parque.eyebrowProximos}
+                </Eyebrow>
+                <h2 className="text-[28px] leading-none font-semibold tracking-[-0.035em] md:text-[clamp(26px,3.8vw,50px)]">
+                  {parque.tituloProximos}
+                </h2>
+              </div>
+              <Link
+                href={rotas.imoveis}
+                className="hidden border-b border-ouro pb-1 text-sm font-medium md:block"
+              >
+                Ver todos os imóveis
+              </Link>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-[clamp(14px,2vw,24px)]">
+              {vizinhos.map((e) => (
+                <CardVizinhoDoParque key={e.slug} e={e} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <p className="px-[18px] pb-6 font-mono text-[10px] leading-[1.7] text-pedra md:px-5 md:text-[11px] lg:px-14">
+          DADOS DO PROJETO DE REVITALIZAÇÃO SÃO ILUSTRATIVOS E SEGUEM O CRONOGRAMA DIVULGADO PELA
+          PREFEITURA DE GOIÂNIA.
+        </p>
+      </div>
     </>
   );
 }

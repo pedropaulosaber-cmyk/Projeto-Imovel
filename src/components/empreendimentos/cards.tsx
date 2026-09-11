@@ -185,7 +185,7 @@ export function CardVizinhoDoParque({ e }: { e: Empreendimento }) {
   return (
     <Link
       href={rotas.empreendimento(e)}
-      className="block overflow-hidden rounded-[14px] border border-creme/[0.14] bg-carvao transition-[transform,box-shadow,border-color] duration-200 md:rounded-lg md:border-creme/[0.16] md:bg-transparent md:hover:-translate-y-[6px] md:hover:border-ouro md:hover:shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
+      className="block overflow-hidden rounded-[14px] border border-tinta/[0.12] bg-creme transition-[transform,box-shadow,border-color] duration-200 md:rounded-lg md:border-tinta/[0.12] md:bg-transparent md:hover:-translate-y-[6px] md:hover:border-ouro md:hover:shadow-[0_18px_40px_rgba(20,19,15,0.14)]"
     >
       <div className="relative aspect-[16/11] md:aspect-[4/3]">
         <Foto
@@ -194,19 +194,19 @@ export function CardVizinhoDoParque({ e }: { e: Empreendimento }) {
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, 33vw"
         />
-        <span className="absolute top-3 left-3 rounded-full bg-[rgba(20,19,15,0.85)] px-[13px] py-[6px] text-[11px] font-semibold md:top-3 md:right-3 md:left-auto md:border md:border-creme/[0.24] md:bg-[rgba(20,19,15,0.8)] md:px-3 md:py-[6px] md:font-medium">
+        <span className="absolute top-3 left-3 rounded-full bg-[rgba(20,19,15,0.85)] px-[13px] py-[6px] text-[11px] font-semibold text-creme md:top-3 md:right-3 md:left-auto md:border md:border-creme/[0.24] md:bg-[rgba(20,19,15,0.8)] md:px-3 md:py-[6px] md:font-medium">
           {rotuloDaCategoria(e.categoria)}
         </span>
       </div>
 
       <div className="p-[18px] md:p-5">
-        <p className="mb-2 text-xs font-medium text-ouro md:mb-[10px] md:font-mono md:text-[10px] md:tracking-[0.14em] md:font-normal md:text-creme/55">
+        <p className="mb-2 text-xs font-medium text-ouro md:mb-[10px] md:font-mono md:text-[10px] md:tracking-[0.14em] md:font-normal md:text-pedra">
           {nomeDaRegiao(e.regiaoSlug)}
         </p>
         <h3 className="mb-2 text-xl leading-[1.2] font-semibold tracking-[-0.025em] md:mb-[14px] md:text-[21px] md:leading-[1.15]">
           {e.nome}
         </h3>
-        <p className="mb-[14px] text-[13px] font-light text-creme/62 md:mb-4 md:border-0 md:pb-4 md:text-sm md:text-creme/65 md:shadow-[0_1px_0_rgba(246,243,236,0.14)]">
+        <p className="mb-[14px] text-[13px] font-light text-grafite-claro md:mb-4 md:border-0 md:pb-4 md:text-sm md:text-grafite-claro md:shadow-[0_1px_0_rgba(20,19,15,0.12)]">
           {e.quartos} · {e.metragem}
           <span className="hidden md:inline"> · {e.entrega}</span>
         </p>
@@ -217,7 +217,7 @@ export function CardVizinhoDoParque({ e }: { e: Empreendimento }) {
           <Seta />
         </div>
         <div className="hidden items-baseline justify-between gap-3 md:flex">
-          <span className="text-xs text-creme/55">A partir de</span>
+          <span className="text-xs text-pedra">A partir de</span>
           <span className="text-xl font-medium text-ouro">{precoExibicao(e)}</span>
         </div>
       </div>
