@@ -9,9 +9,12 @@ import { rotas } from '@/lib/rotas';
 export function GradeNumeros({
   itens = numeros,
   usarLabelMobile = false,
+  claro = false,
 }: {
   itens?: { valor: string; label: string; labelMobile?: string }[];
   usarLabelMobile?: boolean;
+  /** Página de fundo claro: rótulo em tom escuro (o valor herda a cor do tema). */
+  claro?: boolean;
 }) {
   return (
     <section className="grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(170px,1fr))]">
@@ -20,7 +23,7 @@ export function GradeNumeros({
           <p className="mb-2 text-[26px] leading-none font-semibold tracking-[-0.035em] md:mb-[10px] md:text-[clamp(30px,3.4vw,46px)]">
             {n.valor}
           </p>
-          <p className="text-xs text-creme/60 md:text-[13px]">
+          <p className={`text-xs md:text-[13px] ${claro ? 'text-pedra' : 'text-creme/60'}`}>
             {usarLabelMobile && n.labelMobile ? (
               <>
                 <span className="md:hidden">{n.labelMobile}</span>
@@ -82,8 +85,11 @@ export function BannerParque({ parque }: { parque: Parque }) {
 /** Bloco numerado "01 / 02 / 03 / 04" — usado no processo e nas obras dos parques. */
 export function ListaNumerada({
   itens,
+  claro = false,
 }: {
   itens: { n: string; titulo: string; texto: string }[];
+  /** Página de fundo claro: texto de apoio em tom escuro. */
+  claro?: boolean;
 }) {
   return (
     <>
@@ -97,7 +103,9 @@ export function ListaNumerada({
                 <h3 className="mb-2 text-[19px] leading-[1.2] font-semibold tracking-[-0.025em]">
                   {item.titulo}
                 </h3>
-                <p className="text-sm leading-[1.6] text-creme/68">{item.texto}</p>
+                <p className={`text-sm leading-[1.6] ${claro ? 'text-pedra' : 'text-creme/68'}`}>
+                  {item.texto}
+                </p>
               </div>
             </div>
           </div>
@@ -117,7 +125,9 @@ export function ListaNumerada({
               <h3 className="mb-[10px] text-[21px] leading-[1.18] font-semibold tracking-[-0.025em] lg:text-[22px]">
                 {item.titulo}
               </h3>
-              <p className="text-[15px] leading-[1.6] text-creme/68">{item.texto}</p>
+              <p className={`text-[15px] leading-[1.6] ${claro ? 'text-pedra' : 'text-creme/68'}`}>
+                {item.texto}
+              </p>
             </div>
           </div>
         ))}
