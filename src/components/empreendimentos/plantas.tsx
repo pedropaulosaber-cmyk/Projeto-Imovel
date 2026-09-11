@@ -192,18 +192,31 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
               mostrava a tarja da incorporadora e escondia o desenho fora da
               tela — quem toca numa metragem quer ver a planta, não procurá-la.
             */}
-            <button
-              type="button"
-              onClick={() => setAmpliada((v) => !v)}
-              aria-label={ampliada ? 'Ver a planta inteira' : 'Ampliar a planta'}
-              className={`min-h-0 flex-1 cursor-zoom-in ${
-                ampliada ? 'flex cursor-zoom-out flex-col overflow-auto' : 'grid place-items-center'
-              }`}
-            >
-              <span
-                className={`block overflow-hidden rounded-lg bg-creme ${
-                  ampliada ? 'm-auto w-fit shrink-0' : 'max-h-full'
-                }`}
+            {/*
+              Encaixada (padrão): a planta inteira cabe na tela via `fill` +
+              `object-contain`, sem importar a proporção — sempre aparece toda.
+              Ampliada: a planta cresce para 1500 px e rola nos dois eixos, para
+              ler medida de quarto no celular. Um toque alterna entre as duas.
+            */}
+            {ampliada ? (
+              <div className="min-h-0 flex-1 overflow-auto">
+                <Image
+                  src={emFoco.url}
+                  alt={emFoco.alt ?? emFoco.legenda}
+                  width={1500}
+                  height={845}
+                  sizes="1500px"
+                  quality={92}
+                  onClick={() => setAmpliada(false)}
+                  className="mx-auto h-auto w-[1500px] max-w-none cursor-zoom-out rounded-lg bg-creme"
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setAmpliada(true)}
+                aria-label="Ampliar a planta"
+                className="grid min-h-0 flex-1 cursor-zoom-in place-items-center"
               >
                 <Image
                   src={emFoco.url}
@@ -212,15 +225,10 @@ export function Plantas({ plantas, imagens }: { plantas: Planta[]; imagens: Midi
                   height={845}
                   sizes="100vw"
                   quality={92}
-                  className={
-                    ampliada
-                      ? 'h-auto w-[min(1500px,max(760px,100vw))] max-w-none'
-                      : 'max-h-[inherit] w-auto max-w-full object-contain'
-                  }
-                  style={ampliada ? undefined : { height: 'auto', maxHeight: '100%' }}
+                  className="h-auto max-h-[82vh] w-auto max-w-[94vw] rounded-lg bg-creme object-contain"
                 />
-              </span>
-            </button>
+              </button>
+            )}
 
             {!ampliada ? (
               <p className="mt-2 text-center font-mono text-[10px] tracking-[0.08em] text-creme/45">

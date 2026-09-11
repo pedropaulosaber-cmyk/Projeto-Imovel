@@ -1,13 +1,13 @@
 import { site } from '@/config/site';
 
-/** Conteúdo institucional: números, processo e equipe. */
-
-export const numeros = [
-  { valor: '+500', label: 'Famílias atendidas' },
-  { valor: '18', label: 'Anos em Goiânia' },
-  { valor: 'R$ 1,2 bi', label: 'VGV comercializado' },
-  { valor: '11 min', label: 'Resposta média' },
-];
+/**
+ * Conteúdo institucional: processo e equipe.
+ *
+ * Os "números" da vitrine (+500 famílias, 18 anos, R$ 1,2 bi de VGV, 11 min)
+ * saíram: eram afirmações de fato do design que não se sustentam e, sob CRECI
+ * real, configurariam publicidade enganosa (CDC art. 37). Só volta número que
+ * puder ser comprovado.
+ */
 
 export const processo = [
   {

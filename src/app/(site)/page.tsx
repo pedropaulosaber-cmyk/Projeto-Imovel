@@ -93,14 +93,7 @@ export default function Home() {
             </p>
 
             <div className="mb-5 flex flex-wrap items-center gap-[10px] md:mb-7 md:gap-[14px]">
-              <Creci className="hidden text-creme/70 md:inline" />
-              <span
-                aria-label="Cinco estrelas"
-                className="text-[15px] tracking-[0.12em] text-ouro md:text-[17px] md:tracking-[0.15em]"
-              >
-                ★★★★★
-              </span>
-              <span className="text-[13px] text-creme/75 md:text-sm">+500 famílias atendidas</span>
+              <Creci className="text-creme/70" />
             </div>
 
             <BuscaHeroMobile />

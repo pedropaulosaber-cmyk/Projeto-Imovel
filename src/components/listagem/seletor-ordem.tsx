@@ -38,7 +38,7 @@ export function SeletorOrdem({
             })}`,
           )
         }
-        className="rounded border border-creme/[0.2] bg-creme/[0.06] px-4 py-[13px] text-sm text-creme outline-none focus:border-ouro"
+        className="rounded border border-tinta/[0.16] bg-tinta/[0.04] px-4 py-[13px] text-sm text-tinta outline-none focus:border-ouro"
       >
         {ORDENS.map((o) => (
           <option key={o.valor} value={o.valor} className="text-tinta">

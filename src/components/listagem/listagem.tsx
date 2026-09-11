@@ -45,11 +45,13 @@ export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativ
     : { ...filtros, regiao: fixos?.regiao, categoria: fixos?.categoria };
 
   return (
-    <>
+    /* Listagem em tema claro (fundo branco), como as páginas de imóvel e de
+       parque. O cabeçalho fica escuro porque é irmão acima deste contêiner. */
+    <div className="imovel-claro">
       <div className="px-[18px] pt-[22px] pb-[14px] md:px-5 md:pt-[clamp(24px,4vw,48px)] md:pb-[clamp(16px,2vw,26px)] lg:px-14">
         <nav
           aria-label="Você está em"
-          className="mb-[14px] flex flex-wrap gap-[7px] font-mono text-[10px] tracking-[0.12em] text-creme/55 md:mb-[clamp(18px,2.4vw,30px)] md:gap-2 md:text-[11px] md:tracking-[0.1em]"
+          className="mb-[14px] flex flex-wrap gap-[7px] font-mono text-[10px] tracking-[0.12em] text-pedra md:mb-[clamp(18px,2.4vw,30px)] md:gap-2 md:text-[11px] md:tracking-[0.1em]"
         >
           {migalhas.map((m, i) => (
             <span key={m.rotulo} className="flex gap-[7px] md:gap-2">
@@ -70,7 +72,7 @@ export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativ
             <h1 className="mb-2 text-[34px] leading-[0.98] font-bold tracking-[-0.04em] md:mb-3 md:text-[clamp(32px,5.4vw,76px)] md:leading-[0.94] md:tracking-[-0.045em]">
               {titulo}
             </h1>
-            <p className="text-sm text-creme/65 md:text-base md:text-creme/68">
+            <p className="text-sm text-pedra md:text-base">
               {visiveis.length} de {todos.length} {todos.length === 1 ? 'resultado' : 'resultados'}{' '}
               · atualizado hoje
             </p>
@@ -109,7 +111,7 @@ export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativ
             </div>
 
             <div className="filete-topo mt-6 grid gap-3 pt-5 md:mt-[clamp(28px,3.4vw,48px)] md:flex md:flex-wrap md:items-center md:justify-between md:gap-4 md:pt-6">
-              <p className="text-center text-[13px] text-creme/60 md:text-left md:text-sm">
+              <p className="text-center text-[13px] text-pedra md:text-left md:text-sm">
                 Mostrando {visiveis.length} de {todos.length}
               </p>
               {restam > 0 ? (
@@ -120,7 +122,7 @@ export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativ
                     categoria: fixos?.categoria ? undefined : efetivos.categoria,
                   })}`}
                   scroll={false}
-                  className="min-h-[52px] rounded-lg border border-creme/40 p-4 text-center text-sm font-medium transition-colors md:rounded md:px-8 md:py-4 md:hover:border-ouro md:hover:bg-ouro md:hover:text-tinta"
+                  className="min-h-[52px] rounded-lg border border-tinta/[0.2] p-4 text-center text-sm font-medium transition-colors md:rounded md:px-8 md:py-4 md:hover:border-ouro md:hover:bg-ouro md:hover:text-tinta"
                 >
                   Carregar mais
                 </Link>
@@ -129,7 +131,7 @@ export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativ
           </>
         )}
       </main>
-    </>
+    </div>
   );
 }
 
@@ -140,18 +142,18 @@ export function Listagem({ filtros, basePath, titulo, migalhas, fixos, interativ
  */
 function EstadoVazio({ basePath }: { basePath: string }) {
   return (
-    <div className="rounded-xl border border-dashed border-creme/30 px-5 py-10 text-center md:rounded-lg md:px-[clamp(20px,4vw,56px)] md:py-[clamp(40px,7vw,90px)]">
+    <div className="rounded-xl border border-dashed border-tinta/[0.2] px-5 py-10 text-center md:rounded-lg md:px-[clamp(20px,4vw,56px)] md:py-[clamp(40px,7vw,90px)]">
       <h2 className="mb-3 text-[22px] leading-[1.2] font-semibold tracking-[-0.03em] md:mb-[14px] md:text-[clamp(24px,3.2vw,40px)] md:leading-[1.1]">
         Nenhum imóvel com esses filtros
       </h2>
-      <p className="mx-auto mb-[22px] max-w-[46ch] text-sm leading-[1.6] text-creme/68 md:mb-7 md:text-base">
+      <p className="mx-auto mb-[22px] max-w-[46ch] text-sm leading-[1.6] text-grafite md:mb-7 md:text-base">
         Parte do nosso estoque não é publicada. Diga o que procura e o corretor responde com opções
         reais de unidades.
       </p>
       <div className="grid gap-[10px] md:flex md:justify-center">
         <Link
           href={basePath}
-          className="min-h-[50px] rounded-lg border border-creme/40 p-[15px] text-center text-sm font-medium md:rounded md:px-6 md:py-[15px]"
+          className="min-h-[50px] rounded-lg border border-tinta/[0.2] p-[15px] text-center text-sm font-medium md:rounded md:px-6 md:py-[15px]"
         >
           Limpar filtros
         </Link>
@@ -164,7 +166,7 @@ function EstadoVazio({ basePath }: { basePath: string }) {
           Falar no WhatsApp
         </a>
       </div>
-      <p className="mt-6 text-[13px] text-creme/50">
+      <p className="mt-6 text-[13px] text-pedra">
         Ou{' '}
         <Link href={rotas.imoveis} className="underline">
           veja todos os imóveis
