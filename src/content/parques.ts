@@ -26,7 +26,8 @@ export const parques: Parque[] = [
     resumoPaginaMobile:
       '108 mil m² e 819 m de altitude viram parque urbano: R$ 14,5 milhões e 12 meses de obra, com mirante no ponto mais alto da cidade.',
     imagem: '/imagens/parque-serrinha.jpg',
-    imagemAlt: 'Vista aérea do Morro da Serrinha, em Goiânia',
+    imagemAlt:
+      'Perspectiva ilustrada do Parque da Serrinha revitalizado, em Goiânia — vista aérea com a torre de água e a cidade ao fundo',
     numeros: [
       { valor: '108 mil m²', label: 'Área do Morro da Serrinha', labelMobile: 'Área do morro' },
       { valor: 'R$ 14,5 mi', label: 'Investimento contratado', labelMobile: 'Investimento' },
