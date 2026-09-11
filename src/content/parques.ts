@@ -26,7 +26,46 @@ export const parques: Parque[] = [
     resumoPaginaMobile:
       '108 mil m² e 819 m de altitude viram parque urbano: R$ 14,5 milhões e 12 meses de obra, com mirante no ponto mais alto da cidade.',
     imagem: '/imagens/parque-serrinha.jpg',
-    imagemAlt: 'Vista aérea do Morro da Serrinha, em Goiânia',
+    imagemAlt:
+      'Perspectiva ilustrada do Parque da Serrinha revitalizado, em Goiânia — vista aérea com a torre de água e a cidade ao fundo',
+    galeria: [
+      {
+        tipo: 'foto',
+        url: '/imagens/parque-serrinha.jpg',
+        legenda: 'Vista do morro',
+        alt: 'Perspectiva ilustrada do Parque da Serrinha revitalizado, em Goiânia — vista aérea com a torre de água e a cidade ao fundo',
+      },
+      {
+        tipo: 'foto',
+        url: '/imagens/parque-serrinha-praca.jpg',
+        legenda: 'Praça de convivência',
+        alt: 'Perspectiva ilustrada da praça de convivência do Parque da Serrinha, com arena de grama, carrinhos de alimentação, playground e edifício de apoio',
+      },
+      {
+        tipo: 'foto',
+        url: '/imagens/parque-serrinha-pista.jpg',
+        legenda: 'Pista e espaço pet',
+        alt: 'Perspectiva ilustrada da pista de caminhada e ciclovia do Parque da Serrinha, ao lado do espaço pet cercado, com corredores e ciclistas',
+      },
+      {
+        tipo: 'foto',
+        url: '/imagens/parque-serrinha-playground.jpg',
+        legenda: 'Playground e academia',
+        alt: 'Perspectiva ilustrada da área de playground e academia ao ar livre do Parque da Serrinha, ao pé do morro florido, vista da avenida',
+      },
+      {
+        tipo: 'foto',
+        url: '/imagens/parque-serrinha-encosta.jpg',
+        legenda: 'Encosta e ciclovia',
+        alt: 'Perspectiva ilustrada da encosta arborizada do Parque da Serrinha, com árvores floridas, ciclovia e trilhas, em vista aérea',
+      },
+      {
+        tipo: 'foto',
+        url: '/imagens/parque-serrinha-panorama.jpg',
+        legenda: 'Panorama da cidade',
+        alt: 'Perspectiva ilustrada do Parque da Serrinha, em Goiânia — panorama do morro florido com a torre de água e o skyline da cidade ao fundo',
+      },
+    ],
     numeros: [
       { valor: '108 mil m²', label: 'Área do Morro da Serrinha', labelMobile: 'Área do morro' },
       { valor: 'R$ 14,5 mi', label: 'Investimento contratado', labelMobile: 'Investimento' },
