@@ -42,7 +42,7 @@ export function BarraDesktop({ ativo }: { ativo?: ChaveNav }) {
 
   return (
     <header className="sticky top-0 z-[60] hidden flex-wrap items-center justify-between gap-4 bg-[rgba(14,14,12,0.94)] px-5 py-[14px] shadow-[0_1px_0_rgba(246,243,236,0.16)] backdrop-blur-[14px] md:flex lg:px-14">
-      <Link href={rotas.home} className="text-[16px] font-bold tracking-[0.16em]">
+      <Link href={rotas.home} className="text-[16px] font-bold tracking-[0.02em]">
         {site.nome}
       </Link>
 
@@ -61,9 +61,6 @@ export function BarraDesktop({ ativo }: { ativo?: ChaveNav }) {
               {l.rotulo}
             </Link>
           ))}
-        <Link href={rotas.login} className="opacity-70 transition-opacity hover:opacity-50">
-          Corretor
-        </Link>
         <a
           href={linkWhatsAppDoCaminho(caminho)}
           target="_blank"
@@ -104,7 +101,7 @@ function BarraMobile() {
   return (
     <>
       <header className="sticky top-0 z-[70] flex items-center justify-between gap-3 bg-[rgba(14,14,12,0.92)] px-[18px] py-[14px] shadow-[0_1px_0_rgba(246,243,236,0.14)] backdrop-blur-[14px] md:hidden">
-        <Link href={rotas.home} className="text-[15px] font-bold tracking-[0.16em]">
+        <Link href={rotas.home} className="text-[15px] font-bold tracking-[0.02em]">
           {site.nome}
         </Link>
 
@@ -139,7 +136,7 @@ function BarraMobile() {
           >
             <div className="flex w-full max-w-[430px] flex-col p-[18px]">
               <div className="mb-[34px] flex items-center justify-between">
-                <span className="text-[15px] font-bold tracking-[0.16em]">{site.nome}</span>
+                <span className="text-[15px] font-bold tracking-[0.02em]">{site.nome}</span>
                 <button
                   type="button"
                   onClick={() => setMenuAberto(false)}
@@ -192,7 +189,7 @@ function BarraMobile() {
 export function PilulaHome() {
   return (
     <div className="sticky top-4 z-20 mt-4 hidden max-w-[calc(100%-32px)] flex-wrap items-center justify-center gap-[6px] self-center rounded-full border border-creme/[0.22] bg-creme/[0.13] py-[10px] pr-3 pl-5 backdrop-blur-[16px] md:flex">
-      <Link href={rotas.home} className="mr-[10px] text-[16px] font-bold tracking-[0.16em]">
+      <Link href={rotas.home} className="mr-[10px] text-[16px] font-bold tracking-[0.02em]">
         {site.nome}
       </Link>
       <Link
@@ -216,12 +213,6 @@ export function PilulaHome() {
       <a href="#contato" className="px-[14px] py-[9px] text-sm transition-opacity hover:opacity-75">
         Contato
       </a>
-      <Link
-        href={rotas.login}
-        className="px-[14px] py-[9px] text-sm opacity-75 transition-opacity hover:opacity-50"
-      >
-        Corretor
-      </Link>
       <a
         href="#contato"
         className="ml-[6px] rounded-full bg-ouro px-[22px] py-[11px] text-sm font-semibold text-tinta transition-opacity hover:opacity-[0.88]"

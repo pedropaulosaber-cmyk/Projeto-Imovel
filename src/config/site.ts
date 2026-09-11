@@ -20,7 +20,7 @@
  */
 export const site = {
   // ── Marca ──────────────────────────────────────────────────────────────
-  nome: 'VÉRTICE', // ← PREENCHER: nome da sua marca / imobiliária
+  nome: 'Quero Imóvel Goiânia',
   descricao: 'Imóveis em Goiânia — lançamentos, na planta e remanescentes',
 
   // ── CRECI (JÁ É O REAL — não trocar) ───────────────────────────────────

@@ -23,7 +23,7 @@ const secoes: { titulo: string; paragrafos: string[] }[] = [
   {
     titulo: 'Quem trata os seus dados',
     paragrafos: [
-      `Os dados enviados neste site são tratados por ${site.nome}, corretor de imóveis inscrito sob ${site.creci}, com atendimento em ${site.contato.endereco}, ${site.contato.cidade} — ${site.contato.estado}.`,
+      `Os dados enviados neste site são tratados por ${site.nome}, corretor de imóveis inscrito sob ${site.creci}, com atendimento em ${site.contato.cidade} — ${site.contato.estado}.`,
       `Para exercer qualquer direito previsto na LGPD, fale com a gente pelo WhatsApp ${site.contato.telefoneExibicao}.`,
     ],
   },
