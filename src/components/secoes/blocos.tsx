@@ -1,17 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { numeros } from '@/content/escritorio';
 import type { Parque } from '@/content/tipos';
 import { rotas } from '@/lib/rotas';
 
 /** Grade de indicadores separada por linhas de 1px. 2 colunas no mobile, 4 no desktop. */
 export function GradeNumeros({
-  itens = numeros,
+  itens,
   usarLabelMobile = false,
   claro = false,
 }: {
-  itens?: { valor: string; label: string; labelMobile?: string }[];
+  itens: { valor: string; label: string; labelMobile?: string }[];
   usarLabelMobile?: boolean;
   /** Página de fundo claro: rótulo em tom escuro (o valor herda a cor do tema). */
   claro?: boolean;

@@ -6,7 +6,7 @@ import { BuscaHeroDesktop, BuscaHeroMobile } from '@/components/busca/busca';
 import { CardOportunidade } from '@/components/empreendimentos/cards';
 import { Cabecalho, PilulaHome } from '@/components/layout/cabecalho';
 import { FormularioLead } from '@/components/lead/formulario-lead';
-import { BannerParque, GradeNumeros } from '@/components/secoes/blocos';
+import { BannerParque } from '@/components/secoes/blocos';
 import { Creci, Eyebrow } from '@/components/ui/primitivas';
 import { site, urlBase } from '@/config/site';
 import {
@@ -157,13 +157,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* -------------------------------------------------------------- */}
-        {/* Números                                                          */}
-        {/* -------------------------------------------------------------- */}
-        <div className="order-2 my-[26px] md:order-1 md:my-0">
-          <GradeNumeros />
-        </div>
       </div>
 
       {/* ------------------------------------------------------------------ */}
