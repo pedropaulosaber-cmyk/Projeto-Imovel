@@ -74,7 +74,7 @@ export function CardListagem({ e }: { e: Empreendimento }) {
   return (
     <Link
       href={rotas.empreendimento(e)}
-      className="block overflow-hidden rounded-[14px] border border-creme/[0.14] bg-carvao transition-[transform,box-shadow,border-color] duration-200 md:hover:-translate-y-[10px] md:hover:border-ouro md:hover:shadow-[0_24px_50px_rgba(0,0,0,0.55)]"
+      className="block overflow-hidden rounded-[14px] border border-tinta/[0.12] bg-creme transition-[transform,box-shadow,border-color] duration-200 md:hover:-translate-y-[10px] md:hover:border-ouro md:hover:shadow-[0_20px_44px_rgba(20,19,15,0.16)]"
     >
       <div className="relative aspect-[16/11]">
         <Foto
@@ -83,42 +83,42 @@ export function CardListagem({ e }: { e: Empreendimento }) {
           legenda={`[ foto — ${e.nome} ]`}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
-        <span className="absolute top-3 left-3 rounded-full bg-[rgba(20,19,15,0.85)] px-[13px] py-[6px] text-[11px] font-semibold md:top-[14px] md:left-[14px] md:px-[14px] md:py-[7px]">
+        <span className="absolute top-3 left-3 rounded-full bg-[rgba(20,19,15,0.85)] px-[13px] py-[6px] text-[11px] font-semibold text-creme md:top-[14px] md:left-[14px] md:px-[14px] md:py-[7px]">
           {rotuloDaCategoria(e.categoria)}
         </span>
         <span
           aria-hidden
-          className="absolute top-3 right-3 grid h-8 w-8 place-items-center rounded-full bg-[rgba(20,19,15,0.85)] text-sm md:top-[14px] md:right-[14px] md:h-[34px] md:w-[34px]"
+          className="absolute top-3 right-3 grid h-8 w-8 place-items-center rounded-full bg-[rgba(20,19,15,0.85)] text-sm text-creme md:top-[14px] md:right-[14px] md:h-[34px] md:w-[34px]"
         >
           ♡
         </span>
         {/* Bolinha da incorporadora, sobreposta na borda — só no desktop. */}
         <span
           aria-hidden
-          className="absolute -bottom-[22px] right-[18px] hidden h-[46px] w-[46px] rounded-full border-2 border-carvao hachura md:block"
+          className="absolute -bottom-[22px] right-[18px] hidden h-[46px] w-[46px] rounded-full border-2 border-creme hachura-clara md:block"
         />
       </div>
 
       <div className="p-[18px] md:p-[22px]">
         <p className="mb-2 text-xs font-medium text-ouro md:mb-[10px]">
           <span className="hidden md:inline">
-            {rotuloDaCategoria(e.categoria)} <span className="text-creme/40">·</span>{' '}
+            {rotuloDaCategoria(e.categoria)} <span className="text-pedra/60">·</span>{' '}
           </span>
-          <span className="font-normal text-creme/65 md:font-normal">
+          <span className="font-normal text-pedra md:font-normal">
             {nomeDaRegiao(e.regiaoSlug)}, Goiânia
           </span>
         </p>
         <h3 className="mb-2 text-xl leading-[1.2] font-semibold tracking-[-0.025em] md:mb-[10px] md:text-[22px]">
           {e.nome}
         </h3>
-        <p className="mb-[14px] text-[13px] leading-[1.55] font-light text-creme/62 md:mb-[18px] md:text-sm md:leading-[1.6] md:text-creme/66">
+        <p className="mb-[14px] text-[13px] leading-[1.55] font-light text-grafite-claro md:mb-[18px] md:text-sm md:leading-[1.6] md:text-grafite">
           {e.resumo}
         </p>
         <p className="mb-[14px] text-[22px] font-semibold tracking-[-0.03em] md:mb-4 md:text-2xl">
           {precoExibicao(e)}
         </p>
 
-        <div className="flex flex-wrap gap-[14px] rounded-[10px] border border-creme/[0.14] px-[14px] py-3 text-xs text-creme/75 md:gap-[18px] md:px-4 md:py-[13px] md:text-[13px]">
+        <div className="flex flex-wrap gap-[14px] rounded-[10px] border border-tinta/[0.12] px-[14px] py-3 text-xs text-grafite md:gap-[18px] md:px-4 md:py-[13px] md:text-[13px]">
           <span>{e.quartos}</span>
           {e.banheiros ? <span>{e.banheiros}</span> : null}
           <span>{e.metragem}</span>

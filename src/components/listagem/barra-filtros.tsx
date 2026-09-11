@@ -9,7 +9,7 @@ import { comParametros, ORDENS, type Filtros, paramsAtuais } from '@/lib/filtros
 import { Portal } from '@/components/ui/portal';
 
 const pill =
-  'rounded-full border border-creme/[0.2] bg-creme/[0.06] px-4 py-[11px] text-[13px] text-creme outline-none focus:border-ouro';
+  'rounded-full border border-tinta/[0.16] bg-tinta/[0.04] px-4 py-[11px] text-[13px] text-tinta outline-none focus:border-ouro';
 
 /**
  * Barra de filtros grudada abaixo do cabeçalho.
@@ -26,11 +26,11 @@ export function BarraFiltros({ filtros, basePath }: { filtros: Filtros; basePath
       ref={refFormulario}
       method="get"
       action={basePath}
-      className="sticky top-[57px] z-[50] bg-[rgba(14,14,12,0.95)] py-3 shadow-[0_1px_0_rgba(246,243,236,0.14),0_-1px_0_rgba(246,243,236,0.14)] backdrop-blur-[12px] md:top-[56px] md:flex md:flex-wrap md:items-center md:gap-[10px] md:px-5 md:py-[14px] md:shadow-[0_1px_0_rgba(246,243,236,0.16),0_-1px_0_rgba(246,243,236,0.16)] lg:px-14"
+      className="sticky top-[57px] z-[50] bg-[rgba(255,255,255,0.95)] py-3 shadow-[0_1px_0_rgba(20,19,15,0.12),0_-1px_0_rgba(20,19,15,0.12)] backdrop-blur-[12px] md:top-[56px] md:flex md:flex-wrap md:items-center md:gap-[10px] md:px-5 md:py-[14px] md:shadow-[0_1px_0_rgba(20,19,15,0.14),0_-1px_0_rgba(20,19,15,0.14)] lg:px-14"
     >
       {/* Campo de busca — pílula, igual nos dois artboards. */}
-      <label className="mx-[18px] mb-[10px] flex items-center gap-[10px] rounded-full border border-creme/[0.2] bg-creme/[0.06] px-4 py-3 md:mx-0 md:mb-0 md:flex-[1_1_240px] md:px-[18px] md:py-[11px]">
-        <span aria-hidden className="text-[15px] text-creme/50">
+      <label className="mx-[18px] mb-[10px] flex items-center gap-[10px] rounded-full border border-tinta/[0.16] bg-tinta/[0.04] px-4 py-3 md:mx-0 md:mb-0 md:flex-[1_1_240px] md:px-[18px] md:py-[11px]">
+        <span aria-hidden className="text-[15px] text-pedra">
           ⌕
         </span>
         <span className="sr-only">Buscar por empreendimento ou setor</span>
@@ -39,7 +39,7 @@ export function BarraFiltros({ filtros, basePath }: { filtros: Filtros; basePath
           type="search"
           defaultValue={filtros.busca ?? ''}
           placeholder="Buscar empreendimento ou setor"
-          className="min-w-0 flex-1 border-0 bg-transparent text-sm text-creme outline-none"
+          className="min-w-0 flex-1 border-0 bg-transparent text-sm text-tinta outline-none placeholder:text-pedra"
         />
       </label>
 
@@ -119,7 +119,7 @@ export function BarraFiltros({ filtros, basePath }: { filtros: Filtros; basePath
 
       <ControleDeVista filtros={filtros} basePath={basePath} />
 
-      <Link href={basePath} className="hidden text-[13px] text-creme/60 underline md:block">
+      <Link href={basePath} className="hidden text-[13px] text-pedra underline md:block">
         Limpar
       </Link>
 
@@ -147,7 +147,7 @@ function ChipMobile({
       href={href}
       aria-pressed={ativo}
       className={`shrink-0 rounded-full px-4 py-[10px] text-[13px] whitespace-nowrap ${
-        ativo ? 'bg-ouro font-semibold text-tinta' : 'border border-creme/[0.24]'
+        ativo ? 'bg-ouro font-semibold text-tinta' : 'border border-tinta/[0.2]'
       }`}
     >
       {children}
@@ -164,7 +164,7 @@ function ControleDeVista({ filtros, basePath }: { filtros: Filtros; basePath: st
   const base = paramsAtuais(filtros);
 
   return (
-    <div className="ml-auto hidden gap-1 rounded-full border border-creme/[0.2] bg-creme/[0.06] p-1 md:flex">
+    <div className="ml-auto hidden gap-1 rounded-full border border-tinta/[0.16] bg-tinta/[0.04] p-1 md:flex">
       <Link
         href={`${basePath}${comParametros(base, { vista: undefined })}`}
         className={`rounded-full px-4 py-2 text-[13px] ${
