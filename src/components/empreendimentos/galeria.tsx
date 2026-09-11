@@ -24,16 +24,28 @@ const ARRASTO_MINIMO = 44;
 /* Depois de trocar de foto, o texto e o escurecido voltam após esta pausa. */
 const TEMPO_VISIVEL_APOS_NAVEGAR = 1500;
 
+/* Linha legal padrão do imóvel; a página do parque passa a sua ou `null`. */
+const AVISO_PADRAO =
+  '[ PERSPECTIVAS ILUSTRADAS DO MATERIAL DA INCORPORADORA · MOBILIÁRIO E DECORAÇÃO NÃO INTEGRAM O CONTRATO ]';
+
+const ALTURA_PADRAO = 'h-[54svh] md:h-[clamp(340px,72svh,780px)]';
+
 export function Galeria({
   midias,
   nome,
   children,
   acoes,
+  aviso = AVISO_PADRAO,
+  altura = ALTURA_PADRAO,
 }: {
   midias: Midia[];
   nome: string;
   children: React.ReactNode;
   acoes?: React.ReactNode;
+  /** Linha legal sob a tira; `null` esconde (a página do parque tem a sua). */
+  aviso?: string | null;
+  /** Classe de altura da seção do herói. Padrão: a do imóvel. */
+  altura?: string;
 }) {
   const [i, setI] = useState(0);
   const [textoOculto, setTextoOculto] = useState(false);
@@ -94,7 +106,7 @@ export function Galeria({
   return (
     <>
       <section
-        className="relative flex h-[54svh] items-end md:h-[clamp(340px,72svh,780px)]"
+        className={`relative flex items-end ${altura}`}
         onTouchStart={(e) => {
           toqueX.current = e.touches[0]?.clientX ?? null;
         }}
@@ -194,10 +206,11 @@ export function Galeria({
         publicidade de propaganda enganosa (CDC, art. 37) — e é a primeira coisa
         que um comprador experiente procura.
       */}
-      <p className="filete-topo px-[18px] py-[10px] font-mono text-[10px] tracking-[0.08em] text-creme/45 md:px-5 md:text-[11px] lg:px-14">
-        [ PERSPECTIVAS ILUSTRADAS DO MATERIAL DA INCORPORADORA · MOBILIÁRIO E DECORAÇÃO NÃO INTEGRAM
-        O CONTRATO ]
-      </p>
+      {aviso ? (
+        <p className="filete-topo px-[18px] py-[10px] font-mono text-[10px] tracking-[0.08em] text-creme/45 md:px-5 md:text-[11px] lg:px-14">
+          {aviso}
+        </p>
+      ) : null}
     </>
   );
 }

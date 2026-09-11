@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { CardVizinhoDoParque } from '@/components/empreendimentos/cards';
+import { Galeria } from '@/components/empreendimentos/galeria';
 import { Cabecalho } from '@/components/layout/cabecalho';
 import { GradeNumeros, ListaNumerada } from '@/components/secoes/blocos';
 import { Eyebrow } from '@/components/ui/primitivas';
@@ -54,6 +55,23 @@ export default async function PaginaParque({ params }: Params) {
   if (!parque) notFound();
 
   const vizinhos = empreendimentosPorParque(parque.slug);
+  const temGaleria = (parque.galeria?.length ?? 0) > 1;
+
+  /* Conteúdo sobreposto ao herói — o mesmo no carrossel e na imagem única. */
+  const overlayHeroi = (
+    <>
+      <span className="mb-4 inline-block rounded-full bg-ouro px-[14px] py-[6px] text-[11px] font-semibold text-tinta md:mb-[18px] md:text-xs">
+        {parque.selo}
+      </span>
+      <h1 className="mb-[14px] text-[38px] leading-[0.95] font-bold tracking-[-0.048em] text-white md:mb-5 md:text-[clamp(36px,6.4vw,88px)] md:leading-[0.94] md:tracking-[-0.05em]">
+        {parque.titulo}
+      </h1>
+      <p className="max-w-[54ch] text-sm leading-[1.65] font-light text-white/85 text-pretty md:text-[clamp(15px,1.2vw,18px)]">
+        <span className="md:hidden">{parque.resumoPaginaMobile}</span>
+        <span className="hidden md:inline">{parque.resumoPagina}</span>
+      </p>
+    </>
+  );
 
   return (
     <>
@@ -70,35 +88,37 @@ export default async function PaginaParque({ params }: Params) {
         }}
       />
 
-      {/* Herói ----------------------------------------------------------- */}
-      <section className="relative flex min-h-[62svh] items-end md:h-[clamp(340px,70svh,720px)]">
-        <Image
-          src={parque.imagem}
-          alt={parque.imagemAlt}
-          fill
-          priority
-          sizes="100vw"
-          quality={92}
-          className="object-cover"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(14,14,12,0.6)_0%,rgba(14,14,12,0.15)_34%,rgba(14,14,12,0.95)_100%)] md:bg-[linear-gradient(180deg,rgba(14,14,12,0.4)_0%,rgba(14,14,12,0.1)_40%,rgba(14,14,12,0.92)_100%)]"
-        />
+      {/* Herói — carrossel quando há galeria; imagem única quando não há. */}
+      {temGaleria && parque.galeria ? (
+        <Galeria
+          midias={parque.galeria}
+          nome={parque.nome}
+          aviso={null}
+          altura="min-h-[62svh] md:h-[clamp(340px,70svh,720px)]"
+        >
+          <div className="text-white md:max-w-[900px]">{overlayHeroi}</div>
+        </Galeria>
+      ) : (
+        <section className="relative flex min-h-[62svh] items-end md:h-[clamp(340px,70svh,720px)]">
+          <Image
+            src={parque.imagem}
+            alt={parque.imagemAlt}
+            fill
+            priority
+            sizes="100vw"
+            quality={92}
+            className="object-cover"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[linear-gradient(180deg,rgba(14,14,12,0.6)_0%,rgba(14,14,12,0.15)_34%,rgba(14,14,12,0.95)_100%)] md:bg-[linear-gradient(180deg,rgba(14,14,12,0.4)_0%,rgba(14,14,12,0.1)_40%,rgba(14,14,12,0.92)_100%)]"
+          />
 
-        <div className="relative w-full px-[18px] pt-[50px] pb-[26px] text-white md:max-w-[900px] md:px-5 md:pt-0 md:pb-[clamp(28px,4vw,52px)] lg:px-14">
-          <span className="mb-4 inline-block rounded-full bg-ouro px-[14px] py-[6px] text-[11px] font-semibold text-tinta md:mb-[18px] md:text-xs">
-            {parque.selo}
-          </span>
-          <h1 className="mb-[14px] text-[38px] leading-[0.95] font-bold tracking-[-0.048em] text-white md:mb-5 md:text-[clamp(36px,6.4vw,88px)] md:leading-[0.94] md:tracking-[-0.05em]">
-            {parque.titulo}
-          </h1>
-          <p className="max-w-[54ch] text-sm leading-[1.65] font-light text-white/85 text-pretty md:text-[clamp(15px,1.2vw,18px)]">
-            <span className="md:hidden">{parque.resumoPaginaMobile}</span>
-            <span className="hidden md:inline">{parque.resumoPagina}</span>
-          </p>
-        </div>
-      </section>
+          <div className="relative w-full px-[18px] pt-[50px] pb-[26px] text-white md:max-w-[900px] md:px-5 md:pt-0 md:pb-[clamp(28px,4vw,52px)] lg:px-14">
+            {overlayHeroi}
+          </div>
+        </section>
+      )}
 
       <GradeNumeros itens={parque.numeros} usarLabelMobile />
 

@@ -168,6 +168,12 @@ export interface Parque {
   resumoPaginaMobile: string;
   imagem: string;
   imagemAlt: string;
+  /**
+   * Carrossel do herói do parque (opcional). Quando presente, o herói vira uma
+   * galeria navegável (setas, teclado, arrasto, miniaturas); sem ela, o herói
+   * usa só `imagem`. `imagem` continua sendo a capa (Open Graph e 1º quadro).
+   */
+  galeria?: Midia[];
   numeros: { valor: string; label: string; labelMobile: string }[];
   etapas: EtapaObraParque[];
   impacto: { titulo: string; paragrafos: string[]; linhas: { rotulo: string; valor: string }[] };
